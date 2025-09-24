@@ -1,0 +1,939 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Progresivní technologie - Interaktivní hry</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            color: #333;
+        }
+        
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(45deg, #2196F3, #21CBF3);
+            color: white;
+            text-align: center;
+            padding: 30px;
+        }
+        
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+        
+        .header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+        
+        .games-menu {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            padding: 30px;
+        }
+        
+        .game-card {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            border-radius: 15px;
+            padding: 25px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+        
+        .game-card:hover {
+            transform: translateY(-5px);
+            border-color: #2196F3;
+            box-shadow: 0 10px 25px rgba(33, 150, 243, 0.3);
+        }
+        
+        .game-card h3 {
+            color: #2196F3;
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+        }
+        
+        .game-card p {
+            color: #666;
+            line-height: 1.6;
+        }
+        
+        .game-screen {
+            display: none;
+            padding: 30px;
+        }
+        
+        .game-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .game-header h2 {
+            color: #2196F3;
+            font-size: 2rem;
+            margin-bottom: 10px;
+        }
+        
+        .back-btn {
+            background: #ff6b6b;
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 1rem;
+            margin-bottom: 20px;
+            transition: all 0.3s ease;
+        }
+        
+        .back-btn:hover {
+            background: #ff5252;
+            transform: translateY(-2px);
+        }
+        
+        /* Quiz Styles */
+        .question {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 20px;
+            border-left: 5px solid #2196F3;
+        }
+        
+        .question h3 {
+            color: #333;
+            margin-bottom: 20px;
+            font-size: 1.3rem;
+        }
+        
+        .options {
+            display: grid;
+            gap: 15px;
+        }
+        
+        .option {
+            background: white;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            padding: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .option:hover {
+            border-color: #2196F3;
+            background: #f0f8ff;
+        }
+        
+        .option.selected {
+            border-color: #2196F3;
+            background: #e3f2fd;
+        }
+        
+        .option.correct {
+            border-color: #4caf50;
+            background: #e8f5e8;
+            color: #2e7d32;
+        }
+        
+        .option.incorrect {
+            border-color: #f44336;
+            background: #ffebee;
+            color: #c62828;
+        }
+        
+        .check-btn, .next-btn {
+            background: #4caf50;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 1rem;
+            margin: 10px;
+            transition: all 0.3s ease;
+        }
+        
+        .check-btn:hover, .next-btn:hover {
+            background: #45a049;
+            transform: translateY(-2px);
+        }
+        
+        .score {
+            text-align: center;
+            font-size: 1.2rem;
+            margin: 20px 0;
+            padding: 15px;
+            background: #e3f2fd;
+            border-radius: 10px;
+        }
+        
+        /* Memory Game Styles */
+        .memory-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        .memory-card {
+            aspect-ratio: 1;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 15px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.9rem;
+            font-weight: bold;
+            color: white;
+            transition: all 0.3s ease;
+            text-align: center;
+            padding: 10px;
+        }
+        
+        .memory-card:hover {
+            transform: scale(1.05);
+        }
+        
+        .memory-card.flipped {
+            background: white;
+            color: #333;
+            border: 2px solid #2196F3;
+        }
+        
+        .memory-card.matched {
+            background: #4caf50;
+            color: white;
+        }
+        
+        .memory-stats {
+            text-align: center;
+            margin: 20px 0;
+            display: flex;
+            justify-content: space-around;
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 15px;
+        }
+        
+        .memory-stats div {
+            font-size: 1.2rem;
+            font-weight: bold;
+        }
+        
+        /* Drag and Drop Styles */
+        .classification-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin: 20px 0;
+        }
+        
+        .items-pool {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 20px;
+            min-height: 300px;
+        }
+        
+        .items-pool h3 {
+            color: #2196F3;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+        
+        .drop-zone {
+            background: #fff;
+            border: 3px dashed #ddd;
+            border-radius: 15px;
+            padding: 20px;
+            min-height: 150px;
+            margin-bottom: 20px;
+            transition: all 0.3s ease;
+        }
+        
+        .drop-zone.drag-over {
+            border-color: #2196F3;
+            background: #f0f8ff;
+        }
+        
+        .drop-zone h4 {
+            color: #333;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+        
+        .draggable-item {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 12px 20px;
+            margin: 8px;
+            border-radius: 25px;
+            cursor: grab;
+            display: inline-block;
+            font-size: 0.95rem;
+            transition: all 0.3s ease;
+            user-select: none;
+        }
+        
+        .draggable-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+        
+        .draggable-item.dragging {
+            opacity: 0.5;
+            cursor: grabbing;
+        }
+        
+        .restart-btn {
+            background: #ff9800;
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 1rem;
+            margin: 10px;
+            transition: all 0.3s ease;
+        }
+        
+        .restart-btn:hover {
+            background: #f57c00;
+            transform: translateY(-2px);
+        }
+        
+        .explanation {
+            background: #e8f5e8;
+            border-radius: 10px;
+            padding: 15px;
+            margin-top: 20px;
+            border-left: 5px solid #4caf50;
+        }
+        
+        .explanation h4 {
+            color: #2e7d32;
+            margin-bottom: 10px;
+        }
+        
+        @media (max-width: 768px) {
+            .classification-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .memory-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+            
+            .games-menu {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Progresivní technologie</h1>
+            <p>Interaktivní hry pro procvičení znalostí</p>
+        </div>
+        
+        <div id="menu" class="games-menu">
+            <div class="game-card" onclick="startGame('quiz')">
+                <h3>🧠 Kvíz</h3>
+                <p>Otestujte své znalosti o konvenčních a progresivních technologiích pomocí otázek s výběrem odpovědí.</p>
+            </div>
+            
+            <div class="game-card" onclick="startGame('memory')">
+                <h3>🧩 Pexeso</h3>
+                <p>Najděte páry související s různými technologiemi obrábění a jejich charakteristikami.</p>
+            </div>
+            
+            <div class="game-card" onclick="startGame('classification')">
+                <h3>🎯 Klasifikace</h3>
+                <p>Přetáhněte technologie do správných kategorií podle typu obrábění.</p>
+            </div>
+            
+            <div class="game-card" onclick="startGame('sequence')">
+                <h3>📊 Seřazení</h3>
+                <p>Seřaďte technologie podle energetické náročnosti a účinnosti.</p>
+            </div>
+        </div>
+        
+        <!-- Quiz Game -->
+        <div id="quiz" class="game-screen">
+            <div class="game-header">
+                <button class="back-btn" onclick="showMenu()">← Zpět na menu</button>
+                <h2>Kvíz - Progresivní technologie</h2>
+                <div class="score">Skóre: <span id="quiz-score">0/0</span></div>
+            </div>
+            <div id="quiz-content"></div>
+        </div>
+        
+        <!-- Memory Game -->
+        <div id="memory" class="game-screen">
+            <div class="game-header">
+                <button class="back-btn" onclick="showMenu()">← Zpět na menu</button>
+                <h2>Pexeso - Technologie a charakteristiky</h2>
+                <div class="memory-stats">
+                    <div>Tahy: <span id="moves">0</span></div>
+                    <div>Páry: <span id="pairs">0/8</span></div>
+                    <div>Čas: <span id="time">00:00</span></div>
+                </div>
+                <button class="restart-btn" onclick="initMemoryGame()">🔄 Nová hra</button>
+            </div>
+            <div class="memory-grid" id="memory-grid"></div>
+        </div>
+        
+        <!-- Classification Game -->
+        <div id="classification" class="game-screen">
+            <div class="game-header">
+                <button class="back-btn" onclick="showMenu()">← Zpět na menu</button>
+                <h2>Klasifikace technologií</h2>
+                <button class="restart-btn" onclick="initClassificationGame()">🔄 Resetovat</button>
+            </div>
+            <div class="classification-container">
+                <div class="items-pool">
+                    <h3>Technologie k zařazení</h3>
+                    <div id="items-container"></div>
+                </div>
+                <div>
+                    <div class="drop-zone" id="conventional" ondrop="drop(event, 'conventional')" ondragover="allowDrop(event)">
+                        <h4>Konvenční technologie</h4>
+                        <div class="drop-items"></div>
+                    </div>
+                    <div class="drop-zone" id="progressive" ondrop="drop(event, 'progressive')" ondragover="allowDrop(event)">
+                        <h4>Progresivní technologie</h4>
+                        <div class="drop-items"></div>
+                    </div>
+                </div>
+            </div>
+            <button class="check-btn" onclick="checkClassification()">Zkontrolovat odpovědi</button>
+            <div id="classification-result"></div>
+        </div>
+        
+        <!-- Sequence Game -->
+        <div id="sequence" class="game-screen">
+            <div class="game-header">
+                <button class="back-btn" onclick="showMenu()">← Zpět na menu</button>
+                <h2>Seřazení podle energetické náročnosti</h2>
+                <p>Seřaďte technologie od nejmenší po největší spotřebu energie (kW)</p>
+                <button class="restart-btn" onclick="initSequenceGame()">🔄 Resetovat</button>
+            </div>
+            <div id="sequence-container"></div>
+            <button class="check-btn" onclick="checkSequence()">Zkontrolovat pořadí</button>
+            <div id="sequence-result"></div>
+        </div>
+    </div>
+
+    <script>
+        // Global variables
+        let currentQuizQuestion = 0;
+        let quizScore = 0;
+        let memoryCards = [];
+        let flippedCards = [];
+        let matchedPairs = 0;
+        let moves = 0;
+        let startTime;
+        let gameTimer;
+
+        // Quiz questions
+        const quizQuestions = [
+            {
+                question: "Které z následujících patří mezi konvenční procesy úběru materiálu?",
+                options: [
+                    "Řezání a broušení",
+                    "Elektrojiskrové obrábění",
+                    "Laserové obrábění",
+                    "Ultrazvukové obrábění"
+                ],
+                correct: 0,
+                explanation: "Konvenční procesy využívají mechanické zdroje energie - řezání s definovanou geometrií řezné hrany a broušení s neurčenou geometrií břitů."
+            },
+            {
+                question: "Kdy byly vyvinuty nekonvenční/progresivní procesy úběru materiálu?",
+                options: [
+                    "Před rokem 1920",
+                    "Po roce 1940",
+                    "Po roce 1960",
+                    "Po roce 1980"
+                ],
+                correct: 1,
+                explanation: "Nekonvenční procesy úběru materiálu byly vyvíjeny až po roce 1940 jako odpověď na potřeby obrábění nových, těžkoobrobitelných materiálů."
+            },
+            {
+                question: "Jaká je hlavní výhoda progresivních technologií oproti klasickým?",
+                options: [
+                    "Nižší spotřeba energie",
+                    "Vyšší rychlost úběru",
+                    "Úběr nezávisí na mechanických vlastnostech materiálu",
+                    "Levnější nástroje"
+                ],
+                correct: 2,
+                explanation: "Progresivní technologie nezávisí na mechanických vlastnostech materiálu (tvrdost, pevnost, houževnatost), což umožňuje obrábění těžkoobrobitelných materiálů."
+            },
+            {
+                question: "Které tři základní podmínky musí být splněny pro klasické obrábění?",
+                options: [
+                    "Obrobitelnost, porušení soudržnosti, konverze energie",
+                    "Rychlost, přesnost, kvalita",
+                    "Teplota, tlak, vlhkost",
+                    "Síla, moment, výkon"
+                ],
+                correct: 0,
+                explanation: "Základní podmínky pro klasické obrábění: 1) obrobitelnost (nástroj tvrdší než obrobek), 2) porušení soudržnosti materiálu, 3) konverze na mechanickou energii."
+            },
+            {
+                question: "Jak velké jsou typicky mikro-třísky při broušení?",
+                options: [
+                    "Několik mm²",
+                    "Okolo tisíciny mm²",
+                    "Několik cm²",
+                    "Okolo desetiny mm²"
+                ],
+                correct: 1,
+                explanation: "Při broušení vznikají velmi malé mikro-třísky s průřezem řádově okolo tisíciny mm², které jsou pouhým okem neviditelné."
+            },
+            {
+                question: "Jaké energetické zdroje využívají progresivní technologie?",
+                options: [
+                    "Pouze mechanické",
+                    "Pouze elektrické",
+                    "Fyzikální, elektrické, chemické a jiné",
+                    "Pouze tepelné"
+                ],
+                correct: 2,
+                explanation: "Progresivní technologie využívají různé zdroje energie: fyzikální, elektrické, tepelné, chemické a elektrochemické - na rozdíl od konvenčních, které používají pouze mechanickou energii."
+            }
+        ];
+
+        // Memory game pairs
+        const memoryPairs = [
+            { id: 1, text: "Řezání", pair: "Definovaná geometrie řezné hrany" },
+            { id: 2, text: "Broušení", pair: "Neurčitá geometrie břitů" },
+            { id: 3, text: "EDM", pair: "Elektrojiskrové obrábění" },
+            { id: 4, text: "LBM", pair: "Laserové obrábění" },
+            { id: 5, text: "Konvenční", pair: "Mechanická energie" },
+            { id: 6, text: "Progresivní", pair: "Různé zdroje energie" },
+            { id: 7, text: "Mikro-třísky", pair: "~0.001 mm²" },
+            { id: 8, text: "Po roce 1940", pair: "Vznik progresivních technologií" }
+        ];
+
+        // Classification items
+        const classificationItems = [
+            { name: "Soustružení", type: "conventional" },
+            { name: "Frézování", type: "conventional" },
+            { name: "Vrtání", type: "conventional" },
+            { name: "Broušení", type: "conventional" },
+            { name: "Honování", type: "conventional" },
+            { name: "Elektrojiskrové obrábění", type: "progressive" },
+            { name: "Laserové řezání", type: "progressive" },
+            { name: "Ultrazvukové obrábění", type: "progressive" },
+            { name: "Abrazivní vodní paprsek", type: "progressive" },
+            { name: "Elektrolytické broušení", type: "progressive" },
+            { name: "Obrábění elektronovým paprskem", type: "progressive" },
+            { name: "Chemické obrábění", type: "progressive" }
+        ];
+
+        // Sequence items (power consumption in kW)
+        const sequenceItems = [
+            { name: "LBM (Laserové obrábění)", power: 2 },
+            { name: "EBM (Elektronový paprsek)", power: 6 },
+            { name: "AJM (Abrazivní proud)", power: 4 },
+            { name: "USM (Ultrazvukové)", power: 8 },
+            { name: "EDM (Elektrojiskrové)", power: 10 },
+            { name: "AWJ (Abrazivní vodní paprsek)", power: 15 },
+            { name: "KON (Konvenční)", power: 18 }
+        ];
+
+        // Game functions
+        function showMenu() {
+            document.querySelectorAll('.game-screen').forEach(screen => screen.style.display = 'none');
+            document.getElementById('menu').style.display = 'grid';
+        }
+
+        function startGame(gameType) {
+            document.getElementById('menu').style.display = 'none';
+            document.querySelectorAll('.game-screen').forEach(screen => screen.style.display = 'none');
+            document.getElementById(gameType).style.display = 'block';
+
+            switch(gameType) {
+                case 'quiz':
+                    initQuiz();
+                    break;
+                case 'memory':
+                    initMemoryGame();
+                    break;
+                case 'classification':
+                    initClassificationGame();
+                    break;
+                case 'sequence':
+                    initSequenceGame();
+                    break;
+            }
+        }
+
+        // Quiz functions
+        function initQuiz() {
+            currentQuizQuestion = 0;
+            quizScore = 0;
+            updateQuizScore();
+            showQuizQuestion();
+        }
+
+        function showQuizQuestion() {
+            if (currentQuizQuestion >= quizQuestions.length) {
+                showQuizResults();
+                return;
+            }
+
+            const question = quizQuestions[currentQuizQuestion];
+            const content = document.getElementById('quiz-content');
+            
+            content.innerHTML = `
+                <div class="question">
+                    <h3>Otázka ${currentQuizQuestion + 1}/${quizQuestions.length}</h3>
+                    <h3>${question.question}</h3>
+                    <div class="options">
+                        ${question.options.map((option, index) => `
+                            <div class="option" onclick="selectOption(${index})" data-index="${index}">
+                                ${option}
+                            </div>
+                        `).join('')}
+                    </div>
+                    <button class="check-btn" onclick="checkQuizAnswer()" id="check-answer" style="display: none;">Zkontrolovat</button>
+                    <button class="next-btn" onclick="nextQuestion()" id="next-question" style="display: none;">Další otázka</button>
+                    <div id="explanation" style="display: none;"></div>
+                </div>
+            `;
+        }
+
+        function selectOption(index) {
+            document.querySelectorAll('.option').forEach(opt => opt.classList.remove('selected'));
+            document.querySelector(`[data-index="${index}"]`).classList.add('selected');
+            document.getElementById('check-answer').style.display = 'inline-block';
+        }
+
+        function checkQuizAnswer() {
+            const question = quizQuestions[currentQuizQuestion];
+            const selectedOption = document.querySelector('.option.selected');
+            const selectedIndex = parseInt(selectedOption.dataset.index);
+            
+            const options = document.querySelectorAll('.option');
+            options.forEach((opt, index) => {
+                if (index === question.correct) {
+                    opt.classList.add('correct');
+                } else if (index === selectedIndex && index !== question.correct) {
+                    opt.classList.add('incorrect');
+                }
+            });
+
+            if (selectedIndex === question.correct) {
+                quizScore++;
+            }
+
+            document.getElementById('explanation').innerHTML = `
+                <div class="explanation">
+                    <h4>Vysvětlení:</h4>
+                    <p>${question.explanation}</p>
+                </div>
+            `;
+            document.getElementById('explanation').style.display = 'block';
+            document.getElementById('check-answer').style.display = 'none';
+            document.getElementById('next-question').style.display = 'inline-block';
+            
+            updateQuizScore();
+        }
+
+        function nextQuestion() {
+            currentQuizQuestion++;
+            showQuizQuestion();
+        }
+
+        function updateQuizScore() {
+            document.getElementById('quiz-score').textContent = `${quizScore}/${currentQuizQuestion + 1}`;
+        }
+
+        function showQuizResults() {
+            const content = document.getElementById('quiz-content');
+            const percentage = Math.round((quizScore / quizQuestions.length) * 100);
+            
+            content.innerHTML = `
+                <div class="question">
+                    <h3>Výsledky kvízu</h3>
+                    <div class="score">
+                        <h2>Získali jste ${quizScore} z ${quizQuestions.length} bodů (${percentage}%)</h2>
+                        ${percentage >= 80 ? '🎉 Výborně!' : percentage >= 60 ? '👍 Dobře!' : '📚 Zkuste to znovu!'}
+                    </div>
+                    <button class="next-btn" onclick="initQuiz()">Zkusit znovu</button>
+                </div>
+            `;
+        }
+
+        // Memory game functions
+        function initMemoryGame() {
+            memoryCards = [];
+            flippedCards = [];
+            matchedPairs = 0;
+            moves = 0;
+            
+            // Create card pairs
+            memoryPairs.forEach(pair => {
+                memoryCards.push({ id: pair.id, text: pair.text, matched: false });
+                memoryCards.push({ id: pair.id, text: pair.pair, matched: false });
+            });
+            
+            // Shuffle cards
+            memoryCards = memoryCards.sort(() => Math.random() - 0.5);
+            
+            renderMemoryGrid();
+            updateMemoryStats();
+            startTimer();
+        }
+
+        function renderMemoryGrid() {
+            const grid = document.getElementById('memory-grid');
+            grid.innerHTML = memoryCards.map((card, index) => `
+                <div class="memory-card" onclick="flipCard(${index})" data-index="${index}">
+                    <span>${card.flipped || card.matched ? card.text : '?'}</span>
+                </div>
+            `).join('');
+        }
+
+        function flipCard(index) {
+            if (flippedCards.length >= 2 || memoryCards[index].flipped || memoryCards[index].matched) return;
+            
+            memoryCards[index].flipped = true;
+            flippedCards.push(index);
+            renderMemoryGrid();
+            
+            if (flippedCards.length === 2) {
+                moves++;
+                updateMemoryStats();
+                
+                setTimeout(() => {
+                    checkMatch();
+                }, 1000);
+            }
+        }
+
+        function checkMatch() {
+            const [first, second] = flippedCards;
+            
+            if (memoryCards[first].id === memoryCards[second].id) {
+                memoryCards[first].matched = true;
+                memoryCards[second].matched = true;
+                matchedPairs++;
+                
+                if (matchedPairs === memoryPairs.length) {
+                    clearInterval(gameTimer);
+                    setTimeout(() => alert('Gratulujeme! Dokončili jste hru!'), 500);
+                }
+            } else {
+                memoryCards[first].flipped = false;
+                memoryCards[second].flipped = false;
+            }
+            
+            flippedCards = [];
+            renderMemoryGrid();
+            updateMemoryStats();
+        }
+
+        function updateMemoryStats() {
+            document.getElementById('moves').textContent = moves;
+            document.getElementById('pairs').textContent = `${matchedPairs}/${memoryPairs.length}`;
+        }
+
+        function startTimer() {
+            startTime = Date.now();
+            gameTimer = setInterval(() => {
+                const elapsed = Date.now() - startTime;
+                const minutes = Math.floor(elapsed / 60000);
+                const seconds = Math.floor((elapsed % 60000) / 1000);
+                document.getElementById('time').textContent = 
+                    `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+            }, 1000);
+        }
+
+        // Classification game functions
+        function initClassificationGame() {
+            const container = document.getElementById('items-container');
+            const shuffledItems = [...classificationItems].sort(() => Math.random() - 0.5);
+            
+            container.innerHTML = shuffledItems.map(item => `
+                <div class="draggable-item" draggable="true" ondragstart="drag(event)" data-type="${item.type}">
+                    ${item.name}
+                </div>
+            `).join('');
+            
+            // Clear drop zones
+            document.querySelectorAll('.drop-items').forEach(zone => zone.innerHTML = '');
+            document.getElementById('classification-result').innerHTML = '';
+        }
+
+        function allowDrop(ev) {
+            ev.preventDefault();
+            ev.currentTarget.classList.add('drag-over');
+        }
+
+        function drag(ev) {
+            ev.dataTransfer.setData("text", ev.target.outerHTML);
+            ev.dataTransfer.setData("type", ev.target.dataset.type);
+            ev.target.classList.add('dragging');
+        }
+
+        function drop(ev, category) {
+            ev.preventDefault();
+            ev.currentTarget.classList.remove('drag-over');
+            
+            const data = ev.dataTransfer.getData("text");
+            const type = ev.dataTransfer.getData("type");
+            
+            ev.currentTarget.querySelector('.drop-items').innerHTML += data;
+            
+            // Remove from original location
+            const draggingElement = document.querySelector('.dragging');
+            if (draggingElement) {
+                draggingElement.remove();
+            }
+        }
+
+        function checkClassification() {
+            let correct = 0;
+            let total = 0;
+            
+            const conventionalZone = document.getElementById('conventional').querySelector('.drop-items');
+            const progressiveZone = document.getElementById('progressive').querySelector('.drop-items');
+            
+            conventionalZone.querySelectorAll('.draggable-item').forEach(item => {
+                total++;
+                if (item.dataset.type === 'conventional') {
+                    correct++;
+                    item.style.border = '2px solid #4caf50';
+                } else {
+                    item.style.border = '2px solid #f44336';
+                }
+            });
+            
+            progressiveZone.querySelectorAll('.draggable-item').forEach(item => {
+                total++;
+                if (item.dataset.type === 'progressive') {
+                    correct++;
+                    item.style.border = '2px solid #4caf50';
+                } else {
+                    item.style.border = '2px solid #f44336';
+                }
+            });
+            
+            const percentage = Math.round((correct / total) * 100);
+            document.getElementById('classification-result').innerHTML = `
+                <div class="score">
+                    Správně zařazeno: ${correct} z ${total} (${percentage}%)
+                    ${percentage === 100 ? '🎉 Perfektní!' : percentage >= 80 ? '👍 Velmi dobře!' : '📚 Zkuste to znovu!'}
+                </div>
+            `;
+        }
+
+        // Sequence game functions
+        let sequenceOrder = [];
+
+        function initSequenceGame() {
+            sequenceOrder = [...sequenceItems].sort(() => Math.random() - 0.5);
+            renderSequence();
+            document.getElementById('sequence-result').innerHTML = '';
+        }
+
+        function renderSequence() {
+            const container = document.getElementById('sequence-container');
+            container.innerHTML = `
+                <div style="display: grid; gap: 15px; max-width: 600px; margin: 0 auto;">
+                    ${sequenceOrder.map((item, index) => `
+                        <div class="draggable-item" style="cursor: move; display: flex; justify-content: space-between; align-items: center;">
+                            <span>${item.name}</span>
+                            <div>
+                                <button onclick="moveUp(${index})" style="background: #2196F3; color: white; border: none; border-radius: 50%; width: 30px; height: 30px; margin: 0 2px; cursor: pointer;">↑</button>
+                                <button onclick="moveDown(${index})" style="background: #2196F3; color: white; border: none; border-radius: 50%; width: 30px; height: 30px; margin: 0 2px; cursor: pointer;">↓</button>
+                            </div>
+                        </div>
+                    `).join('')}
+                </div>
+            `;
+        }
+
+        function moveUp(index) {
+            if (index > 0) {
+                [sequenceOrder[index], sequenceOrder[index - 1]] = [sequenceOrder[index - 1], sequenceOrder[index]];
+                renderSequence();
+            }
+        }
+
+        function moveDown(index) {
+            if (index < sequenceOrder.length - 1) {
+                [sequenceOrder[index], sequenceOrder[index + 1]] = [sequenceOrder[index + 1], sequenceOrder[index]];
+                renderSequence();
+            }
+        }
+
+        function checkSequence() {
+            const correctOrder = [...sequenceItems].sort((a, b) => a.power - b.power);
+            let correct = 0;
+            
+            sequenceOrder.forEach((item, index) => {
+                if (item.name === correctOrder[index].name) {
+                    correct++;
+                }
+            });
+            
+            const percentage = Math.round((correct / sequenceOrder.length) * 100);
+            
+            let resultHTML = `
+                <div class="score">
+                    Správně seřazeno: ${correct} z ${sequenceOrder.length} (${percentage}%)
+                    ${percentage === 100 ? '🎉 Perfektní!' : percentage >= 80 ? '👍 Velmi dobře!' : '📚 Zkuste to znovu!'}
+                </div>
+                <div class="explanation">
+                    <h4>Správné pořadí podle spotřeby energie:</h4>
+                    <ol>
+            `;
+            
+            correctOrder.forEach(item => {
+                resultHTML += `<li>${item.name} (${item.power} kW)</li>`;
+            });
+            
+            resultHTML += `
+                    </ol>
+                    <p><strong>Pozorování:</strong> Konvenční technologie (KON) mají vysokou spotřebu energie, ale také vysoký poměrný úběr materiálu. Progresivní technologie mají různou energetickou náročnost - laserové obrábění (LBM) je nejúspornější, zatímco abrazivní vodní paprsek (AWJ) má vyšší spotřebu.</p>
+                </div>
+            `;
+            
+            document.getElementById('sequence-result').innerHTML = resultHTML;
+        }
+
+        // Initialize the application
+        showMenu();
+    </script>
+</body>
+</html>
