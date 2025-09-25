@@ -3,66 +3,38 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Progresívne technológie - LMS systém</title>
+    <title>LMS - Progresívne technológie</title>
     <style>
         * {
-            box-sizing: border-box;
             margin: 0;
             padding: 0;
+            box-sizing: border-box;
         }
         
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Segoe UI', sans-serif;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
-            color: #333;
+            padding: 20px;
         }
         
         .container {
-            max-width: 1200px;
+            max-width: 1000px;
             margin: 0 auto;
-            padding: 20px;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            overflow: hidden;
         }
         
         .header {
-            background: white;
-            border-radius: 15px;
+            background: #2196F3;
+            color: white;
             padding: 20px;
-            margin-bottom: 20px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
             display: flex;
             justify-content: space-between;
             align-items: center;
             flex-wrap: wrap;
-        }
-        
-        .header h1 {
-            color: #2196F3;
-            font-size: 2rem;
-        }
-        
-        .user-info {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            flex-wrap: wrap;
-        }
-        
-        .role-badge {
-            padding: 8px 16px;
-            border-radius: 20px;
-            font-size: 0.9rem;
-            font-weight: bold;
-        }
-        
-        .role-teacher {
-            background: #4CAF50;
-            color: white;
-        }
-        
-        .role-student {
-            background: #2196F3;
-            color: white;
         }
         
         .btn {
@@ -71,69 +43,22 @@
             border-radius: 8px;
             cursor: pointer;
             font-size: 1rem;
-            transition: all 0.3s ease;
-            text-decoration: none;
-            display: inline-block;
-            text-align: center;
+            transition: all 0.3s;
         }
         
-        .btn-primary {
-            background: #2196F3;
-            color: white;
-        }
-        
-        .btn-success {
-            background: #4CAF50;
-            color: white;
-        }
-        
-        .btn-danger {
-            background: #f44336;
-            color: white;
-        }
-        
-        .btn-secondary {
-            background: #757575;
-            color: white;
-        }
+        .btn-primary { background: #2196F3; color: white; }
+        .btn-success { background: #4CAF50; color: white; }
+        .btn-danger { background: #f44336; color: white; }
+        .btn-secondary { background: #757575; color: white; }
         
         .btn:hover {
             transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
         }
         
         .auth-section {
-            background: white;
-            border-radius: 15px;
             padding: 40px;
             text-align: center;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-            max-width: 500px;
-            margin: 50px auto;
-        }
-        
-        .auth-tabs {
-            display: flex;
-            margin-bottom: 30px;
-            background: #f5f5f5;
-            border-radius: 10px;
-            padding: 5px;
-        }
-        
-        .auth-tab {
-            flex: 1;
-            padding: 15px;
-            background: transparent;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 1rem;
-            transition: all 0.3s ease;
-        }
-        
-        .auth-tab.active {
-            background: #2196F3;
-            color: white;
         }
         
         .form-group {
@@ -143,23 +68,25 @@
         
         .form-group label {
             display: block;
-            margin-bottom: 8px;
-            font-weight: 600;
-            color: #555;
+            margin-bottom: 5px;
+            font-weight: bold;
         }
         
         .form-control {
             width: 100%;
             padding: 12px;
-            border: 2px solid #e0e0e0;
+            border: 2px solid #ddd;
             border-radius: 8px;
             font-size: 1rem;
-            transition: border-color 0.3s ease;
         }
         
         .form-control:focus {
             outline: none;
             border-color: #2196F3;
+        }
+        
+        .main-content {
+            padding: 30px;
         }
         
         .dashboard {
@@ -170,186 +97,68 @@
             display: block;
         }
         
-        .cards-grid {
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .stat-card {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+        }
+        
+        .stat-number {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #2196F3;
+        }
+        
+        .games-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
             gap: 20px;
             margin-bottom: 30px;
         }
         
-        .card {
-            background: white;
-            border-radius: 15px;
-            padding: 25px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-            transition: transform 0.3s ease;
+        .game-card {
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+            transition: all 0.3s;
         }
         
-        .card:hover {
+        .game-card:hover {
+            border-color: #2196F3;
             transform: translateY(-5px);
         }
         
-        .card h3 {
-            color: #2196F3;
-            margin-bottom: 15px;
-            font-size: 1.3rem;
-        }
-        
-        .stat-number {
-            font-size: 2.5rem;
-            font-weight: bold;
-            color: #333;
-            margin: 10px 0;
-        }
-        
-        .games-list {
-            background: white;
-            border-radius: 15px;
-            padding: 25px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-            margin-bottom: 20px;
-        }
-        
-        .games-list h3 {
-            color: #2196F3;
-            margin-bottom: 20px;
-            font-size: 1.5rem;
-        }
-        
-        .game-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 15px;
-            border: 2px solid #f0f0f0;
-            border-radius: 10px;
-            margin-bottom: 15px;
-            transition: all 0.3s ease;
-        }
-        
-        .game-item:hover {
-            border-color: #2196F3;
-            background: #f8f9fa;
-        }
-        
-        .game-info h4 {
-            color: #333;
-            margin-bottom: 5px;
-        }
-        
-        .game-info p {
-            color: #666;
-            font-size: 0.9rem;
-        }
-        
-        .results-table {
-            background: white;
-            border-radius: 15px;
-            padding: 25px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-            overflow-x: auto;
-        }
-        
-        .results-table h3 {
-            color: #2196F3;
-            margin-bottom: 20px;
-            font-size: 1.5rem;
+        .results-section {
+            margin-top: 30px;
         }
         
         table {
             width: 100%;
             border-collapse: collapse;
-            margin-top: 15px;
+            margin-top: 20px;
         }
         
         th, td {
             padding: 12px;
             text-align: left;
-            border-bottom: 1px solid #e0e0e0;
+            border-bottom: 1px solid #ddd;
         }
         
         th {
             background: #f8f9fa;
-            font-weight: 600;
-            color: #333;
-        }
-        
-        tr:hover {
-            background: #f8f9fa;
-        }
-        
-        .score-badge {
-            padding: 4px 12px;
-            border-radius: 15px;
-            font-size: 0.8rem;
             font-weight: bold;
         }
         
-        .score-excellent {
-            background: #4CAF50;
-            color: white;
-        }
-        
-        .score-good {
-            background: #FF9800;
-            color: white;
-        }
-        
-        .score-poor {
-            background: #f44336;
-            color: white;
-        }
-        
-        .hidden {
-            display: none;
-        }
-        
-        .alert {
-            padding: 15px;
-            border-radius: 8px;
-            margin-bottom: 20px;
-        }
-        
-        .alert-success {
-            background: #d4edda;
-            border: 1px solid #c3e6cb;
-            color: #155724;
-        }
-        
-        .alert-danger {
-            background: #f8d7da;
-            border: 1px solid #f5c6cb;
-            color: #721c24;
-        }
-        
-        .filters {
-            display: flex;
-            gap: 15px;
-            margin-bottom: 20px;
-            flex-wrap: wrap;
-        }
-        
-        .filter-group {
-            display: flex;
-            flex-direction: column;
-            gap: 5px;
-        }
-        
-        .filter-group label {
-            font-weight: 600;
-            color: #555;
-            font-size: 0.9rem;
-        }
-        
-        .filter-group select, .filter-group input {
-            padding: 8px 12px;
-            border: 2px solid #e0e0e0;
-            border-radius: 6px;
-            font-size: 0.9rem;
-        }
-        
-        /* Game Modal Styles */
-        .game-modal {
+        .modal {
             display: none;
             position: fixed;
             top: 0;
@@ -360,7 +169,7 @@
             z-index: 1000;
         }
         
-        .game-modal-content {
+        .modal-content {
             position: absolute;
             top: 50%;
             left: 50%;
@@ -368,13 +177,13 @@
             background: white;
             border-radius: 15px;
             padding: 30px;
-            max-width: 95%;
-            max-height: 95%;
+            max-width: 90%;
+            max-height: 90%;
             overflow-y: auto;
             width: 800px;
         }
         
-        .game-modal-header {
+        .modal-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -388,40 +197,33 @@
             color: white;
             border: none;
             border-radius: 50%;
-            width: 40px;
-            height: 40px;
-            cursor: pointer;
+            width: 35px;
+            height: 35px;
             font-size: 1.2rem;
-            font-weight: bold;
+            cursor: pointer;
         }
         
         /* Quiz Styles */
         .question {
             background: #f8f9fa;
-            border-radius: 15px;
-            padding: 25px;
+            padding: 20px;
+            border-radius: 10px;
             margin-bottom: 20px;
-            border-left: 5px solid #2196F3;
-        }
-        
-        .question h3 {
-            color: #333;
-            margin-bottom: 20px;
-            font-size: 1.3rem;
         }
         
         .options {
             display: grid;
-            gap: 15px;
+            gap: 10px;
+            margin: 15px 0;
         }
         
         .option {
-            background: white;
-            border: 2px solid #e0e0e0;
-            border-radius: 10px;
             padding: 15px;
+            background: white;
+            border: 2px solid #ddd;
+            border-radius: 8px;
             cursor: pointer;
-            transition: all 0.3s ease;
+            transition: all 0.3s;
         }
         
         .option:hover {
@@ -437,64 +239,35 @@
         .option.correct {
             border-color: #4caf50;
             background: #e8f5e8;
-            color: #2e7d32;
         }
         
         .option.incorrect {
             border-color: #f44336;
             background: #ffebee;
-            color: #c62828;
         }
         
-        .check-btn, .next-btn {
-            background: #4caf50;
-            color: white;
-            border: none;
-            padding: 15px 30px;
-            border-radius: 25px;
-            cursor: pointer;
-            font-size: 1rem;
-            margin: 10px;
-            transition: all 0.3s ease;
-        }
-        
-        .check-btn:hover, .next-btn:hover {
-            background: #45a049;
-            transform: translateY(-2px);
-        }
-        
-        .game-score {
-            text-align: center;
-            font-size: 1.2rem;
-            margin: 20px 0;
-            padding: 15px;
-            background: #e3f2fd;
-            border-radius: 10px;
-        }
-        
-        /* Memory Game Styles */
+        /* Memory Game */
         .memory-grid {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
             gap: 15px;
-            max-width: 600px;
+            max-width: 500px;
             margin: 0 auto;
         }
         
         .memory-card {
             aspect-ratio: 1;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            border-radius: 15px;
-            cursor: pointer;
+            background: #667eea;
+            color: white;
+            border-radius: 10px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 0.9rem;
+            cursor: pointer;
             font-weight: bold;
-            color: white;
-            transition: all 0.3s ease;
             text-align: center;
             padding: 10px;
+            transition: all 0.3s;
         }
         
         .memory-card:hover {
@@ -509,53 +282,28 @@
         
         .memory-card.matched {
             background: #4caf50;
-            color: white;
         }
         
-        .memory-stats {
-            text-align: center;
-            margin: 20px 0;
-            display: flex;
-            justify-content: space-around;
-            background: #f8f9fa;
-            padding: 20px;
-            border-radius: 15px;
-        }
-        
-        .memory-stats div {
-            font-size: 1.2rem;
-            font-weight: bold;
-        }
-        
-        /* Classification Game Styles */
-        .classification-container {
+        /* Classification Game */
+        .classification-game {
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 30px;
-            margin: 20px 0;
         }
         
         .items-pool {
             background: #f8f9fa;
-            border-radius: 15px;
             padding: 20px;
-            min-height: 300px;
-        }
-        
-        .items-pool h3 {
-            color: #2196F3;
-            margin-bottom: 15px;
-            text-align: center;
+            border-radius: 10px;
         }
         
         .drop-zone {
-            background: #fff;
             border: 3px dashed #ddd;
-            border-radius: 15px;
+            border-radius: 10px;
             padding: 20px;
             min-height: 150px;
             margin-bottom: 20px;
-            transition: all 0.3s ease;
+            text-align: center;
         }
         
         .drop-zone.drag-over {
@@ -563,84 +311,71 @@
             background: #f0f8ff;
         }
         
-        .drop-zone h4 {
-            color: #333;
-            margin-bottom: 15px;
-            text-align: center;
-        }
-        
         .draggable-item {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 12px 20px;
-            margin: 8px;
-            border-radius: 25px;
-            cursor: grab;
             display: inline-block;
-            font-size: 0.95rem;
-            transition: all 0.3s ease;
+            background: #667eea;
+            color: white;
+            padding: 10px 15px;
+            margin: 5px;
+            border-radius: 20px;
+            cursor: grab;
             user-select: none;
         }
         
         .draggable-item:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            background: #5a6fd8;
         }
         
-        .draggable-item.dragging {
-            opacity: 0.5;
-            cursor: grabbing;
+        /* Sequence Game */
+        .sequence-list {
+            max-width: 500px;
+            margin: 0 auto;
         }
         
-        .restart-btn {
-            background: #ff9800;
+        .sequence-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px;
+            background: #667eea;
+            color: white;
+            margin-bottom: 10px;
+            border-radius: 8px;
+        }
+        
+        .sequence-controls button {
+            background: #2196F3;
             color: white;
             border: none;
-            padding: 12px 25px;
-            border-radius: 25px;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            margin: 0 2px;
             cursor: pointer;
-            font-size: 1rem;
-            margin: 10px;
-            transition: all 0.3s ease;
         }
         
-        .restart-btn:hover {
-            background: #f57c00;
-            transform: translateY(-2px);
+        .alert {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 15px 20px;
+            border-radius: 8px;
+            color: white;
+            font-weight: bold;
+            z-index: 2000;
+            animation: slideIn 0.3s ease;
         }
         
-        .explanation {
-            background: #e8f5e8;
-            border-radius: 10px;
-            padding: 15px;
-            margin-top: 20px;
-            border-left: 5px solid #4caf50;
-        }
+        .alert-success { background: #4CAF50; }
+        .alert-danger { background: #f44336; }
         
-        .explanation h4 {
-            color: #2e7d32;
-            margin-bottom: 10px;
+        @keyframes slideIn {
+            from { transform: translateX(100%); }
+            to { transform: translateX(0); }
         }
         
         @media (max-width: 768px) {
-            .header {
-                flex-direction: column;
-                gap: 15px;
-            }
-            
-            .user-info {
-                justify-content: center;
-            }
-            
-            .cards-grid {
-                grid-template-columns: 1fr;
-            }
-            
-            .filters {
-                flex-direction: column;
-            }
-            
-            .classification-container {
+            .classification-game {
                 grid-template-columns: 1fr;
             }
             
@@ -648,7 +383,7 @@
                 grid-template-columns: repeat(3, 1fr);
             }
             
-            .game-modal-content {
+            .modal-content {
                 width: 95%;
                 padding: 20px;
             }
@@ -657,1106 +392,689 @@
 </head>
 <body>
     <div class="container">
-        <!-- Authentication Section -->
-        <div id="auth-section" class="auth-section">
-            <h2>Prihlásenie do systému</h2>
-            <div class="auth-tabs">
-                <button class="auth-tab active" onclick="switchAuthTab('login')">Prihlásenie</button>
-                <button class="auth-tab" onclick="switchAuthTab('register')">Registrácia</button>
-            </div>
-            
-            <div id="login-form">
-                <form onsubmit="login(event)">
-                    <div class="form-group">
-                        <label for="login-email">Email:</label>
-                        <input type="email" id="login-email" class="form-control" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="login-password">Heslo:</label>
-                        <input type="password" id="login-password" class="form-control" required>
-                    </div>
-                    <button type="submit" class="btn btn-primary" style="width: 100%;">Prihlásiť sa</button>
-                </form>
-                
-                <div style="margin-top: 20px; padding: 15px; background: #f8f9fa; border-radius: 8px; font-size: 0.9rem;">
-                    <strong>Demo účty:</strong><br>
-                    Učiteľ: teacher@vste.sk / heslo123<br>
-                    Študent: student@vste.sk / heslo123
-                </div>
-            </div>
-            
-            <div id="register-form" class="hidden">
-                <form onsubmit="register(event)">
-                    <div class="form-group">
-                        <label for="reg-name">Meno a priezvisko:</label>
-                        <input type="text" id="reg-name" class="form-control" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="reg-email">Email:</label>
-                        <input type="email" id="reg-email" class="form-control" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="reg-password">Heslo:</label>
-                        <input type="password" id="reg-password" class="form-control" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="reg-role">Rola:</label>
-                        <select id="reg-role" class="form-control">
-                            <option value="student">Študent</option>
-                            <option value="teacher">Učiteľ</option>
-                        </select>
-                    </div>
-                    <button type="submit" class="btn btn-success" style="width: 100%;">Registrovať sa</button>
-                </form>
+        <!-- Header -->
+        <div class="header">
+            <h1>Progresívne technológie - LMS</h1>
+            <div id="user-info" class="hidden">
+                <span id="user-name"></span>
+                <button class="btn btn-secondary" onclick="logout()">Odhlásiť</button>
             </div>
         </div>
 
-        <!-- Main Dashboard -->
-        <div id="main-dashboard" class="dashboard">
-            <div class="header">
-                <h1>Progresívne technológie - LMS</h1>
-                <div class="user-info">
-                    <span id="user-name">Užívateľ</span>
-                    <span id="user-role" class="role-badge">Rola</span>
-                    <button class="btn btn-secondary" onclick="logout()">Odhlásiť sa</button>
+        <!-- Login Section -->
+        <div id="login-section" class="auth-section">
+            <h2>Prihlásenie</h2>
+            <form onsubmit="login(event)" style="max-width: 400px; margin: 0 auto;">
+                <div class="form-group">
+                    <label for="email">Email:</label>
+                    <input type="email" id="email" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label for="password">Heslo:</label>
+                    <input type="password" id="password" class="form-control" required>
+                </div>
+                <button type="submit" class="btn btn-primary" style="width: 100%;">Prihlásiť sa</button>
+            </form>
+            
+            <div style="margin-top: 30px; padding: 20px; background: #f8f9fa; border-radius: 10px;">
+                <strong>Demo účty:</strong><br>
+                <strong>Študent:</strong> student@test.sk / heslo123<br>
+                <strong>Učiteľ:</strong> teacher@test.sk / heslo123
+            </div>
+        </div>
+
+        <!-- Student Dashboard -->
+        <div id="student-dashboard" class="dashboard main-content">
+            <h2>Študentský dashboard</h2>
+            
+            <div class="stats">
+                <div class="stat-card">
+                    <div class="stat-number" id="student-games">0</div>
+                    <div>Odohraných hier</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="student-avg">0%</div>
+                    <div>Priemerné skóre</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="student-best">0%</div>
+                    <div>Najlepšie skóre</div>
                 </div>
             </div>
 
-            <!-- Student Dashboard -->
-            <div id="student-dashboard" class="dashboard">
-                <div class="cards-grid">
-                    <div class="card">
-                        <h3>Moje štatistiky</h3>
-                        <div class="stat-number" id="student-games-played">0</div>
-                        <p>Odohratých hier</p>
-                    </div>
-                    <div class="card">
-                        <h3>Priemerné skóre</h3>
-                        <div class="stat-number" id="student-avg-score">0%</div>
-                        <p>Zo všetkých hier</p>
-                    </div>
-                    <div class="card">
-                        <h3>Najlepší výsledok</h3>
-                        <div class="stat-number" id="student-best-score">0%</div>
-                        <p>Najvyššie dosiahnuté skóre</p>
-                    </div>
+            <div class="games-grid">
+                <div class="game-card">
+                    <h3>🧠 Kvíz</h3>
+                    <p>Otestujte svoje znalosti o progresívnych technológiách</p>
+                    <br>
+                    <button class="btn btn-primary" onclick="startGame('quiz')">Hrať kvíz</button>
                 </div>
-
-                <div class="games-list">
-                    <h3>Dostupné hry</h3>
-                    <div class="game-item">
-                        <div class="game-info">
-                            <h4>Kvíz - Základné pojmy</h4>
-                            <p>6 otázok o konvenčných a progresívnych technológiách</p>
-                        </div>
-                        <div>
-                            <button class="btn btn-primary" onclick="startGame('quiz')">Hrať</button>
-                        </div>
-                    </div>
-                    <div class="game-item">
-                        <div class="game-info">
-                            <h4>Pexeso - Technológie</h4>
-                            <p>Priraďte technológie k ich charakteristikám</p>
-                        </div>
-                        <div>
-                            <button class="btn btn-primary" onclick="startGame('memory')">Hrať</button>
-                        </div>
-                    </div>
-                    <div class="game-item">
-                        <div class="game-info">
-                            <h4>Klasifikácia procesov</h4>
-                            <p>Zatrieďte technológie do správnych kategórií</p>
-                        </div>
-                        <div>
-                            <button class="btn btn-primary" onclick="startGame('classification')">Hrať</button>
-                        </div>
-                    </div>
-                    <div class="game-item">
-                        <div class="game-info">
-                            <h4>Energetická náročnosť</h4>
-                            <p>Usporiadajte technológie podľa spotreby energie</p>
-                        </div>
-                        <div>
-                            <button class="btn btn-primary" onclick="startGame('sequence')">Hrať</button>
-                        </div>
-                    </div>
+                
+                <div class="game-card">
+                    <h3>🧩 Pexeso</h3>
+                    <p>Nájdite páry technológií a ich charakteristík</p>
+                    <br>
+                    <button class="btn btn-primary" onclick="startGame('memory')">Hrať pexeso</button>
                 </div>
-
-                <div class="results-table">
-                    <h3>Moje výsledky</h3>
-                    <table id="student-results-table">
-                        <thead>
-                            <tr>
-                                <th>Dátum</th>
-                                <th>Hra</th>
-                                <th>Skóre</th>
-                                <th>Čas</th>
-                                <th>Hodnotenie</th>
-                            </tr>
-                        </thead>
-                        <tbody id="student-results-tbody">
-                        </tbody>
-                    </table>
+                
+                <div class="game-card">
+                    <h3>🎯 Klasifikácia</h3>
+                    <p>Zatrieďte technológie do správnych kategórií</p>
+                    <br>
+                    <button class="btn btn-primary" onclick="startGame('classification')">Hrať klasifikáciu</button>
+                </div>
+                
+                <div class="game-card">
+                    <h3>📊 Usporiadanie</h3>
+                    <p>Usporiadajte technológie podľa energetickej náročnosti</p>
+                    <br>
+                    <button class="btn btn-primary" onclick="startGame('sequence')">Hrať usporiadanie</button>
                 </div>
             </div>
 
-            <!-- Teacher Dashboard -->
-            <div id="teacher-dashboard" class="dashboard">
-                <div class="cards-grid">
-                    <div class="card">
-                        <h3>Registrovaní študenti</h3>
-                        <div class="stat-number" id="total-students">0</div>
-                        <p>Aktívnych účtov</p>
-                    </div>
-                    <div class="card">
-                        <h3>Odohratých hier</h3>
-                        <div class="stat-number" id="total-games">0</div>
-                        <p>Celkový počet</p>
-                    </div>
-                    <div class="card">
-                        <h3>Priemerná úspešnosť</h3>
-                        <div class="stat-number" id="avg-success">0%</div>
-                        <p>Zo všetkých študentov</p>
-                    </div>
-                </div>
+            <div class="results-section">
+                <h3>Moje výsledky</h3>
+                <table id="student-results">
+                    <thead>
+                        <tr>
+                            <th>Dátum</th>
+                            <th>Hra</th>
+                            <th>Skóre</th>
+                            <th>Čas</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+        </div>
 
-                <div class="results-table">
-                    <h3>Výsledky študentov</h3>
-                    
-                    <div class="filters">
-                        <div class="filter-group">
-                            <label>Študent:</label>
-                            <select id="student-filter" onchange="filterResults()">
-                                <option value="">Všetci študenti</option>
-                            </select>
-                        </div>
-                        <div class="filter-group">
-                            <label>Hra:</label>
-                            <select id="game-filter" onchange="filterResults()">
-                                <option value="">Všetky hry</option>
-                                <option value="quiz">Kvíz</option>
-                                <option value="memory">Pexeso</option>
-                                <option value="classification">Klasifikácia</option>
-                                <option value="sequence">Seradenie</option>
-                            </select>
-                        </div>
-                        <div class="filter-group">
-                            <label>Dátum od:</label>
-                            <input type="date" id="date-filter" onchange="filterResults()">
-                        </div>
-                        <div class="filter-group">
-                            <label>&nbsp;</label>
-                            <button class="btn btn-secondary" onclick="exportResults()">Export CSV</button>
-                        </div>
-                    </div>
-
-                    <table id="teacher-results-table">
-                        <thead>
-                            <tr>
-                                <th>Študent</th>
-                                <th>Hra</th>
-                                <th>Dátum</th>
-                                <th>Skóre</th>
-                                <th>Čas</th>
-                                <th>Hodnotenie</th>
-                                <th>Detaily</th>
-                            </tr>
-                        </thead>
-                        <tbody id="teacher-results-tbody">
-                        </tbody>
-                    </table>
+        <!-- Teacher Dashboard -->
+        <div id="teacher-dashboard" class="dashboard main-content">
+            <h2>Dashboard učiteľa</h2>
+            
+            <div class="stats">
+                <div class="stat-card">
+                    <div class="stat-number" id="total-students">0</div>
+                    <div>Študenti</div>
                 </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="total-games">0</div>
+                    <div>Odohraných hier</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="avg-score">0%</div>
+                    <div>Priemerná úspešnosť</div>
+                </div>
+            </div>
+
+            <div class="results-section">
+                <h3>Výsledky všetkých študentov</h3>
+                <button class="btn btn-success" onclick="exportResults()">Export CSV</button>
+                <table id="teacher-results">
+                    <thead>
+                        <tr>
+                            <th>Študent</th>
+                            <th>Hra</th>
+                            <th>Dátum</th>
+                            <th>Skóre</th>
+                            <th>Čas</th>
+                            <th>Detaily</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
             </div>
         </div>
     </div>
 
     <!-- Game Modal -->
-    <div id="game-modal" class="game-modal">
-        <div class="game-modal-content">
-            <div class="game-modal-header">
-                <h2 id="game-modal-title">Hra</h2>
-                <button class="close-btn" onclick="closeGameModal()">×</button>
+    <div id="game-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="game-title">Hra</h2>
+                <button class="close-btn" onclick="closeGame()">&times;</button>
             </div>
-            <div id="game-modal-content">
-                <!-- Game content will be loaded here -->
+            <div id="game-content">
+                <!-- Game content here -->
             </div>
         </div>
     </div>
 
     <script>
-        // Simulovaná databáza
+        // Database simulation
         let database = {
             users: [
-                {
-                    id: 1,
-                    name: "Ing. Peter Novák",
-                    email: "teacher@vste.sk",
-                    password: "heslo123",
-                    role: "teacher"
-                },
-                {
-                    id: 2,
-                    name: "Ján Študent",
-                    email: "student@vste.sk", 
-                    password: "heslo123",
-                    role: "student"
-                }
+                { id: 1, email: 'student@test.sk', password: 'heslo123', name: 'Ján Študent', role: 'student' },
+                { id: 2, email: 'teacher@test.sk', password: 'heslo123', name: 'Ing. Peter Učiteľ', role: 'teacher' }
             ],
-            results: [
-                {
-                    id: 1,
-                    studentId: 2,
-                    studentName: "Ján Študent",
-                    game: "quiz",
-                    score: 83,
-                    maxScore: 100,
-                    time: 180,
-                    date: new Date('2024-01-15').toISOString(),
-                    details: "Správne odpovedané 5 z 6 otázok"
-                }
-            ]
+            results: []
         };
 
         let currentUser = null;
-        let currentGame = null;
+        let gameStartTime = 0;
 
         // Game data
         const quizQuestions = [
             {
-                question: "Ktoré z nasledujúcich patria medzi konvenčné procesy úberu materiálu?",
-                options: [
-                    "Rezanie a brúsenie",
-                    "Elektrojiskrové obrábanie",
-                    "Laserové obrábanie",
-                    "Ultrazvukové obrábanie"
-                ],
+                question: "Ktoré patria medzi konvenčné procesy úberu materiálu?",
+                options: ["Rezanie a brúsenie", "Elektrojiskrové obrábanie", "Laserové obrábanie", "Ultrazvukové obrábanie"],
                 correct: 0,
-                explanation: "Konvenčné procesy využívajú mechanické zdroje energie - rezanie s definovanou geometriou reznej hrany a brúsenie s neurčenou geometriou britov."
+                explanation: "Konvenčné procesy využívajú mechanické zdroje energie."
             },
             {
-                question: "Kedy boli vyvinuté nekonvenčné/progresívne procesy úberu materiálu?",
-                options: [
-                    "Pred rokom 1920",
-                    "Po roku 1940",
-                    "Po roku 1960",
-                    "Po roku 1980"
-                ],
+                question: "Kedy boli vyvinuté progresívne procesy?",
+                options: ["Pred 1920", "Po roku 1940", "Po roku 1960", "Po roku 1980"],
                 correct: 1,
-                explanation: "Nekonvenčné procesy úberu materiálu boli vyvíjané až po roku 1940 ako odpoveď na potreby obrábania nových, ťažkoobrobiteľných materiálov."
+                explanation: "Progresívne procesy boli vyvíjané až po roku 1940."
             },
             {
-                question: "Aká je hlavná výhoda progresívnych technológií oproti klasickým?",
-                options: [
-                    "Nižšia spotreba energie",
-                    "Vyššia rýchlosť úberu",
-                    "Úber nezávisí na mechanických vlastnostiach materiálu",
-                    "Lacnejšie nástroje"
-                ],
+                question: "Hlavná výhoda progresívnych technológií?",
+                options: ["Nižšia spotreba", "Vyššia rýchlosť", "Nezávislosť na mechanických vlastnostiach", "Lacnejšie nástroje"],
                 correct: 2,
-                explanation: "Progresívne technológie nezávisia na mechanických vlastnostiach materiálu (tvrdosť, pevnosť, houževnatosť), čo umožňuje obrábanie ťažkoobrobiteľných materiálov."
-            },
-            {
-                question: "Ktoré tri základné podmienky musia byť splnené pre klasické obrábanie?",
-                options: [
-                    "Obrobiteľnosť, porušenie súdržnosti, konverzia energie",
-                    "Rýchlosť, presnosť, kvalita",
-                    "Teplota, tlak, vlhkosť",
-                    "Sila, moment, výkon"
-                ],
-                correct: 0,
-                explanation: "Základné podmienky pre klasické obrábanie: 1) obrobiteľnosť (nástroj tvrdší než obrobek), 2) porušenie súdržnosti materiálu, 3) konverzia na mechanickú energiu."
-            },
-            {
-                question: "Ako veľké sú typicky mikro-triesky pri brúsení?",
-                options: [
-                    "Niekoľko mm²",
-                    "Okolo tisíciny mm²",
-                    "Niekoľko cm²",
-                    "Okolo desatiny mm²"
-                ],
-                correct: 1,
-                explanation: "Pri brúsení vznikajú veľmi malé mikro-triesky s prierezom rádovo okolo tisíciny mm², ktoré sú pouhým okom neviditeľné."
-            },
-            {
-                question: "Aké energetické zdroje využívajú progresívne technológie?",
-                options: [
-                    "Iba mechanické",
-                    "Iba elektrické",
-                    "Fyzikálne, elektrické, chemické a iné",
-                    "Iba tepelné"
-                ],
-                correct: 2,
-                explanation: "Progresívne technológie využívajú rôzne zdroje energie: fyzikálne, elektrické, tepelné, chemické a elektrochemické - na rozdiel od konvenčných, ktoré používajú iba mechanickú energiu."
+                explanation: "Progresívne technológie nezávisia na tvrdosti, pevnosti materiálu."
             }
         ];
 
         const memoryPairs = [
-            { id: 1, text: "Rezanie", pair: "Definovaná geometria reznej hrany" },
-            { id: 2, text: "Brúsenie", pair: "Neurčitá geometria britov" },
-            { id: 3, text: "EDM", pair: "Elektrojiskrové obrábanie" },
+            { id: 1, text: "Rezanie", pair: "Definovaná geometria" },
+            { id: 2, text: "Brúsenie", pair: "Neurčitá geometria" },
+            { id: 3, text: "EDM", pair: "Elektrojiskrové" },
             { id: 4, text: "LBM", pair: "Laserové obrábanie" },
             { id: 5, text: "Konvenčné", pair: "Mechanická energia" },
-            { id: 6, text: "Progresívne", pair: "Rôzne zdroje energie" },
-            { id: 7, text: "Mikro-triesky", pair: "~0.001 mm²" },
-            { id: 8, text: "Po roku 1940", pair: "Vznik progresívnych technológií" }
+            { id: 6, text: "Progresívne", pair: "Rôzne zdroje energie" }
         ];
 
         const classificationItems = [
             { name: "Sústruženie", type: "conventional" },
             { name: "Frézovanie", type: "conventional" },
-            { name: "Vŕtanie", type: "conventional" },
             { name: "Brúsenie", type: "conventional" },
-            { name: "Honovanie", type: "conventional" },
-            { name: "Elektrojiskrové obrábanie", type: "progressive" },
-            { name: "Laserové rezanie", type: "progressive" },
-            { name: "Ultrazvukové obrábanie", type: "progressive" },
-            { name: "Abrazívny vodný lúč", type: "progressive" },
-            { name: "Elektrolytické brúsenie", type: "progressive" },
-            { name: "Obrábanie elektrónovým lúčom", type: "progressive" },
-            { name: "Chemické obrábanie", type: "progressive" }
+            { name: "Elektrojiskrové", type: "progressive" },
+            { name: "Laserové", type: "progressive" },
+            { name: "Ultrazvukové", type: "progressive" }
         ];
 
         const sequenceItems = [
-            { name: "LBM (Laserové obrábanie)", power: 2 },
+            { name: "LBM (Laserové)", power: 2 },
             { name: "EBM (Elektrónový lúč)", power: 6 },
-            { name: "AJM (Abrazívny prúd)", power: 4 },
             { name: "USM (Ultrazvukové)", power: 8 },
             { name: "EDM (Elektrojiskrové)", power: 10 },
-            { name: "AWJ (Abrazívny vodný lúč)", power: 15 },
+            { name: "AWJ (Vodný lúč)", power: 15 },
             { name: "KON (Konvenčné)", power: 18 }
         ];
 
-        // Game variables
-        let currentQuizQuestion = 0;
-        let quizScore = 0;
-        let gameStartTime = 0;
-        let memoryCards = [];
-        let flippedCards = [];
-        let matchedPairs = 0;
-        let moves = 0;
-        let sequenceOrder = [];
-
-        // Database functions
-        function loadDatabase() {
-            const saved = localStorage.getItem('progressiveTechDB');
+        // Load/Save functions
+        function loadData() {
+            const saved = localStorage.getItem('lmsData');
             if (saved) {
                 database = JSON.parse(saved);
             }
         }
 
-        function saveDatabase() {
-            localStorage.setItem('progressiveTechDB', JSON.stringify(database));
+        function saveData() {
+            localStorage.setItem('lmsData', JSON.stringify(database));
         }
 
-        // Authentication functions
-        function switchAuthTab(tab) {
-            document.querySelectorAll('.auth-tab').forEach(t => t.classList.remove('active'));
-            document.querySelector(`[onclick="switchAuthTab('${tab}')"]`).classList.add('active');
-            
-            if (tab === 'login') {
-                document.getElementById('login-form').classList.remove('hidden');
-                document.getElementById('register-form').classList.add('hidden');
-            } else {
-                document.getElementById('login-form').classList.add('hidden');
-                document.getElementById('register-form').classList.remove('hidden');
-            }
-        }
-
+        // Auth functions
         function login(event) {
             event.preventDefault();
-            
-            const email = document.getElementById('login-email').value;
-            const password = document.getElementById('login-password').value;
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
             
             const user = database.users.find(u => u.email === email && u.password === password);
             
             if (user) {
                 currentUser = user;
                 showDashboard();
-                showAlert('Úspešne prihlásený!', 'success');
+                showAlert('Prihlásenie úspešné!', 'success');
             } else {
-                showAlert('Nesprávne prihlasovacie údaje!', 'danger');
+                showAlert('Nesprávne údaje!', 'danger');
             }
-        }
-
-        function register(event) {
-            event.preventDefault();
-            
-            const name = document.getElementById('reg-name').value;
-            const email = document.getElementById('reg-email').value;
-            const password = document.getElementById('reg-password').value;
-            const role = document.getElementById('reg-role').value;
-            
-            if (database.users.find(u => u.email === email)) {
-                showAlert('Používateľ s týmto emailom už existuje!', 'danger');
-                return;
-            }
-            
-            const newUser = {
-                id: database.users.length + 1,
-                name,
-                email,
-                password,
-                role
-            };
-            
-            database.users.push(newUser);
-            saveDatabase();
-            
-            currentUser = newUser;
-            showDashboard();
-            showAlert('Registrácia úspešná!', 'success');
         }
 
         function logout() {
             currentUser = null;
-            document.getElementById('auth-section').style.display = 'block';
-            document.getElementById('main-dashboard').classList.remove('active');
-            localStorage.removeItem('currentUser');
+            document.getElementById('login-section').style.display = 'block';
+            document.getElementById('student-dashboard').classList.remove('active');
+            document.getElementById('teacher-dashboard').classList.remove('active');
+            document.getElementById('user-info').classList.add('hidden');
         }
 
-        // Dashboard functions
         function showDashboard() {
-            document.getElementById('auth-section').style.display = 'none';
-            document.getElementById('main-dashboard').classList.add('active');
-            
+            document.getElementById('login-section').style.display = 'none';
+            document.getElementById('user-info').classList.remove('hidden');
             document.getElementById('user-name').textContent = currentUser.name;
-            document.getElementById('user-role').textContent = currentUser.role === 'teacher' ? 'Učiteľ' : 'Študent';
-            document.getElementById('user-role').className = currentUser.role === 'teacher' ? 'role-badge role-teacher' : 'role-badge role-student';
             
-            if (currentUser.role === 'teacher') {
-                showTeacherDashboard();
+            if (currentUser.role === 'student') {
+                document.getElementById('student-dashboard').classList.add('active');
+                updateStudentStats();
+                loadStudentResults();
             } else {
-                showStudentDashboard();
+                document.getElementById('teacher-dashboard').classList.add('active');
+                updateTeacherStats();
+                loadTeacherResults();
             }
         }
 
-        function showStudentDashboard() {
-            document.getElementById('teacher-dashboard').classList.remove('active');
-            document.getElementById('student-dashboard').classList.add('active');
-            
-            updateStudentStats();
-            loadStudentResults();
-        }
-
-        function showTeacherDashboard() {
-            document.getElementById('student-dashboard').classList.remove('active');
-            document.getElementById('teacher-dashboard').classList.add('active');
-            
-            updateTeacherStats();
-            loadTeacherResults();
-            populateStudentFilter();
-        }
-
+        // Stats functions
         function updateStudentStats() {
-            const studentResults = database.results.filter(r => r.studentId === currentUser.id);
+            const results = database.results.filter(r => r.studentId === currentUser.id);
+            document.getElementById('student-games').textContent = results.length;
             
-            document.getElementById('student-games-played').textContent = studentResults.length;
-            
-            if (studentResults.length > 0) {
-                const avgScore = studentResults.reduce((sum, r) => sum + (r.score / r.maxScore * 100), 0) / studentResults.length;
-                const bestScore = Math.max(...studentResults.map(r => r.score / r.maxScore * 100));
-                
-                document.getElementById('student-avg-score').textContent = Math.round(avgScore) + '%';
-                document.getElementById('student-best-score').textContent = Math.round(bestScore) + '%';
+            if (results.length > 0) {
+                const avg = results.reduce((sum, r) => sum + r.score, 0) / results.length;
+                const best = Math.max(...results.map(r => r.score));
+                document.getElementById('student-avg').textContent = Math.round(avg) + '%';
+                document.getElementById('student-best').textContent = Math.round(best) + '%';
             }
         }
 
         function updateTeacherStats() {
-            const students = database.users.filter(u => u.role === 'student');
-            const allResults = database.results;
+            const students = database.users.filter(u => u.role === 'student').length;
+            const results = database.results;
             
-            document.getElementById('total-students').textContent = students.length;
-            document.getElementById('total-games').textContent = allResults.length;
+            document.getElementById('total-students').textContent = students;
+            document.getElementById('total-games').textContent = results.length;
             
-            if (allResults.length > 0) {
-                const avgSuccess = allResults.reduce((sum, r) => sum + (r.score / r.maxScore * 100), 0) / allResults.length;
-                document.getElementById('avg-success').textContent = Math.round(avgSuccess) + '%';
+            if (results.length > 0) {
+                const avg = results.reduce((sum, r) => sum + r.score, 0) / results.length;
+                document.getElementById('avg-score').textContent = Math.round(avg) + '%';
             }
         }
 
         function loadStudentResults() {
-            const tbody = document.getElementById('student-results-tbody');
-            const studentResults = database.results
-                .filter(r => r.studentId === currentUser.id)
-                .sort((a, b) => new Date(b.date) - new Date(a.date));
+            const tbody = document.querySelector('#student-results tbody');
+            const results = database.results.filter(r => r.studentId === currentUser.id);
             
-            tbody.innerHTML = studentResults.map(result => {
-                const percentage = Math.round((result.score / result.maxScore) * 100);
-                const badgeClass = percentage >= 80 ? 'score-excellent' : percentage >= 60 ? 'score-good' : 'score-poor';
-                const gameNames = {
-                    quiz: 'Kvíz',
-                    memory: 'Pexeso', 
-                    classification: 'Klasifikácia',
-                    sequence: 'Seradenie'
-                };
-                
-                return `
-                    <tr>
-                        <td>${new Date(result.date).toLocaleDateString('sk-SK')}</td>
-                        <td>${gameNames[result.game] || result.game}</td>
-                        <td>${result.score}/${result.maxScore}</td>
-                        <td>${formatTime(result.time)}</td>
-                        <td><span class="score-badge ${badgeClass}">${percentage}%</span></td>
-                    </tr>
-                `;
-            }).join('');
+            tbody.innerHTML = results.map(r => `
+                <tr>
+                    <td>${new Date(r.date).toLocaleDateString('sk-SK')}</td>
+                    <td>${r.game}</td>
+                    <td>${r.score}%</td>
+                    <td>${Math.floor(r.time / 60)}:${(r.time % 60).toString().padStart(2, '0')}</td>
+                </tr>
+            `).join('');
         }
 
         function loadTeacherResults() {
-            const allResults = database.results.sort((a, b) => new Date(b.date) - new Date(a.date));
-            displayResults(allResults);
-        }
-
-        function displayResults(results) {
-            const tbody = document.getElementById('teacher-results-tbody');
-            const gameNames = {
-                quiz: 'Kvíz',
-                memory: 'Pexeso',
-                classification: 'Klasifikácia', 
-                sequence: 'Seradenie'
-            };
+            const tbody = document.querySelector('#teacher-results tbody');
             
-            tbody.innerHTML = results.map(result => {
-                const percentage = Math.round((result.score / result.maxScore) * 100);
-                const badgeClass = percentage >= 80 ? 'score-excellent' : percentage >= 60 ? 'score-good' : 'score-poor';
-                
-                return `
-                    <tr>
-                        <td>${result.studentName}</td>
-                        <td>${gameNames[result.game] || result.game}</td>
-                        <td>${new Date(result.date).toLocaleDateString('sk-SK')}</td>
-                        <td>${result.score}/${result.maxScore}</td>
-                        <td>${formatTime(result.time)}</td>
-                        <td><span class="score-badge ${badgeClass}">${percentage}%</span></td>
-                        <td>${result.details}</td>
-                    </tr>
-                `;
-            }).join('');
-        }
-
-        function populateStudentFilter() {
-            const select = document.getElementById('student-filter');
-            const students = database.users.filter(u => u.role === 'student');
-            
-            select.innerHTML = '<option value="">Všetci študenti</option>' + 
-                students.map(student => `<option value="${student.id}">${student.name}</option>`).join('');
-        }
-
-        function filterResults() {
-            const studentFilter = document.getElementById('student-filter').value;
-            const gameFilter = document.getElementById('game-filter').value;
-            const dateFilter = document.getElementById('date-filter').value;
-            
-            let filteredResults = database.results;
-            
-            if (studentFilter) {
-                filteredResults = filteredResults.filter(r => r.studentId == studentFilter);
-            }
-            
-            if (gameFilter) {
-                filteredResults = filteredResults.filter(r => r.game === gameFilter);
-            }
-            
-            if (dateFilter) {
-                filteredResults = filteredResults.filter(r => new Date(r.date) >= new Date(dateFilter));
-            }
-            
-            displayResults(filteredResults);
-        }
-
-        function exportResults() {
-            const results = database.results;
-            const gameNames = {
-                quiz: 'Kvíz',
-                memory: 'Pexeso',
-                classification: 'Klasifikácia',
-                sequence: 'Seradenie'
-            };
-            
-            let csv = 'Študent,Hra,Dátum,Skóre,Max Skóre,Percentá,Čas,Detaily\n';
-            
-            results.forEach(result => {
-                const percentage = Math.round((result.score / result.maxScore) * 100);
-                csv += `"${result.studentName}","${gameNames[result.game]}","${new Date(result.date).toLocaleDateString('sk-SK')}",${result.score},${result.maxScore},${percentage}%,"${formatTime(result.time)}","${result.details}"\n`;
-            });
-            
-            const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
-            const link = document.createElement('a');
-            const url = URL.createObjectURL(blob);
-            link.setAttribute('href', url);
-            link.setAttribute('download', 'vysledky_studentov.csv');
-            link.style.visibility = 'hidden';
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
+            tbody.innerHTML = database.results.map(r => `
+                <tr>
+                    <td>${r.studentName}</td>
+                    <td>${r.game}</td>
+                    <td>${new Date(r.date).toLocaleDateString('sk-SK')}</td>
+                    <td>${r.score}%</td>
+                    <td>${Math.floor(r.time / 60)}:${(r.time % 60).toString().padStart(2, '0')}</td>
+                    <td>${r.details}</td>
+                </tr>
+            `).join('');
         }
 
         // Game functions
         function startGame(gameType) {
             if (currentUser.role !== 'student') return;
             
-            currentGame = gameType;
             gameStartTime = Date.now();
+            document.getElementById('game-modal').style.display = 'block';
             
-            const gameNames = {
-                quiz: 'Kvíz - Základné pojmy',
+            const titles = {
+                quiz: 'Kvíz - Progresívne technológie',
                 memory: 'Pexeso - Technológie',
-                classification: 'Klasifikácia procesov', 
-                sequence: 'Energetická náročnosť'
+                classification: 'Klasifikácia technológií',
+                sequence: 'Usporiadanie podľa energie'
             };
             
-            document.getElementById('game-modal-title').textContent = gameNames[gameType];
+            document.getElementById('game-title').textContent = titles[gameType];
             
             switch(gameType) {
-                case 'quiz':
-                    initQuiz();
-                    break;
-                case 'memory':
-                    initMemoryGame();
-                    break;
-                case 'classification':
-                    initClassificationGame();
-                    break;
-                case 'sequence':
-                    initSequenceGame();
-                    break;
+                case 'quiz': initQuiz(); break;
+                case 'memory': initMemory(); break;
+                case 'classification': initClassification(); break;
+                case 'sequence': initSequence(); break;
             }
-            
-            document.getElementById('game-modal').style.display = 'block';
         }
 
-        function closeGameModal() {
+        function closeGame() {
             document.getElementById('game-modal').style.display = 'none';
-            currentGame = null;
         }
 
-        function saveGameResult(gameType, score, maxScore, details) {
-            const gameTime = Math.floor((Date.now() - gameStartTime) / 1000);
-            
-            const newResult = {
+        function saveResult(gameType, score, details) {
+            const result = {
                 id: database.results.length + 1,
                 studentId: currentUser.id,
                 studentName: currentUser.name,
                 game: gameType,
                 score: score,
-                maxScore: maxScore,
-                time: gameTime,
+                time: Math.floor((Date.now() - gameStartTime) / 1000),
                 date: new Date().toISOString(),
                 details: details
             };
             
-            database.results.push(newResult);
-            saveDatabase();
-            
+            database.results.push(result);
+            saveData();
             updateStudentStats();
             loadStudentResults();
+            updateTeacherStats();
+            loadTeacherResults();
             
-            const percentage = Math.round((score / maxScore) * 100);
-            showAlert(`Hra dokončená! Vaše skóre: ${score}/${maxScore} (${percentage}%)`, 'success');
+            showAlert(`Hra dokončená! Skóre: ${score}%`, 'success');
         }
 
         // Quiz Game
+        let currentQuestion = 0;
+        let quizScore = 0;
+
         function initQuiz() {
-            currentQuizQuestion = 0;
+            currentQuestion = 0;
             quizScore = 0;
-            showQuizQuestion();
+            showQuestion();
         }
 
-        function showQuizQuestion() {
-            if (currentQuizQuestion >= quizQuestions.length) {
-                showQuizResults();
+        function showQuestion() {
+            if (currentQuestion >= quizQuestions.length) {
+                finishQuiz();
                 return;
             }
 
-            const question = quizQuestions[currentQuizQuestion];
-            const content = document.getElementById('game-modal-content');
-            
-            content.innerHTML = `
+            const q = quizQuestions[currentQuestion];
+            document.getElementById('game-content').innerHTML = `
                 <div class="question">
-                    <h3>Otázka ${currentQuizQuestion + 1}/${quizQuestions.length}</h3>
-                    <h3>${question.question}</h3>
+                    <h3>Otázka ${currentQuestion + 1}/${quizQuestions.length}</h3>
+                    <p><strong>${q.question}</strong></p>
                     <div class="options">
-                        ${question.options.map((option, index) => `
-                            <div class="option" onclick="selectQuizOption(${index})" data-index="${index}">
-                                ${option}
-                            </div>
+                        ${q.options.map((opt, i) => `
+                            <div class="option" onclick="selectOption(${i})" data-index="${i}">${opt}</div>
                         `).join('')}
                     </div>
-                    <button class="check-btn" onclick="checkQuizAnswer()" id="check-answer" style="display: none;">Skontrolovať</button>
-                    <button class="next-btn" onclick="nextQuizQuestion()" id="next-question" style="display: none;">Ďalšia otázka</button>
-                    <div id="explanation" style="display: none;"></div>
+                    <br>
+                    <button class="btn btn-primary" onclick="checkAnswer()" id="check-btn" style="display:none;">Skontrolovať</button>
+                    <button class="btn btn-success" onclick="nextQuestion()" id="next-btn" style="display:none;">Ďalej</button>
+                    <div id="explanation" style="display:none; margin-top:15px; padding:15px; background:#f0f8ff; border-radius:8px;"></div>
                 </div>
             `;
         }
 
-        function selectQuizOption(index) {
+        function selectOption(index) {
             document.querySelectorAll('.option').forEach(opt => opt.classList.remove('selected'));
             document.querySelector(`[data-index="${index}"]`).classList.add('selected');
-            document.getElementById('check-answer').style.display = 'inline-block';
+            document.getElementById('check-btn').style.display = 'inline-block';
         }
 
-        function checkQuizAnswer() {
-            const question = quizQuestions[currentQuizQuestion];
-            const selectedOption = document.querySelector('.option.selected');
-            const selectedIndex = parseInt(selectedOption.dataset.index);
+        function checkAnswer() {
+            const q = quizQuestions[currentQuestion];
+            const selected = document.querySelector('.option.selected');
+            const selectedIndex = parseInt(selected.dataset.index);
             
-            const options = document.querySelectorAll('.option');
-            options.forEach((opt, index) => {
-                if (index === question.correct) {
-                    opt.classList.add('correct');
-                } else if (index === selectedIndex && index !== question.correct) {
-                    opt.classList.add('incorrect');
-                }
+            document.querySelectorAll('.option').forEach((opt, i) => {
+                if (i === q.correct) opt.classList.add('correct');
+                else if (i === selectedIndex) opt.classList.add('incorrect');
             });
 
-            if (selectedIndex === question.correct) {
-                quizScore++;
-            }
+            if (selectedIndex === q.correct) quizScore++;
 
-            document.getElementById('explanation').innerHTML = `
-                <div class="explanation">
-                    <h4>Vysvetlenie:</h4>
-                    <p>${question.explanation}</p>
-                </div>
-            `;
+            document.getElementById('explanation').innerHTML = `<strong>Vysvetlenie:</strong> ${q.explanation}`;
             document.getElementById('explanation').style.display = 'block';
-            document.getElementById('check-answer').style.display = 'none';
-            document.getElementById('next-question').style.display = 'inline-block';
+            document.getElementById('check-btn').style.display = 'none';
+            document.getElementById('next-btn').style.display = 'inline-block';
         }
 
-        function nextQuizQuestion() {
-            currentQuizQuestion++;
-            showQuizQuestion();
-        }
-
-        function showQuizResults() {
-            const content = document.getElementById('game-modal-content');
-            const percentage = Math.round((quizScore / quizQuestions.length) * 100);
-            
-            content.innerHTML = `
-                <div class="question">
-                    <h3>Výsledky kvízu</h3>
-                    <div class="game-score">
-                        <h2>Získali ste ${quizScore} z ${quizQuestions.length} bodov (${percentage}%)</h2>
-                        ${percentage >= 80 ? '🎉 Výborne!' : percentage >= 60 ? '👍 Dobre!' : '📚 Skúste to znova!'}
-                    </div>
-                    <button class="next-btn" onclick="finishQuiz()">Dokončiť</button>
-                </div>
-            `;
+        function nextQuestion() {
+            currentQuestion++;
+            showQuestion();
         }
 
         function finishQuiz() {
-            const correct = quizScore;
-            const total = quizQuestions.length;
-            const details = `Správne odpovedané ${correct} z ${total} otázok`;
-            
-            saveGameResult('quiz', quizScore * 100 / quizQuestions.length, 100, details);
-            closeGameModal();
-        }
-
-        // Memory Game
-        function initMemoryGame() {
-            memoryCards = [];
-            flippedCards = [];
-            matchedPairs = 0;
-            moves = 0;
-            
-            memoryPairs.forEach(pair => {
-                memoryCards.push({ id: pair.id, text: pair.text, matched: false, flipped: false });
-                memoryCards.push({ id: pair.id, text: pair.pair, matched: false, flipped: false });
-            });
-            
-            memoryCards = memoryCards.sort(() => Math.random() - 0.5);
-            renderMemoryGame();
-        }
-
-        function renderMemoryGame() {
-            const content = document.getElementById('game-modal-content');
-            
-            content.innerHTML = `
-                <div class="memory-stats">
-                    <div>Tahy: <span id="memory-moves">${moves}</span></div>
-                    <div>Páry: <span id="memory-pairs">${matchedPairs}/${memoryPairs.length}</span></div>
+            const score = Math.round((quizScore / quizQuestions.length) * 100);
+            document.getElementById('game-content').innerHTML = `
+                <div style="text-align:center; padding:30px;">
+                    <h2>Výsledok kvízu</h2>
+                    <div style="font-size:3rem; color:#2196F3; margin:20px 0;">${score}%</div>
+                    <p>Správne ste odpovedali na ${quizScore} z ${quizQuestions.length} otázok.</p>
+                    <br>
+                    <button class="btn btn-primary" onclick="finishGame('Kvíz', ${score}, 'Správne ${quizScore}/${quizQuestions.length}')">Dokončiť</button>
                 </div>
-                <div class="memory-grid" id="memory-grid">
-                    ${memoryCards.map((card, index) => `
-                        <div class="memory-card ${card.matched ? 'matched' : ''} ${card.flipped ? 'flipped' : ''}" 
-                             onclick="flipMemoryCard(${index})" data-index="${index}">
-                            <span>${card.flipped || card.matched ? card.text : '?'}</span>
-                        </div>
-                    `).join('')}
-                </div>
-                <button class="restart-btn" onclick="initMemoryGame()">🔄 Nová hra</button>
             `;
         }
 
-        function flipMemoryCard(index) {
+        // Memory Game
+        let memoryCards = [];
+        let flippedCards = [];
+        let matchedPairs = 0;
+
+        function initMemory() {
+            memoryCards = [];
+            flippedCards = [];
+            matchedPairs = 0;
+            
+            memoryPairs.forEach(pair => {
+                memoryCards.push({id: pair.id, text: pair.text, flipped: false, matched: false});
+                memoryCards.push({id: pair.id, text: pair.pair, flipped: false, matched: false});
+            });
+            
+            memoryCards.sort(() => Math.random() - 0.5);
+            renderMemory();
+        }
+
+        function renderMemory() {
+            document.getElementById('game-content').innerHTML = `
+                <div style="text-align:center; margin-bottom:20px;">
+                    <div>Páry: ${matchedPairs}/${memoryPairs.length}</div>
+                </div>
+                <div class="memory-grid">
+                    ${memoryCards.map((card, i) => `
+                        <div class="memory-card ${card.matched ? 'matched' : ''} ${card.flipped ? 'flipped' : ''}" onclick="flipCard(${i})">
+                            ${card.flipped || card.matched ? card.text : '?'}
+                        </div>
+                    `).join('')}
+                </div>
+                ${matchedPairs === memoryPairs.length ? '<br><button class="btn btn-primary" onclick="finishGame(\'Pexeso\', 100, \'Všetky páry nájdené\')">Dokončiť</button>' : ''}
+            `;
+        }
+
+        function flipCard(index) {
             if (flippedCards.length >= 2 || memoryCards[index].flipped || memoryCards[index].matched) return;
             
             memoryCards[index].flipped = true;
             flippedCards.push(index);
-            renderMemoryGame();
+            renderMemory();
             
             if (flippedCards.length === 2) {
-                moves++;
-                
-                setTimeout(() => {
-                    checkMemoryMatch();
-                }, 1000);
+                setTimeout(() => checkMatch(), 1000);
             }
         }
 
-        function checkMemoryMatch() {
+        function checkMatch() {
             const [first, second] = flippedCards;
             
             if (memoryCards[first].id === memoryCards[second].id) {
                 memoryCards[first].matched = true;
                 memoryCards[second].matched = true;
                 matchedPairs++;
-                
-                if (matchedPairs === memoryPairs.length) {
-                    setTimeout(() => {
-                        const details = `Všetky páry nájdené, ${moves} ťahov`;
-                        saveGameResult('memory', 100, 100, details);
-                        closeGameModal();
-                    }, 500);
-                }
             } else {
                 memoryCards[first].flipped = false;
                 memoryCards[second].flipped = false;
             }
             
             flippedCards = [];
-            renderMemoryGame();
+            renderMemory();
         }
 
         // Classification Game
-        function initClassificationGame() {
-            const content = document.getElementById('game-modal-content');
-            const shuffledItems = [...classificationItems].sort(() => Math.random() - 0.5);
+        function initClassification() {
+            const shuffled = [...classificationItems].sort(() => Math.random() - 0.5);
             
-            content.innerHTML = `
-                <div class="classification-container">
+            document.getElementById('game-content').innerHTML = `
+                <div class="classification-game">
                     <div class="items-pool">
                         <h3>Technológie na zaradenie</h3>
-                        <div id="items-container">
-                            ${shuffledItems.map(item => `
-                                <div class="draggable-item" draggable="true" ondragstart="dragClassification(event)" data-type="${item.type}">
+                        <div id="items">
+                            ${shuffled.map(item => `
+                                <div class="draggable-item" draggable="true" data-type="${item.type}" ondragstart="dragStart(event)">
                                     ${item.name}
                                 </div>
                             `).join('')}
                         </div>
                     </div>
                     <div>
-                        <div class="drop-zone" id="conventional" ondrop="dropClassification(event, 'conventional')" ondragover="allowDropClassification(event)">
+                        <div class="drop-zone" ondrop="dropItem(event, 'conventional')" ondragover="allowDrop(event)">
                             <h4>Konvenčné technológie</h4>
-                            <div class="drop-items"></div>
+                            <div class="dropped-items" id="conventional-items"></div>
                         </div>
-                        <div class="drop-zone" id="progressive" ondrop="dropClassification(event, 'progressive')" ondragover="allowDropClassification(event)">
+                        <div class="drop-zone" ondrop="dropItem(event, 'progressive')" ondragover="allowDrop(event)">
                             <h4>Progresívne technológie</h4>
-                            <div class="drop-items"></div>
+                            <div class="dropped-items" id="progressive-items"></div>
                         </div>
                     </div>
                 </div>
-                <button class="check-btn" onclick="checkClassification()">Skontrolovať odpovede</button>
-                <button class="restart-btn" onclick="initClassificationGame()">🔄 Resetovať</button>
+                <br>
+                <button class="btn btn-primary" onclick="checkClassification()">Skontrolovať</button>
                 <div id="classification-result"></div>
             `;
         }
 
-        function allowDropClassification(ev) {
-            ev.preventDefault();
-            ev.currentTarget.classList.add('drag-over');
+        function dragStart(event) {
+            event.dataTransfer.setData("text", event.target.outerHTML);
+            event.dataTransfer.setData("type", event.target.dataset.type);
+            setTimeout(() => event.target.remove(), 0);
         }
 
-        function dragClassification(ev) {
-            ev.dataTransfer.setData("text", ev.target.outerHTML);
-            ev.dataTransfer.setData("type", ev.target.dataset.type);
-            ev.target.classList.add('dragging');
+        function allowDrop(event) {
+            event.preventDefault();
+            event.currentTarget.classList.add('drag-over');
         }
 
-        function dropClassification(ev, category) {
-            ev.preventDefault();
-            ev.currentTarget.classList.remove('drag-over');
-            
-            const data = ev.dataTransfer.getData("text");
-            ev.currentTarget.querySelector('.drop-items').innerHTML += data;
-            
-            const draggingElement = document.querySelector('.dragging');
-            if (draggingElement) {
-                draggingElement.remove();
-            }
+        function dropItem(event, category) {
+            event.preventDefault();
+            event.currentTarget.classList.remove('drag-over');
+            const data = event.dataTransfer.getData("text");
+            document.getElementById(category + '-items').innerHTML += data;
         }
 
         function checkClassification() {
             let correct = 0;
             let total = 0;
             
-            const conventionalZone = document.getElementById('conventional').querySelector('.drop-items');
-            const progressiveZone = document.getElementById('progressive').querySelector('.drop-items');
-            
-            conventionalZone.querySelectorAll('.draggable-item').forEach(item => {
-                total++;
-                if (item.dataset.type === 'conventional') {
-                    correct++;
-                    item.style.border = '2px solid #4caf50';
-                } else {
-                    item.style.border = '2px solid #f44336';
-                }
+            ['conventional', 'progressive'].forEach(category => {
+                const items = document.querySelectorAll(`#${category}-items .draggable-item`);
+                items.forEach(item => {
+                    total++;
+                    if (item.dataset.type === category) {
+                        correct++;
+                        item.style.background = '#4CAF50';
+                    } else {
+                        item.style.background = '#f44336';
+                    }
+                });
             });
             
-            progressiveZone.querySelectorAll('.draggable-item').forEach(item => {
-                total++;
-                if (item.dataset.type === 'progressive') {
-                    correct++;
-                    item.style.border = '2px solid #4caf50';
-                } else {
-                    item.style.border = '2px solid #f44336';
-                }
-            });
-            
-            const percentage = Math.round((correct / total) * 100);
-            const details = `Správne zaradené ${correct} z ${total} technológií`;
-            
+            const score = Math.round((correct / total) * 100);
             document.getElementById('classification-result').innerHTML = `
-                <div class="game-score">
-                    Správne zaradené: ${correct} z ${total} (${percentage}%)
-                    ${percentage === 100 ? '🎉 Perfektné!' : percentage >= 80 ? '👍 Veľmi dobre!' : '📚 Skúste to znova!'}
-                    <br><br>
-                    <button class="check-btn" onclick="finishClassification(${correct}, ${total}, '${details}')">Dokončiť</button>
+                <div style="margin-top:20px; padding:20px; background:#f8f9fa; border-radius:10px; text-align:center;">
+                    <h3>Výsledok: ${correct}/${total} (${score}%)</h3>
+                    <button class="btn btn-primary" onclick="finishGame('Klasifikácia', ${score}, 'Správne ${correct}/${total}')">Dokončiť</button>
                 </div>
             `;
         }
 
-        function finishClassification(correct, total, details) {
-            const score = Math.round((correct / total) * 100);
-            saveGameResult('classification', score, 100, details);
-            closeGameModal();
-        }
-
         // Sequence Game
-        function initSequenceGame() {
+        let sequenceOrder = [];
+
+        function initSequence() {
             sequenceOrder = [...sequenceItems].sort(() => Math.random() - 0.5);
-            renderSequenceGame();
+            renderSequence();
         }
 
-        function renderSequenceGame() {
-            const content = document.getElementById('game-modal-content');
-            
-            content.innerHTML = `
-                <p>Usporiadajte technológie od najmenšej po najväčšiu spotrebu energie (kW)</p>
-                <div style="display: grid; gap: 15px; max-width: 600px; margin: 20px auto;">
-                    ${sequenceOrder.map((item, index) => `
-                        <div class="draggable-item" style="cursor: move; display: flex; justify-content: space-between; align-items: center;">
+        function renderSequence() {
+            document.getElementById('game-content').innerHTML = `
+                <div style="text-align:center; margin-bottom:20px;">
+                    <p>Usporiadajte technológie od najmenšej po najväčšiu spotrebu energie</p>
+                </div>
+                <div class="sequence-list">
+                    ${sequenceOrder.map((item, i) => `
+                        <div class="sequence-item">
                             <span>${item.name}</span>
-                            <div>
-                                <button onclick="moveSequenceUp(${index})" style="background: #2196F3; color: white; border: none; border-radius: 50%; width: 30px; height: 30px; margin: 0 2px; cursor: pointer;">↑</button>
-                                <button onclick="moveSequenceDown(${index})" style="background: #2196F3; color: white; border: none; border-radius: 50%; width: 30px; height: 30px; margin: 0 2px; cursor: pointer;">↓</button>
+                            <div class="sequence-controls">
+                                <button onclick="moveUp(${i})">↑</button>
+                                <button onclick="moveDown(${i})">↓</button>
                             </div>
                         </div>
                     `).join('')}
                 </div>
-                <button class="check-btn" onclick="checkSequence()">Skontrolovať poradie</button>
-                <button class="restart-btn" onclick="initSequenceGame()">🔄 Resetovať</button>
+                <br>
+                <div style="text-align:center;">
+                    <button class="btn btn-primary" onclick="checkSequence()">Skontrolovať</button>
+                </div>
                 <div id="sequence-result"></div>
             `;
         }
 
-        function moveSequenceUp(index) {
+        function moveUp(index) {
             if (index > 0) {
                 [sequenceOrder[index], sequenceOrder[index - 1]] = [sequenceOrder[index - 1], sequenceOrder[index]];
-                renderSequenceGame();
+                renderSequence();
             }
         }
 
-        function moveSequenceDown(index) {
+        function moveDown(index) {
             if (index < sequenceOrder.length - 1) {
                 [sequenceOrder[index], sequenceOrder[index + 1]] = [sequenceOrder[index + 1], sequenceOrder[index]];
-                renderSequenceGame();
+                renderSequence();
             }
         }
 
         function checkSequence() {
-            const correctOrder = [...sequenceItems].sort((a, b) => a.power - b.power);
-            let correct = 0;
+            const correct = [...sequenceItems].sort((a, b) => a.power - b.power);
+            let score = 0;
             
-            sequenceOrder.forEach((item, index) => {
-                if (item.name === correctOrder[index].name) {
-                    correct++;
-                }
+            sequenceOrder.forEach((item, i) => {
+                if (item.name === correct[i].name) score++;
             });
             
-            const percentage = Math.round((correct / sequenceOrder.length) * 100);
-            const details = `Správne usporiadané ${correct} z ${sequenceOrder.length} technológií`;
+            const percentage = Math.round((score / sequenceOrder.length) * 100);
             
-            let resultHTML = `
-                <div class="game-score">
-                    Správne usporiadané: ${correct} z ${sequenceOrder.length} (${percentage}%)
-                    ${percentage === 100 ? '🎉 Perfektné!' : percentage >= 80 ? '👍 Veľmi dobre!' : '📚 Skúste to znova!'}
-                    <br><br>
-                    <button class="check-btn" onclick="finishSequence(${correct}, ${sequenceOrder.length}, '${details}')">Dokončiť</button>
-                </div>
-                <div class="explanation">
-                    <h4>Správne poradie podľa spotreby energie:</h4>
-                    <ol>
-            `;
-            
-            correctOrder.forEach(item => {
-                resultHTML += `<li>${item.name} (${item.power} kW)</li>`;
-            });
-            
-            resultHTML += `
-                    </ol>
-                    <p><strong>Pozorovanie:</strong> Konvenčné technológie (KON) majú vysokú spotrebu energie, ale aj vysoký pomerný úber materiálu. Progresívne technológie majú rôznu energetickú náročnosť - laserové obrábanie (LBM) je najúspornejšie, zatiaľ čo abrazívny vodný lúč (AWJ) má vyššiu spotrebu.</p>
+            document.getElementById('sequence-result').innerHTML = `
+                <div style="margin-top:20px; padding:20px; background:#f8f9fa; border-radius:10px;">
+                    <h3>Výsledok: ${score}/${sequenceOrder.length} (${percentage}%)</h3>
+                    <p><strong>Správne poradie:</strong></p>
+                    <ol>${correct.map(item => `<li>${item.name} (${item.power} kW)</li>`).join('')}</ol>
+                    <br>
+                    <div style="text-align:center;">
+                        <button class="btn btn-primary" onclick="finishGame('Usporiadanie', ${percentage}, 'Správne ${score}/${sequenceOrder.length}')">Dokončiť</button>
+                    </div>
                 </div>
             `;
-            
-            document.getElementById('sequence-result').innerHTML = resultHTML;
         }
 
-        function finishSequence(correct, total, details) {
-            const score = Math.round((correct / total) * 100);
-            saveGameResult('sequence', score, 100, details);
-            closeGameModal();
+        function finishGame(gameType, score, details) {
+            saveResult(gameType, score, details);
+            closeGame();
         }
 
         // Utility functions
-        function formatTime(seconds) {
-            const mins = Math.floor(seconds / 60);
-            const secs = seconds % 60;
-            return `${mins}:${secs.toString().padStart(2, '0')}`;
-        }
-
         function showAlert(message, type) {
-            const alertDiv = document.createElement('div');
-            alertDiv.className = `alert alert-${type}`;
-            alertDiv.textContent = message;
-            
-            const container = document.querySelector('.container');
-            container.insertBefore(alertDiv, container.firstChild);
-            
-            setTimeout(() => {
-                alertDiv.remove();
-            }, 5000);
+            const alert = document.createElement('div');
+            alert.className = `alert alert-${type}`;
+            alert.textContent = message;
+            document.body.appendChild(alert);
+            setTimeout(() => alert.remove(), 3000);
         }
 
-        // Initialize app
-        function initApp() {
-            loadDatabase();
+        function exportResults() {
+            const csv = 'Študent,Hra,Dátum,Skóre,Čas,Detaily\n' + 
+                database.results.map(r => 
+                    `"${r.studentName}","${r.game}","${new Date(r.date).toLocaleDateString('sk-SK')}","${r.score}%","${Math.floor(r.time/60)}:${(r.time%60).toString().padStart(2,'0')}","${r.details}"`
+                ).join('\n');
             
-            const savedUser = localStorage.getItem('currentUser');
-            if (savedUser) {
-                currentUser = JSON.parse(savedUser);
-                showDashboard();
-            }
+            const blob = new Blob([csv], { type: 'text/csv' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'vysledky.csv';
+            a.click();
         }
 
-        window.addEventListener('beforeunload', () => {
-            if (currentUser) {
-                localStorage.setItem('currentUser', JSON.stringify(currentUser));
-            }
-        });
-
-        // Start the application
-        initApp();
+        // Initialize
+        loadData();
+    </script>
+</body>
+</html>
