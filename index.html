@@ -1,1641 +1,868 @@
 <!DOCTYPE html>
-<html lang="sk">
+<html lang="cs">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="mobile-web-app-capable" content="yes">
-    <title>LMS - Progresívne technológie</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HRA 5: ESCAPE ROOM - Technologické centrum</title>
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            -webkit-tap-highlight-color: transparent;
         }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: white;
             min-height: 100vh;
-            padding: 10px;
+            padding: 20px;
         }
 
         .container {
-            max-width: 600px;
+            max-width: 1200px;
             margin: 0 auto;
-            background: white;
-            border-radius: 20px;
-            overflow: hidden;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
         }
 
-        .header {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 20px;
+        h1 {
             text-align: center;
+            margin-bottom: 30px;
+            font-size: 2.5em;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
         }
 
-        .header h1 {
-            font-size: 1.5rem;
-            margin-bottom: 10px;
-        }
-
-        .content {
-            padding: 20px;
-        }
-
-        /* Mobilné optimalizované tlačidlá */
-        .btn {
-            display: inline-block;
-            width: 100%;
-            padding: 15px 20px;
-            border: none;
-            border-radius: 10px;
-            font-size: 16px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            text-align: center;
-            user-select: none;
-            -webkit-user-select: none;
-            touch-action: manipulation;
-        }
-
-        .btn:active {
-            transform: scale(0.95);
-        }
-
-        .btn-primary {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-        }
-
-        .btn-success {
-            background: linear-gradient(135deg, #56ab2f 0%, #a8e063 100%);
-            color: white;
-        }
-
-        .btn-danger {
-            background: linear-gradient(135deg, #eb3349 0%, #f45c43 100%);
-            color: white;
-        }
-
-        .btn-secondary {
-            background: #f5f5f5;
-            color: #333;
-            border: 2px solid #e0e0e0;
-        }
-
-        /* Formulárové prvky */
-        .form-group {
-            margin-bottom: 20px;
-        }
-
-        .form-label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: 600;
-            color: #333;
-        }
-
-        .form-control {
-            width: 100%;
-            padding: 15px;
-            border: 2px solid #e0e0e0;
-            border-radius: 10px;
-            font-size: 16px;
-            transition: border-color 0.3s ease;
-            -webkit-appearance: none;
-            appearance: none;
-        }
-
-        .form-control:focus {
-            outline: none;
-            border-color: #667eea;
-            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
-        }
-
-        select.form-control {
-            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
-            background-repeat: no-repeat;
-            background-position: right 10px center;
-            background-size: 20px;
-            padding-right: 40px;
-        }
-
-        /* Taby */
-        .tabs {
+        .room-selector {
             display: flex;
-            background: #f5f5f5;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+
+        .room-btn {
+            padding: 12px 24px;
+            background: rgba(255,255,255,0.1);
+            border: 2px solid rgba(255,255,255,0.3);
+            color: white;
+            cursor: pointer;
             border-radius: 10px;
-            overflow: hidden;
-            margin-bottom: 20px;
-        }
-
-        .tab {
-            flex: 1;
-            padding: 15px;
-            text-align: center;
-            background: transparent;
-            border: none;
+            transition: all 0.3s;
             font-size: 16px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
         }
 
-        .tab.active {
-            background: white;
-            color: #667eea;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        .room-btn:hover {
+            background: rgba(255,255,255,0.2);
+            transform: translateY(-2px);
         }
 
-        /* Karty */
-        .card {
-            background: white;
+        .room-btn.active {
+            background: #4CAF50;
+            border-color: #4CAF50;
+        }
+
+        .room-btn.completed {
+            background: #2196F3;
+            border-color: #2196F3;
+        }
+
+        .room {
+            background: rgba(255,255,255,0.1);
             border-radius: 15px;
-            padding: 20px;
-            margin-bottom: 15px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
-            transition: transform 0.3s ease;
-        }
-
-        .card:active {
-            transform: scale(0.98);
-        }
-
-        /* Statistiky */
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
-            gap: 15px;
+            padding: 30px;
             margin-bottom: 20px;
-        }
-
-        .stat-card {
-            text-align: center;
-            padding: 15px;
-            background: linear-gradient(135deg, #f5f5f5 0%, #e0e0e0 100%);
-            border-radius: 15px;
-        }
-
-        .stat-value {
-            font-size: 2rem;
-            font-weight: bold;
-            color: #667eea;
-        }
-
-        .stat-label {
-            font-size: 0.9rem;
-            color: #666;
-            margin-top: 5px;
-        }
-
-        /* Hry */
-        .games-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-            gap: 15px;
-            margin-bottom: 20px;
-        }
-
-        .game-card {
-            background: linear-gradient(135deg, #f5f5f5 0%, #fff 100%);
-            border-radius: 15px;
-            padding: 20px;
-            text-align: center;
-            border: 2px solid #e0e0e0;
-            transition: all 0.3s ease;
-            cursor: pointer;
-        }
-
-        .game-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
-        }
-
-        .game-icon {
-            font-size: 2rem;
-            margin-bottom: 10px;
-        }
-
-        /* Tabulka výsledkov - mobilne optimalizovaná */
-        .results-container {
-            overflow-x: auto;
-            -webkit-overflow-scrolling: touch;
-        }
-
-        .results-table {
-            width: 100%;
-            border-collapse: collapse;
-            font-size: 14px;
-        }
-
-        .results-table th,
-        .results-table td {
-            padding: 12px 8px;
-            text-align: left;
-            border-bottom: 1px solid #e0e0e0;
-        }
-
-        .results-table th {
-            background: #f5f5f5;
-            font-weight: 600;
-            position: sticky;
-            top: 0;
-            z-index: 10;
-        }
-
-        /* Modal */
-        .modal {
+            backdrop-filter: blur(10px);
             display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0,0,0,0.8);
-            z-index: 1000;
-            padding: 20px;
-            overflow-y: auto;
-            -webkit-overflow-scrolling: touch;
         }
 
-        .modal-content {
-            background: white;
-            border-radius: 20px;
-            padding: 20px;
-            max-width: 500px;
-            margin: 0 auto;
-            position: relative;
-        }
-
-        .modal-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-        }
-
-        .modal-close {
-            width: 30px;
-            height: 30px;
-            border-radius: 50%;
-            background: #f5f5f5;
-            border: none;
-            font-size: 20px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        /* Herné prvky */
-        .quiz-option {
+        .room.active {
             display: block;
-            width: 100%;
-            text-align: left;
+            animation: fadeIn 0.5s;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .room h2 {
+            color: #FFD700;
+            margin-bottom: 20px;
+            font-size: 1.8em;
+        }
+
+        .problem {
+            background: rgba(255,0,0,0.1);
+            border-left: 4px solid #ff4444;
             padding: 15px;
-            margin-bottom: 10px;
-            background: #f5f5f5;
-            border: 2px solid transparent;
-            border-radius: 10px;
-            cursor: pointer;
-            transition: all 0.3s ease;
+            margin: 15px 0;
+            border-radius: 5px;
         }
 
-        .quiz-option:hover {
-            background: #e0e0e0;
-        }
-
-        .quiz-option.selected {
-            border-color: #667eea;
-            background: #f0f4ff;
-        }
-
-        .quiz-option.correct {
-            border-color: #56ab2f;
-            background: #e8f5e9;
-        }
-
-        .quiz-option.incorrect {
-            border-color: #eb3349;
-            background: #ffebee;
-        }
-
-        .memory-grid {
+        .puzzle-grid {
             display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 10px;
-            max-width: 400px;
-            margin: 20px auto;
-        }
-
-        .memory-card {
-            aspect-ratio: 1;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            border-radius: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            font-size: 0.9rem;
-            color: white;
-            font-weight: bold;
-            padding: 5px;
-            text-align: center;
-            transition: all 0.3s ease;
-        }
-
-        .memory-card.flipped {
-            background: white;
-            color: #333;
-            border: 2px solid #667eea;
-        }
-
-        .memory-card.matched {
-            background: linear-gradient(135deg, #56ab2f 0%, #a8e063 100%);
-            color: white;
-        }
-
-        /* Správy */
-        .alert {
-            position: fixed;
-            top: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-            padding: 15px 20px;
-            border-radius: 10px;
-            color: white;
-            font-weight: 600;
-            z-index: 2000;
-            animation: slideDown 0.3s ease;
-        }
-
-        @keyframes slideDown {
-            from {
-                transform: translateX(-50%) translateY(-100%);
-            }
-            to {
-                transform: translateX(-50%) translateY(0);
-            }
-        }
-
-        .alert-success {
-            background: linear-gradient(135deg, #56ab2f 0%, #a8e063 100%);
-        }
-
-        .alert-error {
-            background: linear-gradient(135deg, #eb3349 0%, #f45c43 100%);
-        }
-
-        .alert-info {
-            background: linear-gradient(135deg, #36d1dc 0%, #5b86e5 100%);
-        }
-
-        /* Pagination pre veľký počet študentov */
-        .pagination {
-            display: flex;
-            justify-content: center;
-            gap: 5px;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
             margin: 20px 0;
         }
 
-        .pagination button {
-            padding: 8px 12px;
-            border: none;
-            background: #f5f5f5;
-            border-radius: 5px;
+        .puzzle-piece {
+            background: rgba(255,255,255,0.2);
+            border: 2px solid rgba(255,255,255,0.3);
+            border-radius: 8px;
+            padding: 15px;
+            text-align: center;
             cursor: pointer;
-            font-weight: 600;
+            transition: all 0.3s;
+            user-select: none;
+            font-size: 14px;
         }
 
-        .pagination button.active {
-            background: #667eea;
+        .puzzle-piece:hover {
+            background: rgba(255,255,255,0.3);
+            transform: scale(1.05);
+        }
+
+        .puzzle-piece.selected {
+            background: #FFD700;
+            color: #000;
+            border-color: #FFD700;
+        }
+
+        .sequence-display {
+            background: rgba(0,0,0,0.3);
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+            text-align: center;
+        }
+
+        .sequence-item {
+            display: inline-block;
+            background: rgba(255,255,255,0.1);
+            border: 2px solid rgba(255,255,255,0.3);
+            border-radius: 5px;
+            padding: 15px;
+            margin: 5px;
+            min-width: 100px;
+            min-height: 60px;
+            vertical-align: top;
+            font-size: 12px;
+        }
+
+        .btn {
+            background: #4CAF50;
             color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 10px 5px;
+            transition: all 0.3s;
         }
 
-        .pagination button:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
+        .btn:hover {
+            background: #45a049;
+            transform: translateY(-2px);
         }
 
-        /* Hidden helper */
-        .hidden {
-            display: none !important;
+        .btn.reset {
+            background: #ff6b6b;
         }
 
-        /* Responzívny dizajn */
-        @media (max-width: 480px) {
-            .container {
-                border-radius: 0;
-                min-height: 100vh;
-            }
-            
-            .header h1 {
-                font-size: 1.2rem;
-            }
-            
-            .games-grid {
-                grid-template-columns: repeat(2, 1fr);
-            }
-            
-            .stats-grid {
-                grid-template-columns: repeat(2, 1fr);
-            }
+        .btn.reset:hover {
+            background: #ff5252;
         }
 
-        /* iOS špecifické úpravy */
-        @supports (-webkit-touch-callout: none) {
-            .form-control {
-                font-size: 16px !important;
-            }
+        .success {
+            background: rgba(76, 175, 80, 0.2);
+            border: 2px solid #4CAF50;
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+            margin: 20px 0;
+            display: none;
         }
 
-        /* Prispôsobenie pre notch */
-        @supports (padding: max(0px)) {
-            .container {
-                padding-top: max(20px, env(safe-area-inset-top));
-                padding-bottom: max(20px, env(safe-area-inset-bottom));
-            }
+        .success.show {
+            display: block;
+            animation: successPulse 0.8s;
+        }
+
+        @keyframes successPulse {
+            0% { transform: scale(0.8); opacity: 0; }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        .timer {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: rgba(0,0,0,0.8);
+            padding: 15px;
+            border-radius: 10px;
+            font-size: 1.2em;
+            z-index: 1000;
+        }
+
+        .progress {
+            text-align: center;
+            margin: 20px 0;
+            font-size: 1.1em;
+        }
+
+        .code-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .code-card {
+            background: rgba(255,255,255,0.1);
+            border: 2px solid rgba(255,255,255,0.3);
+            border-radius: 8px;
+            padding: 15px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-family: 'Courier New', monospace;
+            text-align: center;
+        }
+
+        .code-card:hover {
+            background: rgba(255,255,255,0.2);
+        }
+
+        .code-card.selected {
+            background: #FFD700;
+            color: #000;
+        }
+
+        .defect-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .defect-item {
+            background: rgba(255,255,255,0.1);
+            border: 2px solid rgba(255,255,255,0.3);
+            border-radius: 8px;
+            padding: 15px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .defect-item:hover {
+            background: rgba(255,255,255,0.2);
+        }
+
+        .defect-item.selected {
+            background: #FFD700;
+            color: #000;
+        }
+
+        .energy-config {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        .energy-item {
+            background: rgba(255,255,255,0.1);
+            border: 2px solid rgba(255,255,255,0.3);
+            border-radius: 8px;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .energy-slider {
+            width: 100%;
+            margin: 15px 0;
+        }
+
+        .energy-value {
+            font-weight: bold;
+            color: #FFD700;
+            font-size: 1.2em;
+        }
+
+        .tech-info {
+            background: rgba(255,255,255,0.05);
+            border-radius: 8px;
+            padding: 15px;
+            margin: 15px 0;
+            font-size: 14px;
+        }
+
+        .optimal-display {
+            background: rgba(0,0,0,0.3);
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+            text-align: center;
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <div class="header">
-            <h1>🎓 LMS - Progresívne technológie</h1>
-            <div id="userInfo" class="hidden">
-                <div style="margin-top: 10px;">
-                    <span id="userName"></span>
-                    <button class="btn btn-danger" style="width: auto; padding: 8px 15px; font-size: 14px;" onclick="logout()">Odhlásiť</button>
+        <h1>🔐 ESCAPE ROOM: Technologické centrum</h1>
+        
+        <div class="timer" id="timer">⏰ Čas: 60:00</div>
+        
+        <div class="progress">
+            <strong>Postup:</strong> <span id="progress">0/4 místností dokončeno</span>
+        </div>
+
+        <div class="room-selector">
+            <button class="room-btn active" onclick="showRoom('room1')">Místnost 1: ERP Systém</button>
+            <button class="room-btn" onclick="showRoom('room2')">Místnost 2: Robotika</button>
+            <button class="room-btn" onclick="showRoom('room3')">Místnost 3: AI Kontrola</button>
+            <button class="room-btn" onclick="showRoom('room4')">Místnost 4: Energie</button>
+        </div>
+
+        <!-- MÍSTNOST 1: ERP SYSTÉM -->
+        <div class="room active" id="room1">
+            <h2>🖥️ MÍSTNOST 1: ERP SYSTÉM</h2>
+            <div class="problem">
+                <strong>PROBLÉM:</strong> Firemní ERP systém se zhroutil kvůli chybě v databázi! 
+                Komponenty systému jsou rozházené. Seřaďte je do správného pořadí pro obnovu systému 
+                podle logické architektury: Hardware → Síť → Databáze → Aplikace → Uživatelé
+            </div>
+
+            <h3>Dostupné komponenty systému (klikněte pro výběr):</h3>
+            <div class="puzzle-grid" id="erp-pieces">
+                <div class="puzzle-piece" onclick="selectERPPiece(this)" data-step="A">
+                    🔐 Uživatelské účty<br>
+                    <small>Aktivace přístupů pro zaměstnance</small>
                 </div>
+                <div class="puzzle-piece" onclick="selectERPPiece(this)" data-step="B">
+                    💾 Databázové služby<br>
+                    <small>Načtení dat a indexů</small>
+                </div>
+                <div class="puzzle-piece" onclick="selectERPPiece(this)" data-step="C">
+                    🌐 Síťové protokoly<br>
+                    <small>TCP/IP a komunikační kanály</small>
+                </div>
+                <div class="puzzle-piece" onclick="selectERPPiece(this)" data-step="D">
+                    ⚡ Hardware inicializace<br>
+                    <small>Spuštění serverů a základní HW</small>
+                </div>
+                <div class="puzzle-piece" onclick="selectERPPiece(this)" data-step="E">
+                    🔒 Bezpečnostní moduly<br>
+                    <small>Firewall a autentifikace</small>
+                </div>
+                <div class="puzzle-piece" onclick="selectERPPiece(this)" data-step="F">
+                    📱 Aplikační vrstva<br>
+                    <small>ERP aplikace a rozhraní</small>
+                </div>
+            </div>
+
+            <h3>Vaše sekvence obnovy (6 kroků):</h3>
+            <div class="sequence-display" id="erp-sequence">
+                <div class="sequence-item">Krok 1</div>
+                <div class="sequence-item">Krok 2</div>
+                <div class="sequence-item">Krok 3</div>
+                <div class="sequence-item">Krok 4</div>
+                <div class="sequence-item">Krok 5</div>
+                <div class="sequence-item">Krok 6</div>
+            </div>
+
+            <button class="btn" onclick="checkERPSolution()">🔍 Spustit obnovu systému</button>
+            <button class="btn reset" onclick="resetERP()">🔄 Reset</button>
+
+            <div class="success" id="erp-success">
+                ✅ <strong>SYSTÉM OBNOVEN!</strong><br>
+                🎵 *Zvuk systému: "System restored successfully"*<br>
+                💚 Zelené světlo se rozsvítilo - ERP systém funguje!
             </div>
         </div>
 
-        <div class="content">
-            <!-- Prihlásenie/Registrácia -->
-            <div id="authSection">
-                <div class="tabs">
-                    <button class="tab active" onclick="switchTab('login')">Prihlásenie</button>
-                    <button class="tab" onclick="switchTab('register')">Registrácia</button>
-                </div>
+        <!-- MÍSTNOST 2: ROBOTICKÉ PROGRAMOVÁNÍ -->
+        <div class="room" id="room2">
+            <h2>🤖 MÍSTNOST 2: ROBOTICKÉ PROGRAMOVÁNÍ</h2>
+            <div class="problem">
+                <strong>PROBLÉM:</strong> Výrobní robot ztratil svůj program! Musíte sestavit správnou sekvenci 
+                příkazů pro automatizovanou výrobu. Robot musí: dojet na pozici → vzít materiál → 
+                přesunout do stroje → spustit výrobu → vrátit hotový výrobek
+            </div>
 
-                <!-- Prihlásenie -->
-                <div id="loginForm">
-                    <div class="form-group">
-                        <label class="form-label">Email</label>
-                        <input type="email" id="loginEmail" class="form-control" placeholder="student@test.sk" value="student@test.sk">
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label">Heslo</label>
-                        <input type="password" id="loginPassword" class="form-control" placeholder="Zadajte heslo" value="heslo123">
-                    </div>
-                    <button class="btn btn-primary" onclick="login()">Prihlásiť sa</button>
-                    
-                    <div class="card" style="margin-top: 20px; background: #f0f4ff;">
-                        <p style="font-weight: 600; margin-bottom: 10px;">Demo účty:</p>
-                        <p>👨‍🎓 <strong>Študent:</strong> student@test.sk / heslo123</p>
-                        <p>👨‍🏫 <strong>Učiteľ:</strong> teacher@test.sk / heslo123</p>
-                        <button class="btn btn-secondary" style="margin-top: 10px;" onclick="resetDatabase()">🔄 Reset databázy</button>
-                    </div>
+            <h3>Dostupné programovací karty:</h3>
+            <div class="code-cards" id="robot-cards">
+                <div class="code-card" onclick="selectRobotCard(this)" data-cmd="NAVIGATE_TO_POSITION">
+                    NAVIGATE_TO_POSITION<br>🎯<br>
+                    <small>Pohyb na cílovou pozici</small>
                 </div>
-
-                <!-- Registrácia -->
-                <div id="registerForm" class="hidden">
-                    <div class="form-group">
-                        <label class="form-label">Meno a priezvisko</label>
-                        <input type="text" id="regName" class="form-control" placeholder="Ján Novák">
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label">Email</label>
-                        <input type="email" id="regEmail" class="form-control" placeholder="jan.novak@skola.sk">
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label">Heslo</label>
-                        <input type="password" id="regPassword" class="form-control" placeholder="Minimálne 6 znakov">
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label">Rola</label>
-                        <select id="regRole" class="form-control">
-                            <option value="student">Študent</option>
-                            <option value="teacher">Učiteľ</option>
-                        </select>
-                    </div>
-                    <button class="btn btn-success" onclick="register()">Registrovať sa</button>
+                <div class="code-card" onclick="selectRobotCard(this)" data-cmd="PICK_MATERIAL">
+                    PICK_MATERIAL<br>🤏<br>
+                    <small>Uchopení materiálu</small>
+                </div>
+                <div class="code-card" onclick="selectRobotCard(this)" data-cmd="MOVE_TO_MACHINE">
+                    MOVE_TO_MACHINE<br>🏭<br>
+                    <small>Transport ke stroji</small>
+                </div>
+                <div class="code-card" onclick="selectRobotCard(this)" data-cmd="ACTIVATE_PRODUCTION">
+                    ACTIVATE_PRODUCTION<br>⚙️<br>
+                    <small>Spuštění výrobního cyklu</small>
+                </div>
+                <div class="code-card" onclick="selectRobotCard(this)" data-cmd="RETURN_PRODUCT">
+                    RETURN_PRODUCT<br>📦<br>
+                    <small>Vrácení hotového výrobku</small>
+                </div>
+                <div class="code-card" onclick="selectRobotCard(this)" data-cmd="WAIT_CYCLE">
+                    WAIT_CYCLE<br>⏱️<br>
+                    <small>Čekání na dokončení</small>
                 </div>
             </div>
 
-            <!-- Študent Dashboard -->
-            <div id="studentDashboard" class="hidden">
-                <div class="stats-grid">
-                    <div class="stat-card">
-                        <div class="stat-value" id="studentGamesPlayed">0</div>
-                        <div class="stat-label">Hier</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-value" id="studentAvgScore">0%</div>
-                        <div class="stat-label">Priemer</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-value" id="studentBestScore">0%</div>
-                        <div class="stat-label">Najlepšie</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-value" id="studentTotalTime">0m</div>
-                        <div class="stat-label">Čas</div>
-                    </div>
-                </div>
-
-                <h3>🎮 Vzdelávacie hry</h3>
-                <div class="games-grid">
-                    <div class="game-card" onclick="startGame('quiz')">
-                        <div class="game-icon">📝</div>
-                        <h4>Quiz</h4>
-                        <p style="font-size: 0.9rem; color: #666;">Test znalostí</p>
-                    </div>
-                    <div class="game-card" onclick="startGame('memory')">
-                        <div class="game-icon">🎴</div>
-                        <h4>Pexeso</h4>
-                        <p style="font-size: 0.9rem; color: #666;">Párové karty</p>
-                    </div>
-                    <div class="game-card" onclick="startGame('classification')">
-                        <div class="game-icon">📊</div>
-                        <h4>Klasifikácia</h4>
-                        <p style="font-size: 0.9rem; color: #666;">Roztriedenie</p>
-                    </div>
-                    <div class="game-card" onclick="startGame('sequence')">
-                        <div class="game-icon">🔢</div>
-                        <h4>Poradie</h4>
-                        <p style="font-size: 0.9rem; color: #666;">Usporiadanie</p>
-                    </div>
-                </div>
-
-                <h3>📈 Moje výsledky</h3>
-                <div class="results-container">
-                    <table class="results-table">
-                        <thead>
-                            <tr>
-                                <th>Dátum</th>
-                                <th>Hra</th>
-                                <th>Skóre</th>
-                                <th>Čas</th>
-                            </tr>
-                        </thead>
-                        <tbody id="studentResults"></tbody>
-                    </table>
-                </div>
+            <h3>Váš program (5 příkazů):</h3>
+            <div class="sequence-display" id="robot-sequence">
+                <div class="sequence-item">Příkaz 1</div>
+                <div class="sequence-item">Příkaz 2</div>
+                <div class="sequence-item">Příkaz 3</div>
+                <div class="sequence-item">Příkaz 4</div>
+                <div class="sequence-item">Příkaz 5</div>
             </div>
 
-            <!-- Učiteľ Dashboard -->
-            <div id="teacherDashboard" class="hidden">
-                <div class="stats-grid">
-                    <div class="stat-card">
-                        <div class="stat-value" id="totalStudents">0</div>
-                        <div class="stat-label">Študentov</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-value" id="totalGames">0</div>
-                        <div class="stat-label">Hier</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-value" id="avgClassScore">0%</div>
-                        <div class="stat-label">Ø Triedy</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-value" id="activeToday">0</div>
-                        <div class="stat-label">Dnes</div>
-                    </div>
-                </div>
+            <button class="btn" onclick="checkRobotSolution()">🔍 Spustit robotický program</button>
+            <button class="btn reset" onclick="resetRobot()">🔄 Reset</button>
 
-                <div style="margin-bottom: 20px;">
-                    <button class="btn btn-success" onclick="exportResults()">📥 Export CSV</button>
-                    <button class="btn btn-primary" onclick="refreshTeacherDashboard()">🔄 Obnoviť</button>
-                </div>
-
-                <h3>📊 Prehľad výsledkov</h3>
-                
-                <!-- Filter a vyhľadávanie -->
-                <div style="margin-bottom: 15px;">
-                    <input type="text" id="searchStudent" class="form-control" placeholder="🔍 Hľadať študenta..." onkeyup="filterResults()">
-                </div>
-
-                <div class="results-container">
-                    <table class="results-table">
-                        <thead>
-                            <tr>
-                                <th>Študent</th>
-                                <th>Hra</th>
-                                <th>Dátum</th>
-                                <th>Skóre</th>
-                                <th>Čas</th>
-                            </tr>
-                        </thead>
-                        <tbody id="teacherResults"></tbody>
-                    </table>
-                </div>
-                
-                <div class="pagination" id="pagination"></div>
+            <div class="success" id="robot-success">
+                ✅ <strong>ROBOT NAPROGRAMOVÁN!</strong><br>
+                🤖 *Robot úspěšně dokončil výrobní cyklus*<br>
+                💚 Automatizace obnovena - výrobní linka funguje!
             </div>
         </div>
-    </div>
 
-    <!-- Game Modal -->
-    <div id="gameModal" class="modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h2 id="gameTitle">Hra</h2>
-                <button class="modal-close" onclick="closeGame()">×</button>
+        <!-- MÍSTNOST 3: AI QUALITY CONTROL -->
+        <div class="room" id="room3">
+            <h2>🧠 MÍSTNOST 3: AI QUALITY CONTROL</h2>
+            <div class="problem">
+                <strong>PROBLÉM:</strong> AI systém kontroly kvality detekoval anomálie, ale ztratil schopnost 
+                rozpoznávat typy defektů! Musíte identifikovat a označit všechny typy vad, 
+                které systém nalezl v dodávce výrobků.
             </div>
-            <div id="gameContent"></div>
+
+            <div class="tech-info">
+                <strong>DODANÁ DATA od AI systému:</strong><br>
+                📊 Celkem skenováno: 1000 výrobků<br>
+                ❌ Detekováno: 89 defektních kusů<br>
+                🔍 Nalezené typy vad: Praskliny, Deformace, Nedostatečná tloušťka, Chybějící součásti, Špatná barva
+            </div>
+
+            <h3>Označte VŠECHNY typy defektů nalezené v dodávce:</h3>
+            <div class="defect-grid" id="defect-items">
+                <div class="defect-item" onclick="selectDefect(this)" data-defect="praskliny">
+                    🔍 Praskliny<br>
+                    <small>Povrchové trhliny</small>
+                </div>
+                <div class="defect-item" onclick="selectDefect(this)" data-defect="deformace">
+                    📐 Deformace<br>
+                    <small>Změna tvaru</small>
+                </div>
+                <div class="defect-item" onclick="selectDefect(this)" data-defect="tloustka">
+                    📏 Nedostatečná tloušťka<br>
+                    <small>Pod limit. hodnotou</small>
+                </div>
+                <div class="defect-item" onclick="selectDefect(this)" data-defect="soucastky">
+                    🧩 Chybějící součásti<br>
+                    <small>Neúplný výrobek</small>
+                </div>
+                <div class="defect-item" onclick="selectDefect(this)" data-defect="barva">
+                    🎨 Špatná barva<br>
+                    <small>Barevná odchylka</small>
+                </div>
+                <div class="defect-item" onclick="selectDefect(this)" data-defect="koroze">
+                    🦠 Koroze<br>
+                    <small>Povrchová koroze</small>
+                </div>
+                <div class="defect-item" onclick="selectDefect(this)" data-defect="rozmer">
+                    📊 Chybný rozměr<br>
+                    <small>Mimo toleranci</small>
+                </div>
+                <div class="defect-item" onclick="selectDefect(this)" data-defect="vypln">
+                    🕳️ Dutiny/Bubliny<br>
+                    <small>Vnitřní defekty</small>
+                </div>
+            </div>
+
+            <button class="btn" onclick="checkAISolution()">🔍 Potvrdit analýzu defektů</button>
+            <button class="btn reset" onclick="resetAI()">🔄 Reset</button>
+
+            <div class="success" id="ai-success">
+                ✅ <strong>AI SYSTÉM ZKALIBROVÁN!</strong><br>
+                🧠 *Všechny typy defektů správně identifikovány*<br>
+                💚 Kontrola kvality obnovena - AI systém funguje!
+            </div>
+        </div>
+
+        <!-- MÍSTNOST 4: ENERGETICKÉ CENTRUM -->
+        <div class="room" id="room4">
+            <h2>⚡ MÍSTNOST 4: ENERGETICKÉ CENTRUM</h2>
+            <div class="problem">
+                <strong>PROBLÉM:</strong> Energetická síť je kriticky přetížená! Musíte najít optimální 
+                konfiguraci všech technologií tak, aby celková spotřeba nepřesáhla dostupných 100kW 
+                a přitom všechny systémy fungovaly efektivně.
+            </div>
+
+            <div class="tech-info">
+                <strong>TECHNOLOGIE A JEJICH SPOTŘEBA:</strong><br>
+                🖥️ <strong>Servery:</strong> 15-40kW (minimum 25kW pro plný provoz)<br>
+                🤖 <strong>Robotika:</strong> 10-35kW (minimum 20kW pro produkci)<br>
+                💡 <strong>Osvětlení:</strong> 5-20kW (minimum 8kW pro bezpečnost)<br>
+                ❄️ <strong>Klimatizace:</strong> 8-30kW (minimum 15kW pro servery)<br>
+                🏭 <strong>Výroba:</strong> 12-45kW (minimum 25kW pro efektivitu)
+            </div>
+
+            <h3>Nastavte optimální distribuci energie:</h3>
+            <div class="energy-config">
+                <div class="energy-item">
+                    <h4>🖥️ Servery</h4>
+                    <input type="range" class="energy-slider" min="15" max="40" value="30" 
+                           onchange="updateEnergy('servers', this.value)">
+                    <div class="energy-value" id="servers-value">30kW</div>
+                    <small>Optimum: 25kW+</small>
+                </div>
+                <div class="energy-item">
+                    <h4>🤖 Robotika</h4>
+                    <input type="range" class="energy-slider" min="10" max="35" value="25" 
+                           onchange="updateEnergy('robotics', this.value)">
+                    <div class="energy-value" id="robotics-value">25kW</div>
+                    <small>Optimum: 20kW+</small>
+                </div>
+                <div class="energy-item">
+                    <h4>💡 Osvětlení</h4>
+                    <input type="range" class="energy-slider" min="5" max="20" value="12" 
+                           onchange="updateEnergy('lighting', this.value)">
+                    <div class="energy-value" id="lighting-value">12kW</div>
+                    <small>Optimum: 8kW+</small>
+                </div>
+                <div class="energy-item">
+                    <h4>❄️ Klimatizace</h4>
+                    <input type="range" class="energy-slider" min="8" max="30" value="18" 
+                           onchange="updateEnergy('hvac', this.value)">
+                    <div class="energy-value" id="hvac-value">18kW</div>
+                    <small>Optimum: 15kW+</small>
+                </div>
+                <div class="energy-item">
+                    <h4>🏭 Výroba</h4>
+                    <input type="range" class="energy-slider" min="12" max="45" value="30" 
+                           onchange="updateEnergy('production', this.value)">
+                    <div class="energy-value" id="production-value">30kW</div>
+                    <small>Optimum: 25kW+</small>
+                </div>
+            </div>
+
+            <div class="optimal-display">
+                <strong>Celková spotřeba: </strong>
+                <span id="total-consumption" style="color: #FFD700; font-size: 1.3em;">115kW</span> / 100kW<br>
+                <span id="energy-status" style="color: #ff4444;">⚠️ PŘETÍŽENÍ SÍTĚ</span>
+            </div>
+
+            <button class="btn" onclick="checkEnergySolution()">🔍 Aplikovat energetickou konfiguraci</button>
+            <button class="btn reset" onclick="resetEnergy()">🔄 Reset na výchozí</button>
+
+            <div class="success" id="energy-success">
+                ✅ <strong>OPTIMÁLNÍ KONFIGURACE NALEZENA!</strong><br>
+                ⚡ *Všechny systémy fungují efektivně v rámci limitu*<br>
+                💚 Energetická síť stabilizována - centrum plně funkční!
+            </div>
+        </div>
+
+        <!-- FINÁLNÍ ZPRÁVA -->
+        <div class="success" id="final-success" style="display: none;">
+            🎉 <strong>MISE DOKONČENA!</strong><br>
+            🏆 Úspěšně jste obnovili celé technologické centrum!<br>
+            🔓 Všechny systémy jsou plně funkční a optimalizované!<br>
+            ⏰ Váš čas: <span id="final-time"></span><br>
+            🎖️ Jste skutečný technologický expert!
         </div>
     </div>
 
     <script>
-        // Databáza
-        let db = {
-            users: {},
-            results: [],
-            currentUser: null,
-            gameStartTime: 0,
-            currentGameData: null
+        let gameState = {
+            currentRoom: 'room1',
+            completedRooms: [],
+            startTime: Date.now(),
+            erpSequence: [],
+            robotSequence: [],
+            aiSelected: [],
+            energyConfig: {
+                servers: 30,
+                robotics: 25,
+                lighting: 12,
+                hvac: 18,
+                production: 30
+            }
         };
 
-        // Inicializácia
-        function initApp() {
-            loadFromStorage();
-            setupDefaultUsers();
-            checkSession();
+        // Timer
+        function updateTimer() {
+            const elapsed = Math.floor((Date.now() - gameState.startTime) / 1000);
+            const remaining = Math.max(0, 3600 - elapsed);
+            const minutes = Math.floor(remaining / 60);
+            const seconds = remaining % 60;
+            document.getElementById('timer').textContent = 
+                `⏰ Čas: ${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+            
+            if (remaining > 0) {
+                setTimeout(updateTimer, 1000);
+            }
+        }
+        updateTimer();
+
+        function showRoom(roomId) {
+            document.querySelectorAll('.room').forEach(room => room.classList.remove('active'));
+            document.querySelectorAll('.room-btn').forEach(btn => btn.classList.remove('active'));
+            
+            document.getElementById(roomId).classList.add('active');
+            event.target.classList.add('active');
+            gameState.currentRoom = roomId;
         }
 
-        // LocalStorage handling s fallback na sessionStorage
-        function loadFromStorage() {
-            try {
-                // Pokus o localStorage
-                const savedUsers = localStorage.getItem('lms_users');
-                const savedResults = localStorage.getItem('lms_results');
-                const savedSession = sessionStorage.getItem('lms_session');
-                
-                if (savedUsers) db.users = JSON.parse(savedUsers);
-                if (savedResults) db.results = JSON.parse(savedResults);
-                if (savedSession) db.currentUser = JSON.parse(savedSession);
-            } catch (e) {
-                // Fallback na sessionStorage ak localStorage nie je dostupný
-                console.log('Using sessionStorage fallback');
-                try {
-                    const savedUsers = sessionStorage.getItem('lms_users');
-                    const savedResults = sessionStorage.getItem('lms_results');
-                    
-                    if (savedUsers) db.users = JSON.parse(savedUsers);
-                    if (savedResults) db.results = JSON.parse(savedResults);
-                } catch (err) {
-                    console.error('Storage not available:', err);
-                }
+        function updateProgress() {
+            document.getElementById('progress').textContent = 
+                `${gameState.completedRooms.length}/4 místností dokončeno`;
+            
+            if (gameState.completedRooms.length === 4) {
+                showFinalSuccess();
             }
         }
 
-        function saveToStorage() {
-            try {
-                localStorage.setItem('lms_users', JSON.stringify(db.users));
-                localStorage.setItem('lms_results', JSON.stringify(db.results));
-            } catch (e) {
-                // Fallback
-                try {
-                    sessionStorage.setItem('lms_users', JSON.stringify(db.users));
-                    sessionStorage.setItem('lms_results', JSON.stringify(db.results));
-                } catch (err) {
-                    console.error('Cannot save to storage:', err);
-                }
+        function completeRoom(roomId) {
+            if (!gameState.completedRooms.includes(roomId)) {
+                gameState.completedRooms.push(roomId);
+                document.querySelector(`[onclick="showRoom('${roomId}')"]`).classList.add('completed');
+                updateProgress();
             }
         }
 
-        function saveSession() {
-            try {
-                if (db.currentUser) {
-                    sessionStorage.setItem('lms_session', JSON.stringify(db.currentUser));
+        function showFinalSuccess() {
+            const elapsed = Math.floor((Date.now() - gameState.startTime) / 1000);
+            const minutes = Math.floor(elapsed / 60);
+            const seconds = elapsed % 60;
+            document.getElementById('final-time').textContent = 
+                `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+            document.getElementById('final-success').style.display = 'block';
+        }
+
+        // MÍSTNOST 1: ERP SYSTÉM
+        function selectERPPiece(element) {
+            if (gameState.erpSequence.length < 6) {
+                gameState.erpSequence.push({
+                    step: element.dataset.step,
+                    text: element.textContent.trim()
+                });
+                element.style.opacity = '0.5';
+                element.style.pointerEvents = 'none';
+                updateERPSequence();
+            }
+        }
+
+        function updateERPSequence() {
+            const sequenceItems = document.querySelectorAll('#erp-sequence .sequence-item');
+            sequenceItems.forEach((item, index) => {
+                if (gameState.erpSequence[index]) {
+                    item.innerHTML = `<strong>Krok ${index + 1}:</strong><br>${gameState.erpSequence[index].text}`;
+                    item.style.background = 'rgba(255, 215, 0, 0.3)';
                 } else {
-                    sessionStorage.removeItem('lms_session');
+                    item.innerHTML = `Krok ${index + 1}`;
+                    item.style.background = 'rgba(255,255,255,0.1)';
                 }
-            } catch (e) {
-                console.error('Cannot save session:', e);
-            }
+            });
         }
 
-        // Setup default users
-        function setupDefaultUsers() {
-            if (Object.keys(db.users).length === 0) {
-                db.users = {
-                    'student@test.sk': {
-                        name: 'Demo Študent',
-                        password: 'heslo123',
-                        role: 'student',
-                        created: new Date().toISOString()
-                    },
-                    'teacher@test.sk': {
-                        name: 'Demo Učiteľ',
-                        password: 'heslo123',
-                        role: 'teacher',
-                        created: new Date().toISOString()
-                    }
-                };
-                saveToStorage();
-            }
-        }
-
-        // Session check
-        function checkSession() {
-            if (db.currentUser) {
-                showDashboard();
-            }
-        }
-
-        // Tab switching
-        function switchTab(tab) {
-            const tabs = document.querySelectorAll('.tab');
-            tabs.forEach(t => t.classList.remove('active'));
+        function checkERPSolution() {
+            // Správná sekvence: D-C-B-E-F-A (Hardware → Síť → Databáze → Bezpečnost → Aplikace → Uživatelé)
+            const correctSequence = ['D', 'C', 'B', 'E', 'F', 'A'];
+            const userSequence = gameState.erpSequence.map(item => item.step);
             
-            if (tab === 'login') {
-                document.getElementById('loginForm').classList.remove('hidden');
-                document.getElementById('registerForm').classList.add('hidden');
-                tabs[0].classList.add('active');
+            if (JSON.stringify(correctSequence) === JSON.stringify(userSequence)) {
+                document.getElementById('erp-success').classList.add('show');
+                completeRoom('room1');
             } else {
-                document.getElementById('loginForm').classList.add('hidden');
-                document.getElementById('registerForm').classList.remove('hidden');
-                tabs[1].classList.add('active');
+                alert('❌ Nesprávná sekvence obnovy! Tip: Systém se staví od základu - nejprve hardware a síť, pak data a aplikace, nakonec uživatelé.');
             }
         }
 
-        // Alert system
-        function showAlert(message, type = 'info') {
-            const alert = document.createElement('div');
-            alert.className = `alert alert-${type}`;
-            alert.textContent = message;
-            document.body.appendChild(alert);
-            
-            setTimeout(() => {
-                alert.style.animation = 'slideDown 0.3s ease reverse';
-                setTimeout(() => alert.remove(), 300);
-            }, 3000);
-        }
-
-        // Registration
-        function register() {
-            const name = document.getElementById('regName').value.trim();
-            const email = document.getElementById('regEmail').value.trim().toLowerCase();
-            const password = document.getElementById('regPassword').value;
-            const role = document.getElementById('regRole').value;
-            
-            // Validation
-            if (!name || !email || !password) {
-                showAlert('Vyplňte všetky polia!', 'error');
-                return;
-            }
-            
-            if (!email.includes('@')) {
-                showAlert('Neplatný email!', 'error');
-                return;
-            }
-            
-            if (password.length < 6) {
-                showAlert('Heslo musí mať aspoň 6 znakov!', 'error');
-                return;
-            }
-            
-            if (db.users[email]) {
-                showAlert('Tento email už existuje!', 'error');
-                return;
-            }
-            
-            // Create user
-            db.users[email] = {
-                name: name,
-                password: password,
-                role: role,
-                created: new Date().toISOString()
-            };
-            
-            saveToStorage();
-            showAlert('Registrácia úspešná! Môžete sa prihlásiť.', 'success');
-            
-            // Switch to login
-            switchTab('login');
-            document.getElementById('loginEmail').value = email;
-            document.getElementById('loginPassword').value = '';
-            
-            // Clear form
-            document.getElementById('regName').value = '';
-            document.getElementById('regEmail').value = '';
-            document.getElementById('regPassword').value = '';
-        }
-
-        // Login
-        function login() {
-            const email = document.getElementById('loginEmail').value.trim().toLowerCase();
-            const password = document.getElementById('loginPassword').value;
-            
-            if (!email || !password) {
-                showAlert('Vyplňte email a heslo!', 'error');
-                return;
-            }
-            
-            const user = db.users[email];
-            if (user && user.password === password) {
-                db.currentUser = {
-                    email: email,
-                    name: user.name,
-                    role: user.role
-                };
-                
-                saveSession();
-                showDashboard();
-                showAlert(`Vitajte, ${user.name}!`, 'success');
-            } else {
-                showAlert('Nesprávne prihlasovacie údaje!', 'error');
-            }
-        }
-
-        // Logout
-        function logout() {
-            db.currentUser = null;
-            saveSession();
-            
-            document.getElementById('authSection').classList.remove('hidden');
-            document.getElementById('userInfo').classList.add('hidden');
-            document.getElementById('studentDashboard').classList.add('hidden');
-            document.getElementById('teacherDashboard').classList.add('hidden');
-            
-            // Clear forms
-            document.getElementById('loginEmail').value = '';
-            document.getElementById('loginPassword').value = '';
-            
-            showAlert('Boli ste odhlásený', 'info');
-        }
-
-        // Show dashboard
-        function showDashboard() {
-            document.getElementById('authSection').classList.add('hidden');
-            document.getElementById('userInfo').classList.remove('hidden');
-            document.getElementById('userName').textContent = `${db.currentUser.name} (${db.currentUser.role === 'teacher' ? 'Učiteľ' : 'Študent'})`;
-            
-            if (db.currentUser.role === 'student') {
-                document.getElementById('studentDashboard').classList.remove('hidden');
-                updateStudentDashboard();
-            } else {
-                document.getElementById('teacherDashboard').classList.remove('hidden');
-                updateTeacherDashboard();
-            }
-        }
-
-        // Update student dashboard
-        function updateStudentDashboard() {
-            const myResults = db.results.filter(r => r.email === db.currentUser.email);
-            
-            // Stats
-            document.getElementById('studentGamesPlayed').textContent = myResults.length;
-            
-            if (myResults.length > 0) {
-                const avgScore = Math.round(myResults.reduce((sum, r) => sum + r.score, 0) / myResults.length);
-                const bestScore = Math.max(...myResults.map(r => r.score));
-                const totalTime = myResults.reduce((sum, r) => sum + r.time, 0);
-                
-                document.getElementById('studentAvgScore').textContent = `${avgScore}%`;
-                document.getElementById('studentBestScore').textContent = `${bestScore}%`;
-                document.getElementById('studentTotalTime').textContent = `${Math.round(totalTime / 60)}m`;
-            } else {
-                document.getElementById('studentAvgScore').textContent = '0%';
-                document.getElementById('studentBestScore').textContent = '0%';
-                document.getElementById('studentTotalTime').textContent = '0m';
-            }
-            
-            // Results table
-            const tbody = document.getElementById('studentResults');
-            tbody.innerHTML = '';
-            
-            myResults.slice(-10).reverse().forEach(result => {
-                const row = tbody.insertRow();
-                row.innerHTML = `
-                    <td>${new Date(result.date).toLocaleDateString('sk-SK')}</td>
-                    <td>${result.game}</td>
-                    <td><strong>${result.score}%</strong></td>
-                    <td>${Math.floor(result.time / 60)}:${(result.time % 60).toString().padStart(2, '0')}</td>
-                `;
+        function resetERP() {
+            document.querySelectorAll('#erp-pieces .puzzle-piece').forEach(el => {
+                el.style.opacity = '1';
+                el.style.pointerEvents = 'auto';
             });
-            
-            if (myResults.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="4" style="text-align: center; color: #999;">Zatiaľ žiadne výsledky</td></tr>';
+            gameState.erpSequence = [];
+            updateERPSequence();
+            document.getElementById('erp-success').classList.remove('show');
+        }
+
+        // MÍSTNOST 2: ROBOTICKÉ PROGRAMOVÁNÍ
+        function selectRobotCard(element) {
+            if (gameState.robotSequence.length < 5) {
+                gameState.robotSequence.push({
+                    cmd: element.dataset.cmd,
+                    text: element.textContent.trim()
+                });
+                element.style.opacity = '0.5';
+                element.style.pointerEvents = 'none';
+                updateRobotSequence();
             }
         }
 
-        // Update teacher dashboard with pagination
-        let currentPage = 1;
-        const resultsPerPage = 20;
-
-        function updateTeacherDashboard() {
-            // Count unique students
-            const uniqueStudents = new Set(db.results.map(r => r.email)).size;
-            document.getElementById('totalStudents').textContent = uniqueStudents;
-            
-            // Total games
-            document.getElementById('totalGames').textContent = db.results.length;
-            
-            // Average score
-            if (db.results.length > 0) {
-                const avgScore = Math.round(db.results.reduce((sum, r) => sum + r.score, 0) / db.results.length);
-                document.getElementById('avgClassScore').textContent = `${avgScore}%`;
-            } else {
-                document.getElementById('avgClassScore').textContent = '0%';
-            }
-            
-            // Active today
-            const today = new Date().toDateString();
-            const activeToday = new Set(
-                db.results
-                    .filter(r => new Date(r.date).toDateString() === today)
-                    .map(r => r.email)
-            ).size;
-            document.getElementById('activeToday').textContent = activeToday;
-            
-            // Display results with pagination
-            displayTeacherResults();
-        }
-
-        function displayTeacherResults(filteredResults = null) {
-            const results = filteredResults || db.results;
-            const tbody = document.getElementById('teacherResults');
-            tbody.innerHTML = '';
-            
-            // Pagination
-            const totalPages = Math.ceil(results.length / resultsPerPage);
-            const startIndex = (currentPage - 1) * resultsPerPage;
-            const endIndex = Math.min(startIndex + resultsPerPage, results.length);
-            
-            // Display current page results
-            results.slice(startIndex, endIndex).reverse().forEach(result => {
-                const row = tbody.insertRow();
-                row.innerHTML = `
-                    <td><strong>${result.name}</strong></td>
-                    <td>${result.game}</td>
-                    <td>${new Date(result.date).toLocaleDateString('sk-SK')}</td>
-                    <td><strong>${result.score}%</strong></td>
-                    <td>${Math.floor(result.time / 60)}:${(result.time % 60).toString().padStart(2, '0')}</td>
-                `;
-            });
-            
-            if (results.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="5" style="text-align: center; color: #999;">Žiadne výsledky</td></tr>';
-            }
-            
-            // Update pagination
-            updatePagination(totalPages);
-        }
-
-        function updatePagination(totalPages) {
-            const pagination = document.getElementById('pagination');
-            
-            if (totalPages <= 1) {
-                pagination.innerHTML = '';
-                return;
-            }
-            
-            let html = '';
-            
-            // Previous button
-            html += `<button onclick="changePage(${currentPage - 1})" ${currentPage === 1 ? 'disabled' : ''}>←</button>`;
-            
-            // Page numbers
-            for (let i = 1; i <= Math.min(totalPages, 5); i++) {
-                html += `<button class="${i === currentPage ? 'active' : ''}" onclick="changePage(${i})">${i}</button>`;
-            }
-            
-            if (totalPages > 5) {
-                html += `<button disabled>...</button>`;
-                html += `<button class="${totalPages === currentPage ? 'active' : ''}" onclick="changePage(${totalPages})">${totalPages}</button>`;
-            }
-            
-            // Next button
-            html += `<button onclick="changePage(${currentPage + 1})" ${currentPage === totalPages ? 'disabled' : ''}>→</button>`;
-            
-            pagination.innerHTML = html;
-        }
-
-        function changePage(page) {
-            const totalPages = Math.ceil(db.results.length / resultsPerPage);
-            if (page < 1 || page > totalPages) return;
-            
-            currentPage = page;
-            displayTeacherResults();
-        }
-
-        function filterResults() {
-            const searchTerm = document.getElementById('searchStudent').value.toLowerCase();
-            
-            if (searchTerm === '') {
-                displayTeacherResults();
-            } else {
-                const filtered = db.results.filter(r => 
-                    r.name.toLowerCase().includes(searchTerm) ||
-                    r.email.toLowerCase().includes(searchTerm)
-                );
-                currentPage = 1;
-                displayTeacherResults(filtered);
-            }
-        }
-
-        function refreshTeacherDashboard() {
-            currentPage = 1;
-            updateTeacherDashboard();
-            showAlert('Dashboard obnovený', 'info');
-        }
-
-        // Export results
-        function exportResults() {
-            let csv = 'Študent,Email,Hra,Dátum,Skóre,Čas\n';
-            
-            db.results.forEach(r => {
-                const date = new Date(r.date).toLocaleDateString('sk-SK');
-                const time = `${Math.floor(r.time / 60)}:${(r.time % 60).toString().padStart(2, '0')}`;
-                csv += `"${r.name}","${r.email}","${r.game}","${date}","${r.score}%","${time}"\n`;
-            });
-            
-            const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
-            const link = document.createElement('a');
-            const url = URL.createObjectURL(blob);
-            
-            link.setAttribute('href', url);
-            link.setAttribute('download', `vysledky_${new Date().toISOString().split('T')[0]}.csv`);
-            link.style.visibility = 'hidden';
-            
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-            
-            showAlert('Export dokončený!', 'success');
-        }
-
-        // Reset database
-        function resetDatabase() {
-            if (confirm('Naozaj chcete vymazať všetky dáta? Táto akcia sa nedá vrátiť.')) {
-                db.users = {};
-                db.results = [];
-                setupDefaultUsers();
-                saveToStorage();
-                logout();
-                showAlert('Databáza bola resetovaná', 'info');
-            }
-        }
-
-        // GAMES
-        function startGame(gameType) {
-            db.gameStartTime = Date.now();
-            document.getElementById('gameModal').style.display = 'block';
-            
-            const titles = {
-                'quiz': '📝 Quiz - Progresívne technológie',
-                'memory': '🎴 Pexeso',
-                'classification': '📊 Klasifikácia technológií',
-                'sequence': '🔢 Usporiadanie podľa spotreby'
-            };
-            
-            document.getElementById('gameTitle').textContent = titles[gameType];
-            
-            switch(gameType) {
-                case 'quiz': startQuiz(); break;
-                case 'memory': startMemory(); break;
-                case 'classification': startClassification(); break;
-                case 'sequence': startSequence(); break;
-            }
-        }
-
-        function closeGame() {
-            document.getElementById('gameModal').style.display = 'none';
-            db.currentGameData = null;
-        }
-
-        function saveGameResult(gameName, score, details = '') {
-            const result = {
-                email: db.currentUser.email,
-                name: db.currentUser.name,
-                game: gameName,
-                score: score,
-                time: Math.floor((Date.now() - db.gameStartTime) / 1000),
-                date: new Date().toISOString(),
-                details: details,
-                device: navigator.userAgent
-            };
-            
-            db.results.push(result);
-            saveToStorage();
-            updateStudentDashboard();
-            
-            showAlert(`Hra dokončená! Skóre: ${score}%`, 'success');
-            closeGame();
-        }
-
-        // QUIZ GAME
-        const quizQuestions = [
-            {
-                question: "Ktoré technológie patria medzi konvenčné procesy úberu materiálu?",
-                options: ["Sústruženie a frézovanie", "Elektroerozívne obrábanie", "Laserové obrábanie", "Ultrazvukové obrábanie"],
-                correct: 0
-            },
-            {
-                question: "Kedy boli vyvinuté progresívne technológie obrábania?",
-                options: ["Pred rokom 1920", "Po roku 1940", "V 18. storočí", "V stredoveku"],
-                correct: 1
-            },
-            {
-                question: "Hlavná výhoda progresívnych technológií je:",
-                options: ["Nižšia spotreba energie", "Vyššia rýchlosť", "Nezávislosť na mechanických vlastnostiach", "Lacnejšie nástroje"],
-                correct: 2
-            },
-            {
-                question: "Elektroerozívne obrábanie (EDM) využíva:",
-                options: ["Mechanickú silu", "Elektrické výboje", "Laserový lúč", "Chemické reakcie"],
-                correct: 1
-            },
-            {
-                question: "Ktorá technológia má najnižšiu spotrebu energie?",
-                options: ["Konvenčné obrábanie", "Vodný lúč", "Laserové obrábanie", "Elektroerozívne obrábanie"],
-                correct: 2
-            }
-        ];
-
-        let quizState = {
-            currentQuestion: 0,
-            correctAnswers: 0,
-            selectedAnswer: null
-        };
-
-        function startQuiz() {
-            quizState = {
-                currentQuestion: 0,
-                correctAnswers: 0,
-                selectedAnswer: null
-            };
-            showQuizQuestion();
-        }
-
-        function showQuizQuestion() {
-            if (quizState.currentQuestion >= quizQuestions.length) {
-                const score = Math.round((quizState.correctAnswers / quizQuestions.length) * 100);
-                document.getElementById('gameContent').innerHTML = `
-                    <div style="text-align: center; padding: 20px;">
-                        <h2>Quiz dokončený! 🎉</h2>
-                        <div class="stat-value" style="font-size: 3rem; margin: 20px 0;">${score}%</div>
-                        <p>Správne odpovede: ${quizState.correctAnswers} z ${quizQuestions.length}</p>
-                        <button class="btn btn-primary" onclick="saveGameResult('Quiz', ${score}, 'Správne ${quizState.correctAnswers}/${quizQuestions.length}')">
-                            Uložiť výsledok
-                        </button>
-                    </div>
-                `;
-                return;
-            }
-
-            const q = quizQuestions[quizState.currentQuestion];
-            let html = `
-                <div style="padding: 20px;">
-                    <div style="margin-bottom: 20px;">
-                        <span style="color: #667eea; font-weight: 600;">
-                            Otázka ${quizState.currentQuestion + 1} z ${quizQuestions.length}
-                        </span>
-                    </div>
-                    <h3 style="margin-bottom: 20px;">${q.question}</h3>
-            `;
-
-            q.options.forEach((option, index) => {
-                html += `
-                    <button class="quiz-option" id="option-${index}" onclick="selectQuizAnswer(${index})">
-                        ${option}
-                    </button>
-                `;
-            });
-
-            html += `
-                <div style="margin-top: 20px; text-align: center;">
-                    <button class="btn btn-primary" id="checkAnswerBtn" onclick="checkQuizAnswer()" style="display: none;">
-                        Skontrolovať odpoveď
-                    </button>
-                    <button class="btn btn-success" id="nextQuestionBtn" onclick="nextQuizQuestion()" style="display: none;">
-                        Ďalšia otázka →
-                    </button>
-                </div>
-            </div>
-            `;
-
-            document.getElementById('gameContent').innerHTML = html;
-        }
-
-        function selectQuizAnswer(index) {
-            // Remove previous selection
-            document.querySelectorAll('.quiz-option').forEach(btn => {
-                btn.classList.remove('selected');
-            });
-            
-            // Add selection
-            document.getElementById(`option-${index}`).classList.add('selected');
-            quizState.selectedAnswer = index;
-            
-            // Show check button
-            document.getElementById('checkAnswerBtn').style.display = 'inline-block';
-        }
-
-        function checkQuizAnswer() {
-            const correct = quizQuestions[quizState.currentQuestion].correct;
-            
-            // Disable all options
-            document.querySelectorAll('.quiz-option').forEach(btn => {
-                btn.onclick = null;
-                btn.style.cursor = 'default';
-            });
-            
-            // Mark correct/incorrect
-            if (quizState.selectedAnswer === correct) {
-                document.getElementById(`option-${quizState.selectedAnswer}`).classList.add('correct');
-                quizState.correctAnswers++;
-            } else {
-                document.getElementById(`option-${quizState.selectedAnswer}`).classList.add('incorrect');
-                document.getElementById(`option-${correct}`).classList.add('correct');
-            }
-            
-            // Show next button
-            document.getElementById('checkAnswerBtn').style.display = 'none';
-            document.getElementById('nextQuestionBtn').style.display = 'inline-block';
-        }
-
-        function nextQuizQuestion() {
-            quizState.currentQuestion++;
-            quizState.selectedAnswer = null;
-            showQuizQuestion();
-        }
-
-        // MEMORY GAME
-        const memoryPairs = [
-            { id: 1, text1: "Sústruženie", text2: "Definovaná geometria" },
-            { id: 2, text1: "Brúsenie", text2: "Neurčitá geometria" },
-            { id: 3, text1: "EDM", text2: "Elektrické výboje" },
-            { id: 4, text1: "LBM", text2: "Laserový lúč" },
-            { id: 5, text1: "USM", text2: "Ultrazvuk" },
-            { id: 6, text1: "AWJ", text2: "Vodný lúč" },
-            { id: 7, text1: "Konvenčné", text2: "Mechanické" },
-            { id: 8, text1: "Progresívne", text2: "Nemechanické" }
-        ];
-
-        let memoryState = {
-            cards: [],
-            flipped: [],
-            matched: [],
-            attempts: 0
-        };
-
-        function startMemory() {
-            // Create cards array
-            memoryState = {
-                cards: [],
-                flipped: [],
-                matched: [],
-                attempts: 0
-            };
-            
-            memoryPairs.forEach(pair => {
-                memoryState.cards.push({ id: pair.id, text: pair.text1 });
-                memoryState.cards.push({ id: pair.id, text: pair.text2 });
-            });
-            
-            // Shuffle cards
-            memoryState.cards.sort(() => Math.random() - 0.5);
-            
-            renderMemory();
-        }
-
-        function renderMemory() {
-            let html = `
-                <div style="padding: 20px; text-align: center;">
-                    <p>Nájdené páry: ${memoryState.matched.length / 2} z ${memoryPairs.length}</p>
-                    <p>Pokusy: ${memoryState.attempts}</p>
-                    <div class="memory-grid">
-            `;
-            
-            memoryState.cards.forEach((card, index) => {
-                const isFlipped = memoryState.flipped.includes(index);
-                const isMatched = memoryState.matched.includes(index);
-                
-                html += `
-                    <div class="memory-card ${isFlipped ? 'flipped' : ''} ${isMatched ? 'matched' : ''}"
-                         onclick="${!isMatched && !isFlipped ? `flipMemoryCard(${index})` : ''}">
-                        ${isFlipped || isMatched ? card.text : '?'}
-                    </div>
-                `;
-            });
-            
-            html += '</div>';
-            
-            if (memoryState.matched.length === memoryState.cards.length) {
-                const score = Math.max(0, Math.round(100 - (memoryState.attempts - memoryPairs.length) * 2));
-                html += `
-                    <div style="margin-top: 20px;">
-                        <h3>Výborne! 🎉</h3>
-                        <p>Skóre: ${score}%</p>
-                        <button class="btn btn-primary" onclick="saveGameResult('Pexeso', ${score}, 'Pokusy: ${memoryState.attempts}')">
-                            Uložiť výsledok
-                        </button>
-                    </div>
-                `;
-            }
-            
-            html += '</div>';
-            
-            document.getElementById('gameContent').innerHTML = html;
-        }
-
-        function flipMemoryCard(index) {
-            if (memoryState.flipped.length >= 2) return;
-            
-            memoryState.flipped.push(index);
-            renderMemory();
-            
-            if (memoryState.flipped.length === 2) {
-                memoryState.attempts++;
-                setTimeout(checkMemoryMatch, 1000);
-            }
-        }
-
-        function checkMemoryMatch() {
-            const [first, second] = memoryState.flipped;
-            
-            if (memoryState.cards[first].id === memoryState.cards[second].id) {
-                memoryState.matched.push(first, second);
-            }
-            
-            memoryState.flipped = [];
-            renderMemory();
-        }
-
-        // CLASSIFICATION GAME
-        const classificationItems = [
-            { name: "Sústruženie", type: "conventional" },
-            { name: "Frézovanie", type: "conventional" },
-            { name: "Brúsenie", type: "conventional" },
-            { name: "Vŕtanie", type: "conventional" },
-            { name: "Elektroerozívne", type: "progressive" },
-            { name: "Laserové", type: "progressive" },
-            { name: "Ultrazvukové", type: "progressive" },
-            { name: "Vodný lúč", type: "progressive" }
-        ];
-
-        function startClassification() {
-            let html = `
-                <div style="padding: 20px;">
-                    <p style="text-align: center; margin-bottom: 20px;">
-                        Roztrieďte technológie do správnych kategórií:
-                    </p>
-                    
-                    <div id="itemsToClassify" style="margin-bottom: 20px; text-align: center;">
-            `;
-            
-            classificationItems.forEach((item, index) => {
-                html += `
-                    <span id="item-${index}" 
-                          data-type="${item.type}"
-                          style="display: inline-block; padding: 10px 15px; margin: 5px;
-                                 background: #667eea; color: white; border-radius: 20px;
-                                 cursor: move;"
-                          draggable="true"
-                          ondragstart="dragStart(event, ${index})"
-                          onclick="toggleClassification(${index})">
-                        ${item.name}
-                    </span>
-                `;
-            });
-            
-            html += `
-                    </div>
-                    
-                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
-                        <div>
-                            <h4>Konvenčné technológie</h4>
-                            <div id="conventional-box" 
-                                 style="min-height: 100px; padding: 15px; background: #f0f4ff;
-                                        border: 2px dashed #667eea; border-radius: 10px;"
-                                 ondrop="dropItem(event, 'conventional')"
-                                 ondragover="allowDrop(event)">
-                            </div>
-                        </div>
-                        <div>
-                            <h4>Progresívne technológie</h4>
-                            <div id="progressive-box"
-                                 style="min-height: 100px; padding: 15px; background: #fff0f4;
-                                        border: 2px dashed #eb3349; border-radius: 10px;"
-                                 ondrop="dropItem(event, 'progressive')"
-                                 ondragover="allowDrop(event)">
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div style="text-align: center; margin-top: 20px;">
-                        <button class="btn btn-primary" onclick="checkClassification()">
-                            Skontrolovať
-                        </button>
-                    </div>
-                    
-                    <div id="classificationResult"></div>
-                </div>
-            `;
-            
-            document.getElementById('gameContent').innerHTML = html;
-        }
-
-        function toggleClassification(index) {
-            const item = document.getElementById(`item-${index}`);
-            const type = item.dataset.type;
-            
-            if (item.parentElement.id === 'itemsToClassify') {
-                // Move to correct box for demo
-                const targetBox = type === 'conventional' ? 'conventional-box' : 'progressive-box';
-                document.getElementById(targetBox).appendChild(item);
-            } else {
-                // Move back
-                document.getElementById('itemsToClassify').appendChild(item);
-            }
-        }
-
-        function dragStart(event, index) {
-            event.dataTransfer.setData("text", index);
-        }
-
-        function allowDrop(event) {
-            event.preventDefault();
-        }
-
-        function dropItem(event, boxType) {
-            event.preventDefault();
-            const index = event.dataTransfer.getData("text");
-            const item = document.getElementById(`item-${index}`);
-            
-            const targetBox = boxType === 'conventional' ? 'conventional-box' : 'progressive-box';
-            document.getElementById(targetBox).appendChild(item);
-        }
-
-        function checkClassification() {
-            let correct = 0;
-            let total = classificationItems.length;
-            
-            // Check conventional box
-            const convBox = document.getElementById('conventional-box');
-            const convItems = convBox.querySelectorAll('span');
-            convItems.forEach(item => {
-                if (item.dataset.type === 'conventional') {
-                    item.style.background = '#56ab2f';
-                    correct++;
+        function updateRobotSequence() {
+            const sequenceItems = document.querySelectorAll('#robot-sequence .sequence-item');
+            sequenceItems.forEach((item, index) => {
+                if (gameState.robotSequence[index]) {
+                    item.innerHTML = `<strong>Příkaz ${index + 1}:</strong><br>${gameState.robotSequence[index].text}`;
+                    item.style.background = 'rgba(255, 215, 0, 0.3)';
                 } else {
-                    item.style.background = '#eb3349';
+                    item.innerHTML = `Příkaz ${index + 1}`;
+                    item.style.background = 'rgba(255,255,255,0.1)';
                 }
             });
-            
-            // Check progressive box
-            const progBox = document.getElementById('progressive-box');
-            const progItems = progBox.querySelectorAll('span');
-            progItems.forEach(item => {
-                if (item.dataset.type === 'progressive') {
-                    item.style.background = '#56ab2f';
-                    correct++;
-                } else {
-                    item.style.background = '#eb3349';
-                }
-            });
-            
-            const score = Math.round((correct / total) * 100);
-            
-            document.getElementById('classificationResult').innerHTML = `
-                <div style="text-align: center; margin-top: 20px; padding: 20px; background: #f5f5f5; border-radius: 10px;">
-                    <h3>Výsledok: ${correct} z ${total} (${score}%)</h3>
-                    <button class="btn btn-primary" onclick="saveGameResult('Klasifikácia', ${score}, 'Správne ${correct}/${total}')">
-                        Uložiť výsledok
-                    </button>
-                </div>
-            `;
         }
 
-        // SEQUENCE GAME
-        const sequenceItems = [
-            { name: "LBM (Laserové)", power: 2 },
-            { name: "EBM (Elektrónový lúč)", power: 6 },
-            { name: "USM (Ultrazvukové)", power: 8 },
-            { name: "EDM (Elektroerozívne)", power: 10 },
-            { name: "AWJ (Vodný lúč)", power: 15 },
-            { name: "Konvenčné obrábanie", power: 18 }
-        ];
-
-        let sequenceOrder = [];
-
-        function startSequence() {
-            // Shuffle items
-            sequenceOrder = [...sequenceItems].sort(() => Math.random() - 0.5);
-            renderSequence();
-        }
-
-        function renderSequence() {
-            let html = `
-                <div style="padding: 20px;">
-                    <p style="text-align: center; margin-bottom: 20px;">
-                        Usporiadajte technológie podľa spotreby energie (od najnižšej po najvyššiu):
-                    </p>
-                    
-                    <div id="sequenceList">
-            `;
+        function checkRobotSolution() {
+            // Správná sekvence podle zadání: NAVIGATE_TO_POSITION → PICK_MATERIAL → MOVE_TO_MACHINE → ACTIVATE_PRODUCTION → RETURN_PRODUCT
+            const correctSequence = ['NAVIGATE_TO_POSITION', 'PICK_MATERIAL', 'MOVE_TO_MACHINE', 'ACTIVATE_PRODUCTION', 'RETURN_PRODUCT'];
+            const userSequence = gameState.robotSequence.map(item => item.cmd);
             
-            sequenceOrder.forEach((item, index) => {
-                html += `
-                    <div style="display: flex; justify-content: space-between; align-items: center;
-                                padding: 15px; margin: 10px 0; background: #f5f5f5;
-                                border-radius: 10px; border: 2px solid #e0e0e0;">
-                        <span>${item.name}</span>
-                        <div>
-                            <button class="btn btn-secondary" style="width: auto; padding: 5px 10px;"
-                                    onclick="moveItem(${index}, -1)" ${index === 0 ? 'disabled' : ''}>
-                                ↑
-                            </button>
-                            <button class="btn btn-secondary" style="width: auto; padding: 5px 10px;"
-                                    onclick="moveItem(${index}, 1)" ${index === sequenceOrder.length - 1 ? 'disabled' : ''}>
-                                ↓
-                            </button>
-                        </div>
-                    </div>
-                `;
-            });
-            
-            html += `
-                    </div>
-                    
-                    <div style="text-align: center; margin-top: 20px;">
-                        <button class="btn btn-primary" onclick="checkSequence()">
-                            Skontrolovať poradie
-                        </button>
-                    </div>
-                    
-                    <div id="sequenceResult"></div>
-                </div>
-            `;
-            
-            document.getElementById('gameContent').innerHTML = html;
-        }
-
-        function moveItem(index, direction) {
-            const newIndex = index + direction;
-            if (newIndex < 0 || newIndex >= sequenceOrder.length) return;
-            
-            // Swap items
-            const temp = sequenceOrder[index];
-            sequenceOrder[index] = sequenceOrder[newIndex];
-            sequenceOrder[newIndex] = temp;
-            
-            renderSequence();
-        }
-
-        function checkSequence() {
-            const correctOrder = [...sequenceItems].sort((a, b) => a.power - b.power);
-            let correct = 0;
-            
-            sequenceOrder.forEach((item, index) => {
-                if (item.name === correctOrder[index].name) {
-                    correct++;
-                }
-            });
-            
-            const score = Math.round((correct / sequenceOrder.length) * 100);
-            
-            let resultHtml = `
-                <div style="margin-top: 20px; padding: 20px; background: #f5f5f5; border-radius: 10px;">
-                    <h3 style="text-align: center;">Výsledok: ${correct} z ${sequenceOrder.length} (${score}%)</h3>
-                    <h4>Správne poradie:</h4>
-                    <ol>
-            `;
-            
-            correctOrder.forEach(item => {
-                resultHtml += `<li>${item.name} - ${item.power} kW</li>`;
-            });
-            
-            resultHtml += `
-                    </ol>
-                    <div style="text-align: center; margin-top: 15px;">
-                        <button class="btn btn-primary" onclick="saveGameResult('Poradie', ${score}, 'Správne ${correct}/${sequenceOrder.length}')">
-                            Uložiť výsledok
-                        </button>
-                    </div>
-                </div>
-            `;
-            
-            document.getElementById('sequenceResult').innerHTML = resultHtml;
-        }
-
-        // Initialize app on load
-        window.addEventListener('DOMContentLoaded', initApp);
-        
-        // Handle browser back button
-        window.addEventListener('popstate', function(e) {
-            if (document.getElementById('gameModal').style.display === 'block') {
-                closeGame();
+            if (JSON.stringify(correctSequence) === JSON.stringify(userSequence)) {
+                document.getElementById('robot-success').classList.add('show');
+                completeRoom('room2');
+            } else {
+                alert('❌ Program nefunguje! Tip: Robot musí nejprve dojet na pozici, vzít materiál, přesunout ho ke stroji, spustit výrobu a vrátit výrobek.');
             }
-        });
-    </script
+        }
+
+        function resetRobot() {
+            gameState.robotSequence = [];
+            document.querySelectorAll('#robot-cards .code-card').forEach(card => {
+                card.style.opacity = '1';
+                card.style.pointerEvents = 'auto';
+            });
+            updateRobotSequence();
+            document.getElementById('robot-success').classList.remove('show');
+        }
+
+        // MÍSTNOST 3: AI QUALITY CONTROL
+        function selectDefect(element) {
+            element.classList.toggle('selected');
+            const defectType = element.dataset.defect;
+            
+            if (element.classList.contains('selected')) {
+                if (!gameState.aiSelected.includes(defectType)) {
+                    gameState.aiSelected.push(defectType);
+                }
+            } else {
+                gameState.aiSelected = gameState.aiSelected.filter(item => item !== defectType);
+            }
+        }
+
+        function checkAISolution() {
+            // Podle zadání v DODANÝCH DATECH: Praskliny, Deformace, Nedostatečná tloušťka, Chybějící součásti, Špatná barva
+            const correctDefects = ['praskliny', 'deformace', 'tloustka', 'soucastky', 'barva'];
+            const userSelected = [...gameState.aiSelected].sort();
+            const correctSelected = [...correctDefects].sort();
+            
+            if (JSON.stringify(correctSelected) === JSON.stringify(userSelected)) {
+                document.getElementById('ai-success').classList.add('show');
+                completeRoom('room3');
+            } else {
+                alert('❌ Nesprávná analýza! Přečtěte si pozorně DODANÁ DATA od AI systému - obsahují přesný výčet nalezených typů defektů.');
+            }
+        }
+
+        function resetAI() {
+            document.querySelectorAll('#defect-items .defect-item').forEach(item => {
+                item.classList.remove('selected');
+            });
+            gameState.aiSelected = [];
+            document.getElementById('ai-success').classList.remove('show');
+        }
+
+        // MÍSTNOST 4: ENERGETICKÉ CENTRUM
+        function updateEnergy(system, value) {
+            gameState.energyConfig[system] = parseInt(value);
+            document.getElementById(`${system}-value`).textContent = `${value}kW`;
+            
+            const total = Object.values(gameState.energyConfig).reduce((sum, val) => sum + val, 0);
+            const totalElement = document.getElementById('total-consumption');
+            const statusElement = document.getElementById('energy-status');
+            
+            totalElement.textContent = `${total}kW`;
+            
+            if (total > 100) {
+                totalElement.style.color = '#ff4444';
+                statusElement.innerHTML = '⚠️ PŘETÍŽENÍ SÍTĚ';
+                statusElement.style.color = '#ff4444';
+            } else if (total === 100) {
+                totalElement.style.color = '#FFD700';
+                statusElement.innerHTML = '✅ LIMIT DOSAŽEN';
+                statusElement.style.color = '#4CAF50';
+            } else {
+                totalElement.style.color = '#4CAF50';
+                statusElement.innerHTML = '✅ V POŘÁDKU';
+                statusElement.style.color = '#4CAF50';
+            }
+        }
+
+        function checkEnergySolution() {
+            const config = gameState.energyConfig;
+            const total = Object.values(config).reduce((sum, val) => sum + val, 0);
+            
+            // Optimální konfigurace: servery≥25, robotika≥20, osvětlení≥8, klimatizace≥15, výroba≥25, celkem≤100
+            if (total <= 100 && 
+                config.servers >= 25 && 
+                config.robotics >= 20 && 
+                config.lighting >= 8 && 
+                config.hvac >= 15 && 
+                config.production >= 25) {
+                document.getElementById('energy-success').classList.add('show');
+                completeRoom('room4');
+            } else {
+                let message = '❌ Konfigurace není optimální!\n\nPožadavky:\n';
+                message += `• Servery: min 25kW (aktuálně ${config.servers}kW)\n`;
+                message += `• Robotika: min 20kW (aktuálně ${config.robotics}kW)\n`;
+                message += `• Osvětlení: min 8kW (aktuálně ${config.lighting}kW)\n`;
+                message += `• Klimatizace: min 15kW (aktuálně ${config.hvac}kW)\n`;
+                message += `• Výroba: min 25kW (aktuálně ${config.production}kW)\n`;
+                message += `• Celková spotřeba: max 100kW (aktuálně ${total}kW)`;
+                alert(message);
+            }
+        }
+
+        function resetEnergy() {
+            gameState.energyConfig = {
+                servers: 30,
+                robotics: 25,
+                lighting: 12,
+                hvac: 18,
+                production: 30
+            };
+            
+            document.querySelector('[onchange*="servers"]').value = 30;
+            document.querySelector('[onchange*="robotics"]').value = 25;
+            document.querySelector('[onchange*="lighting"]').value = 12;
+            document.querySelector('[onchange*="hvac"]').value = 18;
+            document.querySelector('[onchange*="production"]').value = 30;
+            
+            Object.keys(gameState.energyConfig).forEach(system => {
+                updateEnergy(system, gameState.energyConfig[system]);
+            });
+            
+            document.getElementById('energy-success').classList.remove('show');
+        }
+
+        // Inicializace energetického systému
+        updateEnergy('servers', 30);
+        updateEnergy('robotics', 25);
+        updateEnergy('lighting', 12);
+        updateEnergy('hvac', 18);
+        updateEnergy('production', 30);
+    </script>
+</body>
+</html>
