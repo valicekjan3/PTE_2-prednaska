@@ -1,1048 +1,1394 @@
-<!DOCTYPE html>
-<html>
+// Reset třídící hry
+        function resetClassificationGame() {
+            usedClassificationQuestions.clear();
+            classificationStats = { correct: 0, total: 0 }; // Reset statistik třídění
+            document.getElementById('classificationFeedback').classList.remove('active');
+            
+            // Najdi a zobraz tlačítko pro další otázku
+            const gameButtons = document.querySelectorAll('#classificationGame .btn');
+            gameButtons.forEach(btn => {
+                if (btn.textContent.includes('Další otázka')) {
+                    btn.style.display = 'inline-block';
+                }
+            });
+            
+            generateClassificationQuestion();
+        }<!DOCTYPE html>
+<html lang="cs">
 <head>
     <meta charset="UTF-8">
-    <title>LMS - Progresivne technologie</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pokročilé materiálové inženýrství - Interaktivní hry</title>
     <style>
-        body {
-            font-family: Arial, sans-serif;
+        * {
             margin: 0;
-            padding: 20px;
-            background: #f0f0f0;
+            padding: 0;
+            box-sizing: border-box;
         }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
         .container {
-            max-width: 800px;
+            max-width: 1200px;
             margin: 0 auto;
             background: white;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
         }
+        
         .header {
-            background: #2196F3;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
-            padding: 20px;
-            margin: -20px -20px 20px -20px;
-            border-radius: 10px 10px 0 0;
+            padding: 30px;
             text-align: center;
         }
-        .btn {
-            padding: 12px 20px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            margin: 5px;
-            font-size: 16px;
-            min-height: 44px; /* Touch target pre mobile */
-            -webkit-tap-highlight-color: transparent; /* Odstráni highlight na iOS */
-            touch-action: manipulation; /* Rýchlejší touch */
-        }
-        .btn-blue { background: #2196F3; color: white; }
-        .btn-green { background: #4CAF50; color: white; }
-        .btn-red { background: #f44336; color: white; }
-        .form-group {
-            margin: 15px 0;
-        }
-        .form-group label {
-            display: block;
-            margin-bottom: 5px;
-            font-weight: bold;
-        }
-        .form-control {
-            width: 100%;
-            padding: 12px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            box-sizing: border-box;
-            font-size: 16px; /* Predchádza zoom na iOS */
-            -webkit-appearance: none; /* iOS styling */
+        
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
         }
         
-        .form-control:focus {
-            border-color: #2196F3;
-            outline: none;
+        .header p {
+            font-size: 1.2em;
+            opacity: 0.9;
         }
         
-        select.form-control {
-            height: 44px; /* Minimálna výška pre touch */
-        }
-        .hidden { display: none; }
-        .games {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 15px;
-            margin: 20px 0;
-        }
-        .game-card {
-            border: 2px solid #ddd;
-            padding: 15px;
-            border-radius: 8px;
-            text-align: center;
-        }
-        .game-card:hover {
-            border-color: #2196F3;
-        }
         .stats {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-            gap: 15px;
-            margin: 20px 0;
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-top: 20px;
+            flex-wrap: wrap;
         }
+        
         .stat {
-            background: #f8f9fa;
-            padding: 15px;
-            border-radius: 5px;
             text-align: center;
         }
-        .stat-number {
-            font-size: 24px;
+        
+        .stat-value {
+            font-size: 2em;
             font-weight: bold;
-            color: #2196F3;
+            color: #ffd700;
         }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 15px;
+        
+        .stat-label {
+            font-size: 0.9em;
+            opacity: 0.8;
         }
-        th, td {
-            padding: 8px;
-            text-align: left;
-            border-bottom: 1px solid #ddd;
+        
+        .main-content {
+            padding: 40px;
         }
-        th {
-            background: #f8f9fa;
+        
+        .game-menu {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 30px;
+            margin-bottom: 40px;
         }
-        .modal {
+        
+        .game-card {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            border-radius: 15px;
+            padding: 30px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 3px solid transparent;
+        }
+        
+        .game-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.2);
+            border-color: #667eea;
+        }
+        
+        .game-card.classification {
+            background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
+        }
+        
+        .game-card.properties {
+            background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
+        }
+        
+        .game-card.selection {
+            background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%);
+        }
+        
+        .game-card h3 {
+            font-size: 1.8em;
+            margin-bottom: 15px;
+            color: #333;
+        }
+        
+        .game-card p {
+            color: #666;
+            margin-bottom: 20px;
+            line-height: 1.6;
+        }
+        
+        .game-card .points {
+            background: rgba(0,0,0,0.1);
+            padding: 10px 20px;
+            border-radius: 25px;
+            font-weight: bold;
+            color: #333;
+            display: inline-block;
+        }
+        
+        .game-area {
             display: none;
-            position: fixed;
-            z-index: 1000;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0,0,0,0.8);
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 40px;
+            margin-top: 30px;
         }
-        .modal-content {
-            background-color: white;
-            margin: 5% auto;
+        
+        .game-area.active {
+            display: block;
+            animation: fadeIn 0.5s ease-in;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .question-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        
+        .question-card h2 {
+            font-size: 2.2em;
+            margin-bottom: 15px;
+        }
+        
+        .question-card .details {
+            background: rgba(255,255,255,0.1);
             padding: 20px;
             border-radius: 10px;
-            width: 80%;
-            max-width: 600px;
+            margin-top: 20px;
+            text-align: left;
         }
-        .close {
-            color: #999;
-            float: right;
-            font-size: 24px;
-            font-weight: bold;
-            cursor: pointer;
-        }
-        .close:hover {
-            color: black;
-        }
-        .question {
-            margin: 15px 0;
-            padding: 15px;
-            background: #f8f9fa;
-            border-radius: 5px;
-        }
-        .option {
-            display: block;
-            margin: 8px 0;
-            padding: 10px;
-            background: white;
-            border: 2px solid #ddd;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-        .option:hover {
-            border-color: #2196F3;
-        }
-        .option.selected {
-            border-color: #2196F3;
-            background: #e3f2fd;
-        }
-        .option.correct {
-            border-color: #4CAF50;
-            background: #e8f5e8;
-        }
-        .option.wrong {
-            border-color: #f44336;
-            background: #ffebee;
-        }
-        .memory-grid {
+        
+        .options {
             display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 10px;
-            max-width: 400px;
-            margin: 20px auto;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin: 30px 0;
         }
-        .memory-card {
-            aspect-ratio: 1;
-            background: #2196F3;
-            color: white;
-            border-radius: 5px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            font-size: 12px;
-            text-align: center;
-            padding: 5px;
-        }
-        .memory-card.flipped {
+        
+        .option {
             background: white;
-            color: #333;
-            border: 2px solid #2196F3;
+            border: 3px solid #e0e0e0;
+            border-radius: 10px;
+            padding: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
         }
-        .memory-card.matched {
-            background: #4CAF50;
-            cursor: default;
+        
+        .option:hover {
+            border-color: #667eea;
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
         }
-        .alert {
+        
+        .option.correct {
+            border-color: #28a745;
+            background: #d4edda;
+        }
+        
+        .option.incorrect {
+            border-color: #dc3545;
+            background: #f8d7da;
+        }
+        
+        .option.disabled {
+            cursor: not-allowed;
+            opacity: 0.6;
+        }
+        
+        .feedback {
+            background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%);
+            border: 2px solid #28a745;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+            display: none;
+        }
+        
+        .feedback.error {
+            background: linear-gradient(135deg, #f8d7da 0%, #f5c6cb 100%);
+            border-color: #dc3545;
+        }
+        
+        .feedback.active {
+            display: block;
+            animation: slideIn 0.5s ease-out;
+        }
+        
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateX(-20px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+        
+        .timer {
             position: fixed;
             top: 20px;
             right: 20px;
-            padding: 15px 20px;
-            border-radius: 5px;
+            background: rgba(0,0,0,0.8);
             color: white;
+            padding: 15px 25px;
+            border-radius: 50px;
+            font-size: 1.5em;
             font-weight: bold;
-            z-index: 2000;
+            z-index: 1000;
+            display: none;
         }
-        .alert-success { background: #4CAF50; }
-        .alert-error { background: #f44336; }
+        
+        .timer.active {
+            display: block;
+        }
+        
+        .timer.warning {
+            background: #ff6b35;
+            animation: pulse 1s infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+        
+        .btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 50px;
+            font-size: 1.1em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin: 10px;
+        }
+        
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+        }
+        
+        .btn:active {
+            transform: translateY(-1px);
+        }
+        
+        .btn.secondary {
+            background: linear-gradient(135deg, #74b9ff 0%, #0984e3 100%);
+        }
+        
+        .material-info {
+            background: rgba(255,255,255,0.9);
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+            border-left: 5px solid #667eea;
+        }
+        
+        .formula {
+            background: #2d3748;
+            color: #e2e8f0;
+            padding: 15px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            margin: 10px 0;
+            overflow-x: auto;
+        }
+        
+        .hidden {
+            display: none;
+        }
+        
+        .notification {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: #667eea;
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            z-index: 9999;
+            font-weight: bold;
+            text-align: center;
+            min-width: 300px;
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                margin: 10px;
+                border-radius: 10px;
+            }
+            
+            .header {
+                padding: 20px;
+            }
+            
+            .header h1 {
+                font-size: 2em;
+            }
+            
+            .main-content {
+                padding: 20px;
+            }
+            
+            .stats {
+                gap: 20px;
+            }
+            
+            .game-menu {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+            
+            .options {
+                grid-template-columns: 1fr;
+                gap: 15px;
+            }
+            
+            .timer {
+                top: 10px;
+                right: 10px;
+                font-size: 1.2em;
+                padding: 10px 20px;
+            }
+        }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="header">
-            <h1>LMS - Progresivne technologie</h1>
-            <div id="user-info" class="hidden">
-                <span id="current-user"></span>
-                <button class="btn btn-red" onclick="logout()">Odhlasit</button>
+            <h1>🧬 Pokročilé materiálové inženýrství</h1>
+            <p>Interaktivní hry pro studenty vysokých škol</p>
+            <div class="stats">
+                <div class="stat">
+                    <div class="stat-value" id="totalScore">0</div>
+                    <div class="stat-label">Celkové skóre</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-value" id="correctAnswers">0</div>
+                    <div class="stat-label">Správné odpovědi</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-value" id="successRate">0%</div>
+                    <div class="stat-label">Úspěšnost</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-value" id="level">Začátečník</div>
+                    <div class="stat-label">Úroveň</div>
+                </div>
             </div>
         </div>
-
-        <!-- Prihlasenie a registracia -->
-        <div id="auth-section">
-            <!-- Taby -->
-            <div style="display: flex; margin-bottom: 20px; background: #f0f0f0; border-radius: 5px; padding: 5px;">
-                <button class="btn" id="login-tab" onclick="showTab('login')" style="flex: 1; background: #2196F3; color: white;">Prihlasenie</button>
-                <button class="btn" id="register-tab" onclick="showTab('register')" style="flex: 1; background: transparent; color: #333;">Registracia</button>
-            </div>
-
-            <!-- Prihlasenie -->
-            <div id="login-section">
-                <h2>Prihlasenie</h2>
-                <form onsubmit="prihlasit(); return false;">
-                    <div class="form-group">
-                        <label>Email:</label>
-                        <input type="email" id="login-email" class="form-control" value="student@test.sk" autocomplete="email">
+        
+        <div class="timer" id="timer">⏱️ 45s</div>
+        
+        <div class="main-content">
+            <div id="gameMenu">
+                <div class="game-menu">
+                    <div class="game-card classification" onclick="startGame('classification')">
+                        <h3>🔬 Pokročilé třídění</h3>
+                        <p>Slitiny, technická keramika, kompozity s mikrostrukturou. Časový limit s bonusem za rychlost.</p>
+                        <div class="points">10-20 bodů dle rychlosti</div>
                     </div>
-                    <div class="form-group">
-                        <label>Heslo:</label>
-                        <input type="password" id="login-password" class="form-control" value="heslo123" autocomplete="current-password">
+                    
+                    <div class="game-card properties" onclick="startGame('properties')">
+                        <h3>⚙️ Kvantitativní vlastnosti</h3>
+                        <p>Lomová houževnatost, creep, únava s matematickými vzorci a výpočty.</p>
+                        <div class="points">10-15 bodů dle kvality</div>
                     </div>
-                    <button type="submit" class="btn btn-blue" style="width: 100%;">Prihlasit sa</button>
-                </form>
+                    
+                    <div class="game-card selection" onclick="startGame('selection')">
+                        <h3>🎯 Expertní volba</h3>
+                        <p>Turbíny, reaktory, ložiska - reálné inženýrské scénáře s komplexní analýzou.</p>
+                        <div class="points">25-40 bodů dle složitosti</div>
+                    </div>
+                </div>
                 
-                <div style="margin-top: 30px; padding: 20px; background: #f8f9fa; border-radius: 5px;">
-                    <h4>Demo ucty:</h4>
-                    <p><strong>Student:</strong> student@test.sk / heslo123</p>
-                    <p><strong>Ucitel:</strong> teacher@test.sk / heslo123</p>
-                    <hr style="margin: 15px 0;">
-                    <p style="font-size: 12px; color: #666;">Ak mate problemy s prihlasenim:</p>
-                    <button class="btn" onclick="resetData()" style="background: #ff9800; color: white; font-size: 12px; padding: 5px 10px;">Reset dat</button>
+                <div class="material-info">
+                    <h3>📚 Doporučené prerekvizity:</h3>
+                    <p>Fyzikální chemie, Mechanika kontinua, Termodynamika, Strukturní analýza materiálů</p>
                 </div>
             </div>
-
-            <!-- Registracia -->
-            <div id="register-section" class="hidden">
-                <h2>Registracia</h2>
-                <form onsubmit="registrovat(); return false;">
-                    <div class="form-group">
-                        <label>Meno a priezvisko:</label>
-                        <input type="text" id="register-name" class="form-control" placeholder="Jan Novak" autocomplete="name">
-                    </div>
-                    <div class="form-group">
-                        <label>Email:</label>
-                        <input type="email" id="register-email" class="form-control" placeholder="jan@example.com" autocomplete="email">
-                    </div>
-                    <div class="form-group">
-                        <label>Heslo:</label>
-                        <input type="password" id="register-password" class="form-control" placeholder="Minimalne 6 znakov" autocomplete="new-password">
-                    </div>
-                    <div class="form-group">
-                        <label>Rola:</label>
-                        <select id="register-role" class="form-control">
-                            <option value="student">Student</option>
-                            <option value="teacher">Ucitel</option>
-                        </select>
-                    </div>
-                    <button type="submit" class="btn btn-green" style="width: 100%;">Registrovat sa</button>
-                </form>
-            </div>
-        </div>
-
-        <!-- Student -->
-        <div id="student-section" class="hidden">
-            <h2>Student Dashboard</h2>
             
-            <div class="stats">
-                <div class="stat">
-                    <div class="stat-number" id="student-games">0</div>
-                    <div>Hier</div>
+            <!-- Hra 1: Pokročilé třídění -->
+            <div id="classificationGame" class="game-area">
+                <div class="question-card">
+                    <h2 id="materialName">Načítání...</h2>
+                    <div class="details" id="materialDetails"></div>
                 </div>
-                <div class="stat">
-                    <div class="stat-number" id="student-avg">0%</div>
-                    <div>Priemer</div>
-                </div>
-                <div class="stat">
-                    <div class="stat-number" id="student-best">0%</div>
-                    <div>Najlepsie</div>
-                </div>
-            </div>
-
-            <h3>Hry</h3>
-            <div class="games">
-                <div class="game-card">
-                    <h4>Quiz</h4>
-                    <p>Test znalosti</p>
-                    <button class="btn btn-blue" onclick="startGame('quiz')">Hrat</button>
-                </div>
-                <div class="game-card">
-                    <h4>Pexeso</h4>
-                    <p>Pary slov</p>
-                    <button class="btn btn-blue" onclick="startGame('memory')">Hrat</button>
-                </div>
-                <div class="game-card">
-                    <h4>Klasifikacia</h4>
-                    <p>Rozdelenie</p>
-                    <button class="btn btn-blue" onclick="startGame('classification')">Hrat</button>
-                </div>
-                <div class="game-card">
-                    <h4>Poradie</h4>
-                    <p>Usporiadanie</p>
-                    <button class="btn btn-blue" onclick="startGame('sequence')">Hrat</button>
+                
+                <h3 style="text-align: center; margin: 20px 0;">Do které pokročilé kategorie tento materiál patří?</h3>
+                
+                <div class="options" id="classificationOptions"></div>
+                
+                <div class="feedback" id="classificationFeedback"></div>
+                
+                <div style="text-align: center;">
+                    <button class="btn" onclick="generateClassificationQuestion()">🔄 Další otázka</button>
+                    <button class="btn secondary" onclick="showGameMenu()">← Hlavní menu</button>
                 </div>
             </div>
-
-            <h3>Vysledky</h3>
-            <table id="student-results">
-                <thead>
-                    <tr><th>Datum</th><th>Hra</th><th>Skore</th><th>Cas</th></tr>
-                </thead>
-                <tbody></tbody>
-            </table>
-        </div>
-
-        <!-- Ucitel -->
-        <div id="teacher-section" class="hidden">
-            <h2>Ucitel Dashboard</h2>
             
-            <div class="stats">
-                <div class="stat">
-                    <div class="stat-number" id="total-students">1</div>
-                    <div>Studenti</div>
+            <!-- Hra 2: Vlastnosti -->
+            <div id="propertiesGame" class="game-area">
+                <div class="question-card">
+                    <h2 id="propertyName">Načítání...</h2>
+                    <div class="details" id="propertyDetails"></div>
                 </div>
-                <div class="stat">
-                    <div class="stat-number" id="total-games">0</div>
-                    <div>Hry</div>
+                
+                <div style="margin: 30px 0;">
+                    <h3>💡 Napište vlastními slovy co víte o této vlastnosti:</h3>
+                    <div style="background: rgba(255,255,255,0.1); padding: 15px; border-radius: 10px; margin: 15px 0; border-left: 4px solid #ffd700;">
+                        <strong>🎯 Úkol pro studenty:</strong><br>
+                        Vysvětlete význam, aplikace a souvislosti této materiálové vlastnosti. 
+                        Uveďte konkrétní příklady použití v praxi.
+                        <br><small>(Minimum 50 znaků pro zobrazení vysvětlení)</small>
+                    </div>
+                    <textarea id="userAnswer" placeholder="Napište zde svoje vysvětlení této materiálové vlastnosti..." 
+                              style="width: 100%; height: 150px; padding: 15px; border-radius: 10px; border: 2px solid #e0e0e0; font-size: 16px; resize: vertical;"></textarea>
                 </div>
-                <div class="stat">
-                    <div class="stat-number" id="avg-score">0%</div>
-                    <div>Uspesnost</div>
+                
+                <div class="feedback" id="propertiesFeedback"></div>
+                
+                <div style="text-align: center;">
+                    <button class="btn" id="revealBtn" onclick="revealPropertyAnswer()">📖 Zobrazit odborné vysvětlení</button>
+                    <button class="btn" onclick="generatePropertyQuestion()">🔄 Další vlastnost</button>
+                    <button class="btn secondary" onclick="showGameMenu()">← Hlavní menu</button>
                 </div>
             </div>
-
-            <h3>Vsetky vysledky</h3>
-            <button class="btn btn-green" onclick="exportCSV()">Export CSV</button>
-            <table id="teacher-results">
-                <thead>
-                    <tr><th>Student</th><th>Hra</th><th>Datum</th><th>Skore</th><th>Cas</th></tr>
-                </thead>
-                <tbody></tbody>
-            </table>
-        </div>
-    </div>
-
-    <!-- Modal -->
-    <div id="gameModal" class="modal">
-        <div class="modal-content">
-            <span class="close" onclick="closeGame()">&times;</span>
-            <h2 id="game-title">Hra</h2>
-            <div id="game-area"></div>
+            
+            <!-- Hra 3: Volba materiálu -->
+            <div id="selectionGame" class="game-area">
+                <div class="question-card">
+                    <h2 id="scenarioTitle">Načítání...</h2>
+                    <div class="details" id="scenarioDetails"></div>
+                </div>
+                
+                <h3 style="text-align: center; margin: 20px 0;">Který materiál byste zvolili?</h3>
+                
+                <div class="options" id="selectionOptions"></div>
+                
+                <div class="feedback" id="selectionFeedback"></div>
+                
+                <div style="text-align: center;">
+                    <button class="btn" onclick="generateSelectionQuestion()">🔄 Nový scénář</button>
+                    <button class="btn secondary" onclick="showGameMenu()">← Hlavní menu</button>
+                </div>
+            </div>
         </div>
     </div>
 
     <script>
-        var users = {
-            'student@test.sk': { password: 'heslo123', name: 'Jan Student', role: 'student' },
-            'teacher@test.sk': { password: 'heslo123', name: 'Peter Ucitel', role: 'teacher' }
+        // Globální proměnné
+        let gameStats = { correct: 0, total: 0 };
+        let currentScore = 0;
+        let timer = null;
+        let timeLeft = 0;
+        let currentGame = '';
+        
+        // Statistiky pro jednotlivé hry
+        let classificationStats = { correct: 0, total: 0 };
+        let propertiesStats = { correct: 0, total: 0, answers: [] }; // Přidáno pole pro odpovědi
+        let selectionStats = { correct: 0, total: 0 };
+        
+        // Systém pro sledování použitých otázek
+        let usedClassificationQuestions = new Set();
+        let usedPropertyQuestions = new Set();
+        let usedSelectionQuestions = new Set();
+        let allClassificationQuestions = [];
+        let allPropertyQuestions = [];
+        let allSelectionQuestions = [];
+        
+        // Data pro hry
+        const advancedMaterialCategories = {
+            'Slitiny železa': {
+                materials: ['Uhlíková ocel (AISI 1045)', 'Nízkolegovaná ocel (HSLA)', 'Nerezová ocel (316L)', 'Rychlořezná ocel (HSS)', 'Šedá litina (GG-25)', 'Tvárná litina (GGG-40)'],
+                characteristics: 'Magnetické, dobré mechanické vlastnosti, náchylnost ke korozi'
+            },
+            'Neželezné kovy a slitiny': {
+                materials: ['Hliníková slitina (7075-T6)', 'Titanová slitina (Ti-6Al-4V)', 'Měděná slitina (CuZn37)', 'Magnéziová slitina (AZ91)', 'Niklová superslitina (Inconel 718)', 'Bezberilyové bronzy'],
+                characteristics: 'Vysoký poměr pevnosti k hmotnosti, odolnost korozi, vysoká cena'
+            },
+            'Technická keramika': {
+                materials: ['Oxid hlinitý (Al₂O₃)', 'Karbid křemíku (SiC)', 'Nitrid křemíku (Si₃N₄)', 'Zirkoničitá keramika (ZrO₂)', 'Boridy', 'Karbid wolframu (WC-Co)'],
+                characteristics: 'Vysoká tvrdost, křehkost, chemická inertnost, vysokoteplotní stabilita'
+            },
+            'Technické polymery': {
+                materials: ['PEEK (Polyéteréterketon)', 'POM (Polyoxymethylen)', 'PA66-GF30 (Nylon s skelnými vlákny)', 'PTFE (Teflon)', 'PPS (Polyfenylensulfid)', 'LCP (Tekutě krystalické polymery)'],
+                characteristics: 'Nízká hustota, viskoelastické chování, teplotní závislost vlastností'
+            },
+            'Pokročilé kompozity': {
+                materials: ['CFRP (Uhlíková vlákna/epoxid)', 'GFRP (Skelná vlákna/polyester)', 'Aramidové kompozity', 'MMC (Al/SiC)', 'CMC (SiC/SiC)', 'Nanokomposiety'],
+                characteristics: 'Anizotropní vlastnosti, vysoký poměr pevnosti/hmotnosti, složitá výroba'
+            },
+            'Funkční materiály': {
+                materials: ['Tvarová paměť (Nitinol)', 'Piezoelektrika (PZT)', 'Termoelektrika', 'Supervodivé keramiky', 'Magnetostrikční materiály', 'Feroelektrika'],
+                characteristics: 'Speciální fyzikální vlastnosti, úzce specializované aplikace'
+            }
         };
-
-        var currentUser = null;
-        var results = [];
-        var gameStartTime = 0;
-
-        // Nacitanie dat
-        function loadData() {
-            var savedUsers = localStorage.getItem('lmsUsers');
-            if (savedUsers) {
-                users = JSON.parse(savedUsers);
+        
+        const advancedProperties = [
+            { 
+                name: 'Mez kluzu σy', 
+                unit: 'MPa', 
+                description: 'Napětí při kterém začíná plastická deformace',
+                examples: 'Ocel S235: 235 MPa, Ti-6Al-4V: 880 MPa',
+                importance: 'Kritická pro dimenzování při statickém zatížení',
+                formula: 'σy = F/A₀ (při 0.2% plastické deformaci)'
+            },
+            { 
+                name: 'Lomová houževnatost KIC', 
+                unit: 'MPa√m', 
+                description: 'Odolnost materiálu proti šíření trhliny',
+                examples: 'Keramika: 2-6, Hliník: 20-45, Ocel: 50-200',
+                importance: 'Zásadní pro aplikace s rizikem křehkého lomu',
+                formula: 'KIC = σ√(πa) pro nekonečnou desku'
+            },
+            { 
+                name: 'Součinitel tepelné roztažnosti α', 
+                unit: '10⁻⁶/K', 
+                description: 'Relativní změna rozměru při změně teploty',
+                examples: 'Invar: 1.2, Ocel: 11-13, Hliník: 23-24',
+                importance: 'Klíčové pro tepelně zatížené konstrukce',
+                formula: 'ΔL/L₀ = α·ΔT'
+            },
+            { 
+                name: 'Únava - Wöhlerova křivka', 
+                unit: 'cykly', 
+                description: 'Počet cyklů do lomu při daném napětí',
+                examples: 'Ocel: mez únavy ~0.5σUTS, Hliník: bez meze únavy',
+                importance: 'Zásadní pro cyklicky zatížené součásti',
+                formula: 'log N = A - m·log σa'
+            },
+            { 
+                name: 'Creep - tečení za vysokých teplot', 
+                unit: '%/h', 
+                description: 'Postupná plastická deformace při konstantním zatížení',
+                examples: 'Superslitiny při T > 0.5Tm, polymery při T > Tg',
+                importance: 'Limituje použití při vysokých teplotách',
+                formula: 'ε̇ = A·σⁿ·exp(-Q/RT)'
+            },
+            { 
+                name: 'Korozní rychlost', 
+                unit: 'mm/rok', 
+                description: 'Rychlost úbytku materiálu vlivem koroze',
+                examples: 'Nerez v mořské vodě: 0.01, Ocel na vzduchu: 0.1',
+                importance: 'Určuje životnost v agresivním prostředí',
+                formula: 'CR = K·W/(A·T·D)'
             }
-            
-            var savedResults = localStorage.getItem('lmsResults');
-            if (savedResults) {
-                results = JSON.parse(savedResults);
-            }
-        }
-
-        function saveUsers() {
-            localStorage.setItem('lmsUsers', JSON.stringify(users));
-        }
-
-        function saveData() {
-            localStorage.setItem('lmsResults', JSON.stringify(results));
-        }
-
-        // Taby
-        function showTab(tab) {
-            if (tab === 'login') {
-                document.getElementById('login-section').classList.remove('hidden');
-                document.getElementById('register-section').classList.add('hidden');
-                document.getElementById('login-tab').style.background = '#2196F3';
-                document.getElementById('login-tab').style.color = 'white';
-                document.getElementById('register-tab').style.background = 'transparent';
-                document.getElementById('register-tab').style.color = '#333';
-            } else {
-                document.getElementById('login-section').classList.add('hidden');
-                document.getElementById('register-section').classList.remove('hidden');
-                document.getElementById('register-tab').style.background = '#2196F3';
-                document.getElementById('register-tab').style.color = 'white';
-                document.getElementById('login-tab').style.background = 'transparent';
-                document.getElementById('login-tab').style.color = '#333';
-            }
-        }
-
-        // Registracia
-        function registrovat() {
-            var name = document.getElementById('register-name').value.trim();
-            var email = document.getElementById('register-email').value.trim();
-            var password = document.getElementById('register-password').value;
-            var role = document.getElementById('register-role').value;
-            
-            // Validacia
-            if (!name || !email || !password) {
-                showAlert('Vyplnte vsetky polia!', 'error');
-                return;
-            }
-            
-            if (password.length < 6) {
-                showAlert('Heslo musi mat minimalne 6 znakov!', 'error');
-                return;
-            }
-            
-            if (users[email]) {
-                showAlert('Pouzivatel s tymto emailom uz existuje!', 'error');
-                return;
-            }
-            
-            // Vytvorenie uctu
-            users[email] = {
-                name: name,
-                password: password,
-                role: role
-            };
-            
-            saveUsers();
-            showAlert('Registracia uspesna! Mozete sa prihlasit.', 'success');
-            
-            // Prepnutie na prihlasenie
-            showTab('login');
-            document.getElementById('login-email').value = email;
-            document.getElementById('login-password').value = password;
-        }
-
-        // Prihlasenie
-        function prihlasit() {
-            var email = document.getElementById('login-email').value.trim();
-            var password = document.getElementById('login-password').value.trim();
-            
-            // Debug - zkontrolujeme co mame ulozene
-            console.log('Pokus o prihlasenie:', email);
-            console.log('Dostupni pouzivatelia:', Object.keys(users));
-            
-            if (!email || !password) {
-                showAlert('Vyplnte email a heslo!', 'error');
-                return;
-            }
-            
-            if (users[email] && users[email].password === password) {
-                currentUser = { email: email, name: users[email].name, role: users[email].role };
-                
-                document.getElementById('auth-section').classList.add('hidden');
-                document.getElementById('user-info').classList.remove('hidden');
-                document.getElementById('current-user').textContent = currentUser.name + ' (' + (currentUser.role === 'teacher' ? 'Ucitel' : 'Student') + ')';
-                
-                if (currentUser.role === 'student') {
-                    document.getElementById('student-section').classList.remove('hidden');
-                    updateStudentStats();
-                    loadStudentResults();
-                } else {
-                    document.getElementById('teacher-section').classList.remove('hidden');
-                    updateTeacherStats();
-                    loadTeacherResults();
-                }
-                
-                showAlert('Prihlasenie uspesne!', 'success');
-            } else {
-                showAlert('Nespravne udaje! Skontrolujte email a heslo.', 'error');
-            }
-        }
-
-        function logout() {
-            currentUser = null;
-            document.getElementById('auth-section').classList.remove('hidden');
-            document.getElementById('student-section').classList.add('hidden');
-            document.getElementById('teacher-section').classList.add('hidden');
-            document.getElementById('user-info').classList.add('hidden');
-            
-            // Reset formularu a vymazanie vstupov
-            showTab('login');
-            document.getElementById('login-email').value = '';
-            document.getElementById('login-password').value = '';
-            document.getElementById('register-name').value = '';
-            document.getElementById('register-email').value = '';
-            document.getElementById('register-password').value = '';
-            document.getElementById('register-role').value = 'student';
-        }
-
-        function showAlert(message, type) {
-            var alert = document.createElement('div');
-            alert.className = 'alert alert-' + type;
-            alert.textContent = message;
-            document.body.appendChild(alert);
-            setTimeout(function() {
-                if (document.body.contains(alert)) {
-                    document.body.removeChild(alert);
-                }
-            }, 3000);
-        }
-
-        // Statistiky
-        function updateStudentStats() {
-            var studentResults = results.filter(function(r) { return r.email === currentUser.email; });
-            document.getElementById('student-games').textContent = studentResults.length;
-            
-            if (studentResults.length > 0) {
-                var total = 0;
-                var best = 0;
-                for (var i = 0; i < studentResults.length; i++) {
-                    total += studentResults[i].score;
-                    if (studentResults[i].score > best) best = studentResults[i].score;
-                }
-                var avg = Math.round(total / studentResults.length);
-                document.getElementById('student-avg').textContent = avg + '%';
-                document.getElementById('student-best').textContent = best + '%';
-            }
-        }
-
-        function updateTeacherStats() {
-            document.getElementById('total-games').textContent = results.length;
-            
-            if (results.length > 0) {
-                var total = 0;
-                for (var i = 0; i < results.length; i++) {
-                    total += results[i].score;
-                }
-                var avg = Math.round(total / results.length);
-                document.getElementById('avg-score').textContent = avg + '%';
-            }
-        }
-
-        function loadStudentResults() {
-            var tbody = document.querySelector('#student-results tbody');
-            var studentResults = results.filter(function(r) { return r.email === currentUser.email; });
-            
-            tbody.innerHTML = '';
-            for (var i = 0; i < studentResults.length; i++) {
-                var r = studentResults[i];
-                var row = tbody.insertRow();
-                row.insertCell(0).textContent = new Date(r.date).toLocaleDateString();
-                row.insertCell(1).textContent = r.game;
-                row.insertCell(2).textContent = r.score + '%';
-                row.insertCell(3).textContent = Math.floor(r.time/60) + ':' + (r.time%60).toString().padStart(2,'0');
-            }
-        }
-
-        function loadTeacherResults() {
-            var tbody = document.querySelector('#teacher-results tbody');
-            tbody.innerHTML = '';
-            
-            for (var i = 0; i < results.length; i++) {
-                var r = results[i];
-                var row = tbody.insertRow();
-                row.insertCell(0).textContent = r.name;
-                row.insertCell(1).textContent = r.game;
-                row.insertCell(2).textContent = new Date(r.date).toLocaleDateString();
-                row.insertCell(3).textContent = r.score + '%';
-                row.insertCell(4).textContent = Math.floor(r.time/60) + ':' + (r.time%60).toString().padStart(2,'0');
-            }
-        }
-
-        // Hry
-        function startGame(type) {
-            gameStartTime = Date.now();
-            document.getElementById('gameModal').style.display = 'block';
-            
-            var titles = {
-                'quiz': 'Quiz - Progresivne technologie',
-                'memory': 'Pexeso',
-                'classification': 'Klasifikacia',
-                'sequence': 'Usporiadanie'
-            };
-            
-            document.getElementById('game-title').textContent = titles[type];
-            
-            if (type === 'quiz') startQuiz();
-            else if (type === 'memory') startMemory();
-            else if (type === 'classification') startClassification();
-            else if (type === 'sequence') startSequence();
-        }
-
-        function closeGame() {
-            document.getElementById('gameModal').style.display = 'none';
-        }
-
-        function saveResult(game, score, details) {
-            var result = {
-                email: currentUser.email,
-                name: currentUser.name,
-                game: game,
-                score: score,
-                time: Math.floor((Date.now() - gameStartTime) / 1000),
-                date: new Date().toISOString(),
-                details: details
-            };
-            
-            results.push(result);
-            saveData();
-            
-            updateStudentStats();
-            loadStudentResults();
-            updateTeacherStats();
-            loadTeacherResults();
-            
-            showAlert('Hra skoncena! Skore: ' + score + '%', 'success');
-        }
-
-        // QUIZ
-        var questions = [
+        ];
+        
+        const engineeringScenarios = [
             {
-                q: "Ktore patria medzi konvencne procesy uberu materialu?",
-                options: ["Rezanie a brusenie", "Elektrojiskrove obrabanie", "Laserove obrabanie", "Ultrazvukove obrabanie"],
-                correct: 0
+                situation: "Lopatka plynové turbíny (T = 1200°C, ω = 10000 ot/min)",
+                requirements: [
+                    "Creepová odolnost při 1200°C", 
+                    "Odolnost tepelné únavě", 
+                    "Nízký koeficient tepelné roztažnosti",
+                    "Odolnost vysokoteplotní oxidaci",
+                    "Dostatečná lomová houževnatost"
+                ],
+                correctMaterial: "Niklová superslitina (Inconel 718)",
+                options: ["Niklová superslitina (Inconel 718)", "Uhlíková ocel AISI 4140", "Hliníková slitina 7075-T6", "Titanová slitina Ti-6Al-4V"],
+                explanation: "Superslitiny na bázi niklu jsou speciálně navrženy pro vysokoteplotní aplikace. Inconel 718 si zachovává pevnost až do 650°C a má vynikající creepovou odolnost.",
+                points: 35
             },
             {
-                q: "Kedy boli vyvinute progresivne procesy?",
-                options: ["Pred 1920", "Po roku 1940", "Po roku 1960", "Po roku 1980"],
-                correct: 1
+                situation: "Tlakový reaktor pro chemický průmysl (p = 50 bar, T = 300°C, HCl prostředí)",
+                requirements: [
+                    "Odolnost vůči chloridové korozi",
+                    "Vysoká pevnost při 300°C",
+                    "Odolnost napěťové koroze",
+                    "Svařitelnost",
+                    "Certifikace pro tlakové nádoby"
+                ],
+                correctMaterial: "Nerezová ocel 316L",
+                options: ["Nerezová ocel 316L", "Uhlíková ocel P355GH", "Hliníková slitina 5083", "Titanová slitina Grade 2"],
+                explanation: "316L obsahuje molybden (2-3%) který výrazně zvyšuje odolnost proti chloridové korozi. Nižší obsah uhlíku (<0.03%) eliminuje citlivost na mezikrystalickou korozi.",
+                points: 30
             },
             {
-                q: "Hlavna vyhoda progresivnych technologii?",
-                options: ["Nizsia spotreba", "Vyssia rychlost", "Nezavislost na mechanickych vlastnostiach", "Lacnejsie nastroje"],
-                correct: 2
+                situation: "Ložiskové kroužky pro letecké motory (kontaktní napětí 3 GPa, T = 200°C)",
+                requirements: [
+                    "Velmi vysoká tvrdost (>60 HRC)",
+                    "Lomová houževnatost >20 MPa√m",
+                    "Odolnost kontaktní únavě",
+                    "Rozměrová stabilita",
+                    "Čistota oceli (nízký obsah inkluzí)"
+                ],
+                correctMaterial: "Ložisková ocel 100Cr6 (AISI 52100)",
+                options: ["Ložisková ocel 100Cr6 (AISI 52100)", "Rychlořezná ocel M2", "Nerezová ocel 440C", "Cementační ocel 16MnCr5"],
+                explanation: "100Cr6 je speciální ocel s 1% C a 1.5% Cr, optimalizovaná pro ložiskové aplikace. Po kalení a popouštění dosahuje tvrdosti 60-65 HRC při zachování dostatečné houževnatosti.",
+                points: 40
+            },
+            {
+                situation: "Piezoelektrický aktuátor pro přesné pozicionování (přesnost ±1 nm, f = 1 kHz)",
+                requirements: [
+                    "Vysoký piezoelektrický koeficient d33",
+                    "Nízké dielektrické ztráty",
+                    "Teplotní stabilita konstant",
+                    "Mechanická stabilita",
+                    "Rychlá odezva"
+                ],
+                correctMaterial: "PZT keramika (PbZrTiO₃)",
+                options: ["PZT keramika (PbZrTiO₃)", "Křemen (SiO₂)", "Turmalín", "PVDF polymer"],
+                explanation: "PZT má nejvyšší piezoelektrické konstanty (d33 ≈ 400 pC/N) díky morphotropické fázové hranici mezi tetragonální a rhombohedrickou fází.",
+                points: 25
             }
         ];
-
-        var currentQuestion = 0;
-        var correctAnswers = 0;
-
-        function startQuiz() {
-            currentQuestion = 0;
-            correctAnswers = 0;
-            showQuestion();
+        
+        // Utility funkce
+        function updateStats() {
+            document.getElementById('totalScore').textContent = currentScore;
+            document.getElementById('correctAnswers').textContent = gameStats.correct;
+            const successRate = gameStats.total > 0 ? Math.round((gameStats.correct / gameStats.total) * 100) : 0;
+            document.getElementById('successRate').textContent = successRate + '%';
+            
+            let level = 'Začátečník';
+            if (currentScore > 200) level = 'Expert';
+            else if (currentScore > 100) level = 'Pokročilý';
+            else if (currentScore > 50) level = 'Středně pokročilý';
+            
+            document.getElementById('level').textContent = level;
+        }
+        
+        function showNotification(message) {
+            const notification = document.createElement('div');
+            notification.className = 'notification';
+            notification.innerHTML = message;
+            document.body.appendChild(notification);
+            setTimeout(() => notification.remove(), 2500);
+        }
+        
+        function startTimer(seconds) {
+            timeLeft = seconds;
+            const timerEl = document.getElementById('timer');
+            timerEl.classList.add('active');
+            
+            timer = setInterval(() => {
+                timeLeft--;
+                timerEl.textContent = `⏱️ ${timeLeft}s`;
+                
+                if (timeLeft <= 10) {
+                    timerEl.classList.add('warning');
+                } else {
+                    timerEl.classList.remove('warning');
+                }
+                
+                if (timeLeft <= 0) {
+                    stopTimer();
+                    if (currentGame === 'classification') {
+                        handleTimeout();
+                    }
+                }
+            }, 1000);
+        }
+        
+        function stopTimer() {
+            if (timer) {
+                clearInterval(timer);
+                timer = null;
+            }
+            document.getElementById('timer').classList.remove('active', 'warning');
+        }
+        
+        function handleTimeout() {
+            const options = document.querySelectorAll('#classificationOptions .option');
+            options.forEach(opt => opt.classList.add('disabled'));
+            
+            const feedback = document.getElementById('classificationFeedback');
+            feedback.innerHTML = '⏰ Čas vypršel! Zkuste to znovu rychleji.';
+            feedback.classList.add('active', 'error');
+            
+            // KRITICKÉ: Aktualizuj statistiky i při timeoutu
+            classificationStats.total++;
+            gameStats.total++;
+            
+            // Debug info
+            console.log('TIMEOUT - špatná odpověď');
+            console.log(`Statistiky třídění: ${classificationStats.correct}/${classificationStats.total}`);
+            
+            updateStats();
+        }
+        
+        // Inicializace všech možných otázek
+        function initializeQuestions() {
+            // Generuj všechny možné klasifikační otázky
+            allClassificationQuestions = [];
+            Object.keys(advancedMaterialCategories).forEach(category => {
+                advancedMaterialCategories[category].materials.forEach(material => {
+                    allClassificationQuestions.push({
+                        material: material,
+                        correctCategory: category,
+                        characteristics: advancedMaterialCategories[category].characteristics,
+                        id: `class_${material.replace(/[^a-zA-Z0-9]/g, '_')}`
+                    });
+                });
+            });
+            
+            // Generuj všechny vlastnosti
+            allPropertyQuestions = [...advancedProperties];
+            allPropertyQuestions.forEach((prop, index) => {
+                prop.id = `prop_${index}`;
+            });
+            
+            // Generuj všechny scénáře
+            allSelectionQuestions = [...engineeringScenarios];
+            allSelectionQuestions.forEach((scenario, index) => {
+                scenario.id = `scenario_${index}`;
+            });
+        }
+        
+        // Získej nevyužitou otázku
+        function getUnusedQuestion(allQuestions, usedSet, gameType = '') {
+            const availableQuestions = allQuestions.filter(q => !usedSet.has(q.id));
+            
+            // Pokud došly otázky
+            if (availableQuestions.length === 0) {
+                if (gameType === 'classification') {
+                    // Pro třídění zobraz souhrn a zastav hru
+                    console.log('=== DOKONČENO VŠECH 24 OTÁZEK ===');
+                    console.log(`Finální statistiky: ${classificationStats.correct}/${classificationStats.total}`);
+                    showGameCompletionSummary();
+                    return null;
+                } else if (gameType === 'properties') {
+                    // Pro vlastnosti zobraz souhrn všech odpovědí
+                    showPropertiesCompletionSummary();
+                    return null;
+                } else {
+                    // Pro ostatní hry reset a pokračuj
+                    usedSet.clear();
+                    showNotification('🔄 Výborně! Prošli jste všemi otázkami.<br>Začínáme s novými kombinacemi!');
+                    return getUnusedQuestion(allQuestions, usedSet, gameType);
+                }
+            }
+            
+            // Náhodný výběr z dostupných
+            const question = availableQuestions[Math.floor(Math.random() * availableQuestions.length)];
+            usedSet.add(question.id);
+            
+            return question;
+        }
+        
+        // Zobraz souhrn dokončené hry
+        function showGameCompletionSummary() {
+            const totalClassification = allClassificationQuestions.length;
+            const correctClassification = classificationStats.correct;
+            const accuracy = totalClassification > 0 ? Math.round((correctClassification / totalClassification) * 100) : 0;
+            
+            // Debug informace
+            console.log('=== STATISTIKY TŘÍDĚNÍ ===');
+            console.log('Správné odpovědi:', correctClassification);
+            console.log('Celkové otázky:', totalClassification);
+            console.log('Úspěšnost:', accuracy + '%');
+            console.log('Aktuální skóre:', currentScore);
+            
+            const summaryHTML = `
+                <div class="question-card">
+                    <h2>🎉 Gratulujeme! Dokončili jste pokročilé třídění!</h2>
+                    <div class="details">
+                        <h3>📊 Váš výkon v třídění:</h3>
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 20px; margin: 20px 0;">
+                            <div style="text-align: center; background: rgba(255,255,255,0.2); padding: 15px; border-radius: 10px;">
+                                <div style="font-size: 2em; font-weight: bold; color: #ffd700;">${totalClassification}</div>
+                                <div>Dokončených otázek</div>
+                            </div>
+                            <div style="text-align: center; background: rgba(255,255,255,0.2); padding: 15px; border-radius: 10px;">
+                                <div style="font-size: 2em; font-weight: bold; color: ${accuracy >= 80 ? '#4CAF50' : accuracy >= 60 ? '#FF9800' : '#F44336'};">${correctClassification}</div>
+                                <div>Správných odpovědí</div>
+                            </div>
+                            <div style="text-align: center; background: rgba(255,255,255,0.2); padding: 15px; border-radius: 10px;">
+                                <div style="font-size: 2em; font-weight: bold; color: ${accuracy >= 80 ? '#4CAF50' : accuracy >= 60 ? '#FF9800' : '#F44336'};">${accuracy}%</div>
+                                <div>Úspěšnost</div>
+                            </div>
+                            <div style="text-align: center; background: rgba(255,255,255,0.2); padding: 15px; border-radius: 10px;">
+                                <div style="font-size: 2em; font-weight: bold; color: #ffd700;">${currentScore}</div>
+                                <div>Získané body</div>
+                            </div>
+                        </div>
+                        
+                        <div style="background: ${accuracy >= 80 ? 'rgba(76, 175, 80, 0.2)' : accuracy >= 60 ? 'rgba(255, 152, 0, 0.2)' : 'rgba(244, 67, 54, 0.2)'}; padding: 20px; border-radius: 10px; margin: 20px 0; border-left: 5px solid ${accuracy >= 80 ? '#4CAF50' : accuracy >= 60 ? '#FF9800' : '#F44336'};">
+                            <h4 style="margin-bottom: 10px;">🎯 Hodnocení výkonu:</h4>
+                            ${accuracy >= 80 ? 
+                                '🌟 <strong>Výborné!</strong> Máte skvělé znalosti materiálových kategorií. Jste připraveni na pokročilé vlastnosti.' :
+                                accuracy >= 60 ?
+                                '👍 <strong>Dobré!</strong> Slušný základ, ale ještě si projděte materiály o mikrostruktuře a složení.' :
+                                '📚 <strong>Potřebujete procvičit.</strong> Doporučujeme zopakovat základy před pokračováním na další hry.'
+                            }
+                        </div>
+                        
+                        <h3 style="margin-top: 30px;">🎓 Co jste procvičovali:</h3>
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 15px; margin: 15px 0;">
+                            <div style="background: rgba(255,255,255,0.1); padding: 15px; border-radius: 8px;">
+                                <strong>🔩 Slitiny železa:</strong><br>
+                                <small>Uhlíková ocel, nerez, litina, rychlořezné oceli</small>
+                            </div>
+                            <div style="background: rgba(255,255,255,0.1); padding: 15px; border-radius: 8px;">
+                                <strong>⚡ Neželezné slitiny:</strong><br>
+                                <small>Hliník, titan, měď, superslitiny</small>
+                            </div>
+                            <div style="background: rgba(255,255,255,0.1); padding: 15px; border-radius: 8px;">
+                                <strong>💎 Technická keramika:</strong><br>
+                                <small>Oxidy, karbidy, nitridy, boridy</small>
+                            </div>
+                            <div style="background: rgba(255,255,255,0.1); padding: 15px; border-radius: 8px;">
+                                <strong>🧪 Technické polymery:</strong><br>
+                                <small>PEEK, POM, nylon, teflon</small>
+                            </div>
+                            <div style="background: rgba(255,255,255,0.1); padding: 15px; border-radius: 8px;">
+                                <strong>🏗️ Pokročilé kompozity:</strong><br>
+                                <small>CFRP, MMC, nanokomposity</small>
+                            </div>
+                            <div style="background: rgba(255,255,255,0.1); padding: 15px; border-radius: 8px;">
+                                <strong>⚡ Funkční materiály:</strong><br>
+                                <small>Tvarová paměť, piezoelektrika</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div style="text-align: center; margin-top: 30px;">
+                    <button class="btn" onclick="resetClassificationGame()">🔄 Hrát znovu</button>
+                    <button class="btn secondary" onclick="showGameMenu()">← Hlavní menu</button>
+                </div>
+            `;
+            
+            document.getElementById('classificationOptions').innerHTML = '';
+            document.getElementById('classificationFeedback').innerHTML = summaryHTML;
+            document.getElementById('classificationFeedback').classList.add('active');
+            
+            // Skryj tlačítko pro další otázku
+            const gameButtons = document.querySelectorAll('#classificationGame .btn');
+            gameButtons.forEach(btn => {
+                if (btn.textContent.includes('Další otázka')) {
+                    btn.style.display = 'none';
+                }
+            });
+        }
+        
+        // Zobraz souhrn dokončených kvantitativních vlastností
+        function showPropertiesCompletionSummary() {
+            const totalProperties = allPropertyQuestions.length;
+            const goodAnswers = propertiesStats.correct;
+            const accuracy = totalProperties > 0 ? Math.round((goodAnswers / totalProperties) * 100) : 0;
+            const totalPoints = propertiesStats.answers.reduce((sum, answer) => sum + answer.points, 0);
+            
+            console.log('=== DOKONČENY KVANTITATIVNÍ VLASTNOSTI ===');
+            console.log(`Statistiky: ${goodAnswers}/${totalProperties} (${accuracy}%)`);
+            console.log('Všechny odpovědi:', propertiesStats.answers);
+            
+            // Vytvoř přehled všech odpovědí
+            const answersReview = propertiesStats.answers.map((answer, index) => `
+                <div style="background: ${answer.isGood ? 'rgba(76, 175, 80, 0.1)' : 'rgba(244, 67, 54, 0.1)'}; 
+                            border-left: 5px solid ${answer.isGood ? '#4CAF50' : '#F44336'}; 
+                            padding: 15px; border-radius: 8px; margin: 10px 0;">
+                    <h5 style="margin: 0 0 10px 0; color: #333;">
+                        ${index + 1}. ${answer.property}
+                        <span style="float: right; color: ${answer.isGood ? '#4CAF50' : '#F44336'}; font-weight: bold;">
+                            ${answer.rating} (${answer.points}b)
+                        </span>
+                    </h5>
+                    <div style="background: rgba(255,255,255,0.3); padding: 10px; border-radius: 5px; font-size: 0.9em;">
+                        <strong>Vaše odpověď:</strong> ${answer.userAnswer.substring(0, 100)}${answer.userAnswer.length > 100 ? '...' : ''}
+                    </div>
+                </div>
+            `).join('');
+            
+            const summaryHTML = `
+                <div class="question-card">
+                    <h2>🎉 Dokončili jste kvantitativní vlastnosti!</h2>
+                    <div class="details">
+                        <h3>📊 Celkový přehled vašich odpovědí:</h3>
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 20px; margin: 20px 0;">
+                            <div style="text-align: center; background: rgba(255,255,255,0.2); padding: 15px; border-radius: 10px;">
+                                <div style="font-size: 2em; font-weight: bold; color: #ffd700;">${totalProperties}</div>
+                                <div>Dokončených vlastností</div>
+                            </div>
+                            <div style="text-align: center; background: rgba(255,255,255,0.2); padding: 15px; border-radius: 10px;">
+                                <div style="font-size: 2em; font-weight: bold; color: ${accuracy >= 70 ? '#4CAF50' : accuracy >= 50 ? '#FF9800' : '#F44336'};">${goodAnswers}</div>
+                                <div>Kvalitních odpovědí</div>
+                            </div>
+                            <div style="text-align: center; background: rgba(255,255,255,0.2); padding: 15px; border-radius: 10px;">
+                                <div style="font-size: 2em; font-weight: bold; color: ${accuracy >= 70 ? '#4CAF50' : accuracy >= 50 ? '#FF9800' : '#F44336'};">${accuracy}%</div>
+                                <div>Úspěšnost</div>
+                            </div>
+                            <div style="text-align: center; background: rgba(255,255,255,0.2); padding: 15px; border-radius: 10px;">
+                                <div style="font-size: 2em; font-weight: bold; color: #ffd700;">${totalPoints}</div>
+                                <div>Získané body</div>
+                            </div>
+                        </div>
+                        
+                        <div style="background: ${accuracy >= 70 ? 'rgba(76, 175, 80, 0.2)' : accuracy >= 50 ? 'rgba(255, 152, 0, 0.2)' : 'rgba(244, 67, 54, 0.2)'}; padding: 20px; border-radius: 10px; margin: 20px 0; border-left: 5px solid ${accuracy >= 70 ? '#4CAF50' : accuracy >= 50 ? '#FF9800' : '#F44336'};">
+                            <h4 style="margin-bottom: 10px;">🎯 Hodnocení kvality odpovědí:</h4>
+                            ${accuracy >= 70 ? 
+                                '🌟 <strong>Výborné!</strong> Máte skvělé porozumění kvantitativním vlastnostem. Jste připraveni na expertní volbu materiálů.' :
+                                accuracy >= 50 ?
+                                '👍 <strong>Dobré!</strong> Slušná znalost vlastností, ale zkuste být detailnější v odpovědích.' :
+                                '📚 <strong>Potřebujete procvičit.</strong> Zkuste psát podrobnější odpovědi s konkrétními aplikacemi a souvislostmi.'
+                            }
+                        </div>
+                        
+                        <h3 style="margin-top: 30px;">📝 Přehled všech vašich odpovědí:</h3>
+                        <div style="max-height: 400px; overflow-y: auto; margin: 15px 0;">
+                            ${answersReview}
+                        </div>
+                    </div>
+                </div>
+                
+                <div style="text-align: center; margin-top: 30px;">
+                    <button class="btn" onclick="resetPropertiesGame()">🔄 Hrát znovu</button>
+                    <button class="btn secondary" onclick="showGameMenu()">← Hlavní menu</button>
+                </div>
+            `;
+            
+            document.getElementById('propertyName').innerHTML = '';
+            document.getElementById('propertyDetails').innerHTML = summaryHTML;
+            
+            // Skryj ostatní prvky
+            document.querySelector('#propertiesGame textarea').style.display = 'none';
+            document.getElementById('propertiesFeedback').classList.remove('active');
+            
+            const gameButtons = document.querySelectorAll('#propertiesGame .btn');
+            gameButtons.forEach(btn => {
+                if (btn.textContent.includes('Další vlastnost') || btn.textContent.includes('Zobrazit')) {
+                    btn.style.display = 'none';
+                }
+            });
+        }
+        
+        // Reset hry vlastností
+        function resetPropertiesGame() {
+            usedPropertyQuestions.clear();
+            propertiesStats = { correct: 0, total: 0, answers: [] };
+            
+            document.querySelector('#propertiesGame textarea').style.display = 'block';
+            document.getElementById('propertiesFeedback').classList.remove('active');
+            
+            const gameButtons = document.querySelectorAll('#propertiesGame .btn');
+            gameButtons.forEach(btn => {
+                if (btn.textContent.includes('Další vlastnost') || btn.textContent.includes('Zobrazit')) {
+                    btn.style.display = 'inline-block';
+                }
+            });
+            
+            generatePropertyQuestion();
         }
 
-        function showQuestion() {
-            if (currentQuestion >= questions.length) {
-                var score = Math.round((correctAnswers / questions.length) * 100);
-                document.getElementById('game-area').innerHTML = 
-                    '<div style="text-align: center; padding: 30px;">' +
-                    '<h2>Quiz dokonceny!</h2>' +
-                    '<div style="font-size: 3em; color: #2196F3; margin: 20px 0;">' + score + '%</div>' +
-                    '<p>Spravne: ' + correctAnswers + ' z ' + questions.length + '</p>' +
-                    '<button class="btn btn-blue" onclick="finishQuiz(' + score + ')">Ulozit vysledok</button>' +
-                    '</div>';
+        // Navigace mezi hrami
+        function startGame(gameType) {
+            currentGame = gameType;
+            document.getElementById('gameMenu').style.display = 'none';
+            
+            // Reset statistik při začátku nové hry
+            if (gameType === 'classification') {
+                classificationStats = { correct: 0, total: 0 };
+                console.log('🎮 ZAČÁTEK NOVÉ HRY - statistiky resetovány na 0/0');
+            } else if (gameType === 'properties') {
+                propertiesStats = { correct: 0, total: 0, answers: [] };
+                console.log('🎮 ZAČÁTEK KVANTITATIVNÍCH VLASTNOSTÍ - statistiky resetovány');
+            }
+            
+            document.querySelectorAll('.game-area').forEach(area => {
+                area.classList.remove('active');
+            });
+            
+            const gameArea = document.getElementById(gameType + 'Game');
+            gameArea.classList.add('active');
+            
+            if (gameType === 'classification') {
+                generateClassificationQuestion();
+            } else if (gameType === 'properties') {
+                generatePropertyQuestion();
+            } else if (gameType === 'selection') {
+                generateSelectionQuestion();
+            }
+        }
+        
+        function showGameMenu() {
+            currentGame = '';
+            stopTimer();
+            document.getElementById('gameMenu').style.display = 'block';
+            
+            document.querySelectorAll('.game-area').forEach(area => {
+                area.classList.remove('active');
+            });
+        }
+        
+        // Hra 1: Pokročilé třídění (opravená verze)
+        function generateClassificationQuestion() {
+            const question = getUnusedQuestion(allClassificationQuestions, usedClassificationQuestions, 'classification');
+            
+            // Pokud došly otázky, nezobrazuj novou otázku
+            if (!question) {
                 return;
             }
-
-            var q = questions[currentQuestion];
-            var html = '<div class="question">' +
-                '<h3>Otazka ' + (currentQuestion + 1) + '/' + questions.length + '</h3>' +
-                '<p><strong>' + q.q + '</strong></p>';
             
-            for (var i = 0; i < q.options.length; i++) {
-                html += '<div class="option" onclick="selectAnswer(' + i + ')" data-index="' + i + '">' + q.options[i] + '</div>';
+            document.getElementById('materialName').textContent = question.material;
+            document.getElementById('materialDetails').innerHTML = `
+                <div style="text-align: center; background: rgba(255,255,255,0.2); padding: 20px; border-radius: 10px;">
+                    <strong>🎯 Úkol:</strong><br>
+                    Identifikujte správnou kategorii tohoto materiálu na základě svých znalostí o jeho vlastnostech a složení.
+                </div>
+                <div style="margin-top: 15px; text-align: center;">
+                    <small>📊 Zbývající otázky: ${allClassificationQuestions.length - usedClassificationQuestions.size}/${allClassificationQuestions.length}</small>
+                </div>
+            `;
+            
+            // Vygeneruj možnosti
+            const categories = Object.keys(advancedMaterialCategories);
+            const wrongCategories = categories.filter(cat => cat !== question.correctCategory).sort(() => Math.random() - 0.5).slice(0, 2);
+            const options = [question.correctCategory, ...wrongCategories].sort(() => Math.random() - 0.5);
+            
+            const optionsContainer = document.getElementById('classificationOptions');
+            optionsContainer.innerHTML = '';
+            
+            options.forEach(option => {
+                const optionEl = document.createElement('div');
+                optionEl.className = 'option';
+                optionEl.innerHTML = `<strong>${option}</strong>`;
+                optionEl.onclick = () => checkClassificationAnswer(option, question.correctCategory);
+                optionsContainer.appendChild(optionEl);
+            });
+            
+            // Reset feedback
+            const feedback = document.getElementById('classificationFeedback');
+            feedback.classList.remove('active', 'error');
+            
+            // Spustí timer
+            startTimer(45);
+        }
+        
+        function checkClassificationAnswer(selected, correct) {
+            stopTimer();
+            const isCorrect = selected === correct;
+            const options = document.querySelectorAll('#classificationOptions .option');
+            
+            options.forEach(opt => {
+                opt.classList.add('disabled');
+                if (opt.innerHTML.includes(selected)) {
+                    opt.classList.add(isCorrect ? 'correct' : 'incorrect');
+                }
+                if (opt.innerHTML.includes(correct) && !isCorrect) {
+                    opt.classList.add('correct');
+                }
+            });
+            
+            const points = isCorrect ? (timeLeft > 30 ? 20 : timeLeft > 15 ? 15 : 10) : 0;
+            if (points > 0) currentScore += points;
+            
+            // KRITICKÉ: Aktualizuj statistiky PRVNÍ
+            classificationStats.total++;
+            gameStats.total++;
+            if (isCorrect) {
+                classificationStats.correct++;
+                gameStats.correct++;
             }
             
-            html += '<br><button class="btn btn-blue" onclick="checkAnswer()" id="checkBtn" style="display:none;">Skontrolovat</button>' +
-                '<button class="btn btn-green" onclick="nextQuestion()" id="nextBtn" style="display:none;">Dalej</button>' +
-                '</div>';
+            // Debug info
+            console.log(`Odpověď: ${isCorrect ? 'SPRÁVNĚ' : 'ŠPATNĚ'}`);
+            console.log(`Statistiky třídění: ${classificationStats.correct}/${classificationStats.total}`);
             
-            document.getElementById('game-area').innerHTML = html;
+            const feedback = document.getElementById('classificationFeedback');
+            feedback.innerHTML = isCorrect ? 
+                `✅ Správně! Získáváte ${points} bodů.<br><strong>Vysvětlení:</strong> ${advancedMaterialCategories[correct].characteristics}` :
+                `❌ Nesprávně. Správná odpověď: ${correct}.<br><strong>Vysvětlení:</strong> ${advancedMaterialCategories[correct].characteristics}`;
+            feedback.classList.add('active', isCorrect ? '' : 'error');
+            
+            updateStats();
         }
-
-        function selectAnswer(index) {
-            var options = document.querySelectorAll('.option');
-            for (var i = 0; i < options.length; i++) {
-                options[i].classList.remove('selected');
+        
+        // Hra 2: Vlastnosti (opravená verze - bez popisů)
+        function generatePropertyQuestion() {
+            const property = getUnusedQuestion(allPropertyQuestions, usedPropertyQuestions, 'properties');
+            
+            // Pokud došly otázky, pokračuj s resetem
+            if (!property) {
+                return;
             }
-            document.querySelector('[data-index="' + index + '"]').classList.add('selected');
-            document.getElementById('checkBtn').style.display = 'inline-block';
-        }
-
-        function checkAnswer() {
-            var selected = document.querySelector('.option.selected');
-            var selectedIndex = parseInt(selected.dataset.index);
-            var correct = questions[currentQuestion].correct;
             
-            if (selectedIndex === correct) {
-                correctAnswers++;
-                selected.classList.add('correct');
+            document.getElementById('propertyName').textContent = property.name;
+            document.getElementById('propertyDetails').innerHTML = `
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px;">
+                    <div style="text-align: center; background: rgba(255,255,255,0.2); padding: 15px; border-radius: 10px;">
+                        <strong>Jednotka:</strong><br>
+                        <span style="font-size: 1.3em; color: #ffd700;">${property.unit}</span>
+                    </div>
+                    <div style="text-align: center; background: rgba(255,255,255,0.2); padding: 15px; border-radius: 10px;">
+                        <strong>Příklady hodnot:</strong><br>
+                        <span style="font-size: 0.9em;">${property.examples}</span>
+                    </div>
+                    ${property.formula ? `
+                    <div style="text-align: center; background: rgba(255,255,255,0.2); padding: 15px; border-radius: 10px;">
+                        <strong>Vzorec:</strong><br>
+                        <div class="formula" style="font-size: 0.9em; margin-top: 5px;">${property.formula}</div>
+                    </div>
+                    ` : ''}
+                </div>
+                <div style="margin-top: 15px; text-align: center;">
+                    <small>📊 Zbývající vlastnosti: ${allPropertyQuestions.length - usedPropertyQuestions.size}/${allPropertyQuestions.length}</small>
+                </div>
+            `;
+            
+            // Reset
+            document.getElementById('userAnswer').value = '';
+            document.getElementById('revealBtn').style.display = 'inline-block';
+            document.getElementById('revealBtn').textContent = '📖 Zobrazit odborné vysvětlení';
+            
+            const feedback = document.getElementById('propertiesFeedback');
+            feedback.classList.remove('active');
+            
+            // Uložíme aktuální vlastnost pro pozdější použití
+            window.currentProperty = property;
+        }
+        
+        function revealPropertyAnswer() {
+            const userAnswer = document.getElementById('userAnswer').value.trim();
+            
+            // Kontrola kvality odpovědi - obsah I délka
+            let points = 0;
+            let isGoodAnswer = false;
+            let feedbackMessage = '';
+            let rating = '';
+            
+            // Klíčová slova pro každou vlastnost
+            const currentProperty = window.currentProperty;
+            let keyWords = [];
+            let qualityScore = 0;
+            
+            // Definuj klíčová slova podle vlastnosti
+            switch(currentProperty.name) {
+                case 'Mez kluzu σy':
+                    keyWords = ['plastick', 'deformac', 'napětí', 'zatíž', 'pevnost', 'dimenz', 'konstrukc', 'bezpeč'];
+                    break;
+                case 'Lomová houževnatost KIC':
+                    keyWords = ['trhlin', 'lom', 'křehk', 'šíření', 'bezpeč', 'kritick', 'napětí', 'defekt'];
+                    break;
+                case 'Součinitel tepelné roztažnosti α':
+                    keyWords = ['teplot', 'rozměr', 'roztaž', 'změna', 'tepeln', 'kompenz', 'konstrukc', 'spoj'];
+                    break;
+                case 'Únava - Wöhlerova křivka':
+                    keyWords = ['cykl', 'opakovan', 'zatíž', 'únavov', 'počet', 'životnost', 'střídav', 'dynamick'];
+                    break;
+                case 'Creep - tečení za vysokých teplot':
+                    keyWords = ['teplot', 'čas', 'tečen', 'deformac', 'creep', 'vysokoteplot', 'postupn', 'dlouhodob'];
+                    break;
+                case 'Korozní rychlost':
+                    keyWords = ['koroz', 'prostřed', 'chemick', 'degradac', 'životnost', 'ochran', 'úbyt', 'povrch'];
+                    break;
+                default:
+                    keyWords = ['materiál', 'vlastnost', 'použit', 'aplikac'];
+            }
+            
+            // Spočítej kvalitu obsahu
+            const lowerAnswer = userAnswer.toLowerCase();
+            keyWords.forEach(word => {
+                if (lowerAnswer.includes(word)) {
+                    qualityScore++;
+                }
+            });
+            
+            // Kontrola obecných frází (negativní body)
+            const badPhrases = ['je důležité', 'je to důležité', 'je významné', 'je podstatné', 'je nutné', 'je třeba'];
+            let hasBadPhrases = badPhrases.some(phrase => lowerAnswer.includes(phrase));
+            
+            // Hodnocení kvality
+            if (userAnswer.length < 20) {
+                feedbackMessage = '❌ <strong>Nedostatečná odpověď!</strong><br>Vaše odpověď je příliš krátká. Napište alespoň 20 znaků s konkrétním vysvětlením.';
+                points = 0;
+                rating = 'Nedostatečná';
+            } else if (qualityScore === 0 || hasBadPhrases) {
+                feedbackMessage = '❌ <strong>Nesprávná odpověď!</strong><br>Vaše odpověď neobsahuje relevantní technické informace. Použijte konkrétní termíny a vysvětlení.';
+                points = 0;
+                rating = 'Nesprávná';
+            } else if (qualityScore <= 2 && userAnswer.length < 50) {
+                feedbackMessage = '⚠️ <strong>Slabá odpověď!</strong><br>Máte základní představu, ale odpověď je velmi stručná a chybí technické detaily.';
+                points = 3;
+                isGoodAnswer = true;
+                rating = 'Slabá';
+            } else if (qualityScore <= 3 && userAnswer.length < 100) {
+                feedbackMessage = '👍 <strong>Dobrá odpověď!</strong><br>Obsahuje relevantní informace, ale mohla by být podrobnější s více technickými detaily.';
+                points = 8;
+                isGoodAnswer = true;
+                rating = 'Dobrá';
+            } else if (qualityScore >= 4 && userAnswer.length >= 80) {
+                feedbackMessage = '🌟 <strong>Výborná odpověď!</strong><br>Detailní technické vysvětlení s konkrétními termíny a aplikacemi.';
+                points = 15;
+                isGoodAnswer = true;
+                rating = 'Výborná';
             } else {
-                selected.classList.add('wrong');
-                document.querySelector('[data-index="' + correct + '"]').classList.add('correct');
+                feedbackMessage = '👍 <strong>Dobrá odpověď!</strong><br>Slušné vysvětlení, ale mohlo by obsahovat více technických detailů.';
+                points = 6;
+                isGoodAnswer = true;
+                rating = 'Dobrá';
             }
             
-            document.getElementById('checkBtn').style.display = 'none';
-            document.getElementById('nextBtn').style.display = 'inline-block';
-        }
-
-        function nextQuestion() {
-            currentQuestion++;
-            showQuestion();
-        }
-
-        function finishQuiz(score) {
-            saveResult('Quiz', score, 'Spravne ' + correctAnswers + '/' + questions.length);
-            closeGame();
-        }
-
-        // MEMORY
-        var memoryPairs = [
-            { text: "Rezanie", match: "Definovana geometria" },
-            { text: "Brusenie", match: "Neurcita geometria" },
-            { text: "EDM", match: "Elektrojiskrove" },
-            { text: "LBM", match: "Laserove" }
-        ];
-
-        var memoryCards = [];
-        var flippedCards = [];
-        var matchedPairs = 0;
-
-        function startMemory() {
-            memoryCards = [];
-            flippedCards = [];
-            matchedPairs = 0;
+            // Debug informace
+            console.log(`=== HODNOCENÍ ODPOVĚDI ===`);
+            console.log(`Vlastnost: ${currentProperty.name}`);
+            console.log(`Délka odpovědi: ${userAnswer.length} znaků`);
+            console.log(`Klíčová slova nalezena: ${qualityScore}/${keyWords.length}`);
+            console.log(`Špatné fráze: ${hasBadPhrases}`);
+            console.log(`Hodnocení: ${rating} (${points} bodů)`);
             
-            for (var i = 0; i < memoryPairs.length; i++) {
-                memoryCards.push({ id: i, text: memoryPairs[i].text, flipped: false, matched: false });
-                memoryCards.push({ id: i, text: memoryPairs[i].match, flipped: false, matched: false });
+            // Uložit odpověď do statistik
+            propertiesStats.answers.push({
+                property: window.currentProperty.name,
+                userAnswer: userAnswer,
+                points: points,
+                rating: rating,
+                isGood: isGoodAnswer,
+                qualityScore: qualityScore,
+                keyWordsFound: keyWords.filter(word => lowerAnswer.includes(word))
+            });
+            
+            // Aktualizuj statistiky
+            propertiesStats.total++;
+            if (isGoodAnswer) {
+                propertiesStats.correct++;
+                currentScore += points;
             }
             
-            // Zamiesanie
-            for (var i = memoryCards.length - 1; i > 0; i--) {
-                var j = Math.floor(Math.random() * (i + 1));
-                var temp = memoryCards[i];
-                memoryCards[i] = memoryCards[j];
-                memoryCards[j] = temp;
-            }
-            
-            renderMemory();
-        }
-
-        function renderMemory() {
-            var html = '<div style="text-align: center; margin-bottom: 20px;">Najdene pary: ' + matchedPairs + '/' + memoryPairs.length + '</div>' +
-                '<div class="memory-grid">';
-            
-            for (var i = 0; i < memoryCards.length; i++) {
-                var card = memoryCards[i];
-                var classes = 'memory-card';
-                if (card.matched) classes += ' matched';
-                if (card.flipped) classes += ' flipped';
+            const feedback = document.getElementById('propertiesFeedback');
+            feedback.innerHTML = `
+                <div style="background: ${isGoodAnswer ? 'rgba(76, 175, 80, 0.1)' : 'rgba(244, 67, 54, 0.1)'}; padding: 20px; border-radius: 10px; border-left: 5px solid ${isGoodAnswer ? '#4CAF50' : '#F44336'}; margin-bottom: 20px;">
+                    ${feedbackMessage}
+                    <br><strong>Získané body: ${points > 0 ? '+' : ''}${points}</strong>
+                    ${qualityScore > 0 ? `<br><small>Nalezené klíčové pojmy: ${keyWords.filter(word => lowerAnswer.includes(word)).join(', ')}</small>` : ''}
+                </div>
                 
-                html += '<div class="' + classes + '" onclick="flipCard(' + i + ')">' +
-                    (card.flipped || card.matched ? card.text : '?') + '</div>';
+                <h4>📚 Odborné vysvětlení:</h4>
+                <div style="background: rgba(255,255,255,0.1); padding: 20px; border-radius: 10px; margin-top: 15px;">
+                    <p><strong>Význam:</strong> ${window.currentProperty.importance}</p>
+                    <p><strong>Detailní popis:</strong> ${window.currentProperty.description}</p>
+                    ${window.currentProperty.formula ? `
+                        <div style="margin: 15px 0;">
+                            <strong>Matematický vztah:</strong>
+                            <div class="formula">${window.currentProperty.formula}</div>
+                        </div>
+                    ` : ''}
+                    <p><strong>Typické hodnoty:</strong> ${window.currentProperty.examples}</p>
+                    
+                    <div style="background: rgba(0,0,0,0.1); padding: 15px; border-radius: 8px; margin-top: 15px;">
+                        <strong>💡 Praktické aplikace:</strong><br>
+                        Tato vlastnost je klíčová při navrhování komponentů pro specializované inženýrské aplikace.
+                        ${!isGoodAnswer ? `<br><br><strong>💭 Tip pro zlepšení:</strong> V odpovědi použijte konkrétní technické termíny jako: ${keyWords.slice(0, 4).join(', ')}. Vysvětlete souvislosti a praktické aplikace.` : ''}
+                    </div>
+                </div>
+            `;
+            feedback.classList.add('active');
+            
+            document.getElementById('revealBtn').style.display = 'none';
+            updateStats();
+        }
+        
+        // Hra 3: Volba materiálu (opravená verze)
+        function generateSelectionQuestion() {
+            const scenario = getUnusedQuestion(allSelectionQuestions, usedSelectionQuestions, 'selection');
+            
+            // Pokud došly otázky, pokračuj s resetem
+            if (!scenario) {
+                return;
             }
             
-            html += '</div>';
+            document.getElementById('scenarioTitle').textContent = scenario.situation;
+            document.getElementById('scenarioDetails').innerHTML = `
+                <h4>🎯 Technické požadavky:</h4>
+                <ul style="margin-left: 20px; margin-top: 10px;">
+                    ${scenario.requirements.map(req => `<li>${req}</li>`).join('')}
+                </ul>
+                <div style="background: rgba(255,255,255,0.2); padding: 15px; border-radius: 8px; margin-top: 15px;">
+                    <strong>⚠️ Kritické aspekty:</strong><br>
+                    Zvažte interakci mezi jednotlivými požadavky a možné kompromisy.<br>
+                    <small>📊 Zbývající scénáře: ${allSelectionQuestions.length - usedSelectionQuestions.size}/${allSelectionQuestions.length}</small>
+                </div>
+            `;
             
-            if (matchedPairs === memoryPairs.length) {
-                html += '<br><div style="text-align:center;"><button class="btn btn-blue" onclick="finishMemory()">Ulozit vysledok</button></div>';
-            }
+            const optionsContainer = document.getElementById('selectionOptions');
+            optionsContainer.innerHTML = '';
             
-            document.getElementById('game-area').innerHTML = html;
+            scenario.options.forEach(option => {
+                const optionEl = document.createElement('div');
+                optionEl.className = 'option';
+                optionEl.innerHTML = `<strong>${option}</strong>`;
+                optionEl.onclick = () => checkSelectionAnswer(option, scenario);
+                optionsContainer.appendChild(optionEl);
+            });
+            
+            const feedback = document.getElementById('selectionFeedback');
+            feedback.classList.remove('active', 'error');
+            
+            // Uložíme aktuální scénář
+            window.currentScenario = scenario;
         }
-
-        function flipCard(index) {
-            if (flippedCards.length >= 2 || memoryCards[index].flipped || memoryCards[index].matched) return;
+        
+        function checkSelectionAnswer(selected, scenario) {
+            const isCorrect = selected === scenario.correctMaterial;
+            const options = document.querySelectorAll('#selectionOptions .option');
             
-            memoryCards[index].flipped = true;
-            flippedCards.push(index);
-            renderMemory();
-            
-            if (flippedCards.length === 2) {
-                setTimeout(checkMemoryMatch, 1000);
-            }
-        }
-
-        function checkMemoryMatch() {
-            var first = flippedCards[0];
-            var second = flippedCards[1];
-            
-            if (memoryCards[first].id === memoryCards[second].id) {
-                memoryCards[first].matched = true;
-                memoryCards[second].matched = true;
-                matchedPairs++;
-            } else {
-                memoryCards[first].flipped = false;
-                memoryCards[second].flipped = false;
-            }
-            
-            flippedCards = [];
-            renderMemory();
-        }
-
-        function finishMemory() {
-            saveResult('Pexeso', 100, 'Vsetky pary najdene');
-            closeGame();
-        }
-
-        // CLASSIFICATION
-        var technologies = [
-            { name: "Sustruzenie", type: "conventional" },
-            { name: "Frezovanie", type: "conventional" },
-            { name: "Brusenie", type: "conventional" },
-            { name: "Elektrojiskrove", type: "progressive" },
-            { name: "Laserove", type: "progressive" },
-            { name: "Ultrazvukove", type: "progressive" }
-        ];
-
-        function startClassification() {
-            var html = '<div style="margin-bottom: 20px;">Presunte technologie do spravnych kategorii:</div>';
-            
-            for (var i = 0; i < technologies.length; i++) {
-                html += '<span style="display: inline-block; background: #2196F3; color: white; padding: 8px 15px; margin: 5px; border-radius: 15px; cursor: pointer;" onclick="toggleTech(this, \'' + technologies[i].type + '\')">' + 
-                    technologies[i].name + '</span>';
-            }
-            
-            html += '<div style="margin: 20px 0;"><h4>Konvencne:</h4><div id="conventional" style="min-height: 50px; border: 2px dashed #ddd; padding: 10px; margin: 10px 0;"></div></div>' +
-                '<div style="margin: 20px 0;"><h4>Progresivne:</h4><div id="progressive" style="min-height: 50px; border: 2px dashed #ddd; padding: 10px; margin: 10px 0;"></div></div>' +
-                '<div style="text-align: center;"><button class="btn btn-blue" onclick="checkClassification()">Skontrolovat</button></div>' +
-                '<div id="classification-result"></div>';
-            
-            document.getElementById('game-area').innerHTML = html;
-        }
-
-        function toggleTech(element, type) {
-            if (element.dataset.placed) {
-                // Vratit naspat
-                element.style.backgroundColor = '#2196F3';
-                element.dataset.placed = '';
-                element.onclick = function() { toggleTech(element, type); };
-            } else {
-                // Presunut do kategorie
-                var category = type === 'conventional' ? 'conventional' : 'progressive';
-                document.getElementById(category).appendChild(element);
-                element.style.backgroundColor = '#757575';
-                element.dataset.placed = category;
-                element.dataset.originalType = type;
-                element.onclick = function() { toggleTech(element, type); };
-            }
-        }
-
-        function checkClassification() {
-            var correct = 0;
-            var total = 0;
-            
-            var convElements = document.getElementById('conventional').children;
-            var progElements = document.getElementById('progressive').children;
-            
-            for (var i = 0; i < convElements.length; i++) {
-                total++;
-                if (convElements[i].dataset.originalType === 'conventional') {
-                    correct++;
-                    convElements[i].style.backgroundColor = '#4CAF50';
-                } else {
-                    convElements[i].style.backgroundColor = '#f44336';
+            options.forEach(opt => {
+                opt.classList.add('disabled');
+                if (opt.innerHTML.includes(selected)) {
+                    opt.classList.add(isCorrect ? 'correct' : 'incorrect');
                 }
-            }
-            
-            for (var i = 0; i < progElements.length; i++) {
-                total++;
-                if (progElements[i].dataset.originalType === 'progressive') {
-                    correct++;
-                    progElements[i].style.backgroundColor = '#4CAF50';
-                } else {
-                    progElements[i].style.backgroundColor = '#f44336';
+                if (opt.innerHTML.includes(scenario.correctMaterial) && !isCorrect) {
+                    opt.classList.add('correct');
                 }
+            });
+            
+            if (isCorrect) currentScore += scenario.points;
+            
+            const feedback = document.getElementById('selectionFeedback');
+            feedback.innerHTML = `
+                <h4>${isCorrect ? '✅ Výborně!' : '❌ Nesprávně'}</h4>
+                <p>${isCorrect ? `Získáváte ${scenario.points} bodů! ` : `Správnou volbou by byl ${scenario.correctMaterial}. `}${scenario.explanation}</p>
+                <div style="background: rgba(0,0,0,0.1); padding: 15px; border-radius: 8px; margin-top: 15px;">
+                    <strong>🔬 Technické zdůvodnění:</strong><br>
+                    Analýza požadavků ukazuje, že materiál musí splňovat kombinaci mechanických, tepelných a chemických vlastností. 
+                    Správná volba vyžaduje pochopení mikrostruktury a její souvislosti s makroskopickými vlastnostmi.
+                </div>
+            `;
+            feedback.classList.add('active', isCorrect ? '' : 'error');
+            
+            gameStats.total++;
+            if (isCorrect) gameStats.correct++;
+            updateStats();
+        }
+        
+        // Inicializace při načtení stránky
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('🚀 Inicializace aplikace...');
+            try {
+                initializeQuestions();
+                updateStats();
+                console.log('✅ Aplikace připravena!');
+                showNotification('🎯 Aplikace načtena! Vyberte hru z menu.');
+            } catch (error) {
+                console.error('❌ Chyba při inicializaci:', error);
+                showNotification('⚠️ Chyba při načítání. Obnovte stránku.');
             }
-            
-            var score = total > 0 ? Math.round((correct / total) * 100) : 0;
-            document.getElementById('classification-result').innerHTML = 
-                '<div style="margin-top: 20px; text-align: center;">' +
-                '<h3>Vysledok: ' + correct + '/' + total + ' (' + score + '%)</h3>' +
-                '<button class="btn btn-blue" onclick="finishClassification(' + score + ', ' + correct + ', ' + total + ')">Ulozit vysledok</button>' +
-                '</div>';
-        }
-
-        function finishClassification(score, correct, total) {
-            saveResult('Klasifikacia', score, 'Spravne ' + correct + '/' + total);
-            closeGame();
-        }
-
-        // SEQUENCE
-        var energyData = [
-            { name: "LBM (Laserove)", power: 2 },
-            { name: "EBM (Elektronovy)", power: 6 },
-            { name: "USM (Ultrazvukove)", power: 8 },
-            { name: "EDM (Elektrojiskrove)", power: 10 },
-            { name: "AWJ (Vodny luc)", power: 15 },
-            { name: "KON (Konvencne)", power: 18 }
-        ];
-
-        var sequenceOrder = [];
-
-        function startSequence() {
-            sequenceOrder = energyData.slice();
-            // Zamiesanie
-            for (var i = sequenceOrder.length - 1; i > 0; i--) {
-                var j = Math.floor(Math.random() * (i + 1));
-                var temp = sequenceOrder[i];
-                sequenceOrder[i] = sequenceOrder[j];
-                sequenceOrder[j] = temp;
-            }
-            renderSequence();
-        }
-
-        function renderSequence() {
-            var html = '<p style="text-align: center; margin-bottom: 20px;">Usporiadajte technologie od najmenšej po najvačšiu spotrebu energie:</p>';
-            
-            for (var i = 0; i < sequenceOrder.length; i++) {
-                html += '<div style="display: flex; justify-content: space-between; align-items: center; padding: 15px; background: #2196F3; color: white; margin: 10px 0; border-radius: 5px;">' +
-                    '<span>' + sequenceOrder[i].name + '</span>' +
-                    '<div>' +
-                    '<button style="background: white; color: #2196F3; border: none; border-radius: 50%; width: 30px; height: 30px; margin: 0 2px; cursor: pointer;" onclick="moveUp(' + i + ')" ' + (i === 0 ? 'disabled' : '') + '>↑</button>' +
-                    '<button style="background: white; color: #2196F3; border: none; border-radius: 50%; width: 30px; height: 30px; margin: 0 2px; cursor: pointer;" onclick="moveDown(' + i + ')" ' + (i === sequenceOrder.length - 1 ? 'disabled' : '') + '>↓</button>' +
-                    '</div>' +
-                    '</div>';
-            }
-            
-            html += '<div style="text-align: center; margin-top: 20px;">' +
-                '<button class="btn btn-blue" onclick="checkSequence()">Skontrolovat</button>' +
-                '</div>' +
-                '<div id="sequence-result"></div>';
-            
-            document.getElementById('game-area').innerHTML = html;
-        }
-
-        function moveUp(index) {
-            if (index > 0) {
-                var temp = sequenceOrder[index];
-                sequenceOrder[index] = sequenceOrder[index - 1];
-                sequenceOrder[index - 1] = temp;
-                renderSequence();
-            }
-        }
-
-        function moveDown(index) {
-            if (index < sequenceOrder.length - 1) {
-                var temp = sequenceOrder[index];
-                sequenceOrder[index] = sequenceOrder[index + 1];
-                sequenceOrder[index + 1] = temp;
-                renderSequence();
-            }
-        }
-
-        function checkSequence() {
-            var correctOrder = energyData.slice().sort(function(a, b) { return a.power - b.power; });
-            var correct = 0;
-            
-            for (var i = 0; i < sequenceOrder.length; i++) {
-                if (sequenceOrder[i].name === correctOrder[i].name) {
-                    correct++;
-                }
-            }
-            
-            var score = Math.round((correct / sequenceOrder.length) * 100);
-            
-            var html = '<div style="margin-top: 20px; padding: 20px; background: #f8f9fa; border-radius: 5px;">' +
-                '<h3>Vysledok: ' + correct + '/' + sequenceOrder.length + ' (' + score + '%)</h3>' +
-                '<h4>Spravne poradie:</h4><ol>';
-            
-            for (var i = 0; i < correctOrder.length; i++) {
-                html += '<li>' + correctOrder[i].name + ' (' + correctOrder[i].power + ' kW)</li>';
-            }
-            
-            html += '</ol><div style="text-align: center; margin-top: 15px;">' +
-                '<button class="btn btn-blue" onclick="finishSequence(' + score + ', ' + correct + ')">Ulozit vysledok</button>' +
-                '</div></div>';
-            
-            document.getElementById('sequence-result').innerHTML = html;
-        }
-
-        function finishSequence(score, correct) {
-            saveResult('Poradie', score, 'Spravne ' + correct + '/' + sequenceOrder.length);
-            closeGame();
-        }
-
-        // Export CSV
-        function exportCSV() {
-            var csv = 'Student,Hra,Datum,Skore,Cas\n';
-            for (var i = 0; i < results.length; i++) {
-                var r = results[i];
-                csv += '"' + r.name + '","' + r.game + '","' + new Date(r.date).toLocaleDateString() + '","' + r.score + '%","' + Math.floor(r.time/60) + ':' + (r.time%60).toString().padStart(2,'0') + '"\n';
-            }
-            
-            var blob = new Blob([csv], { type: 'text/csv' });
-            var url = URL.createObjectURL(blob);
-            var a = document.createElement('a');
-            a.href = url;
-            a.download = 'vysledky.csv';
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-        }
-
-        // Reset dat - pre pripad problemov
-        function resetData() {
-            if (confirm('Naozaj chcete vymazat vsetky ulozene data? Toto sa neda vratit spat.')) {
-                localStorage.removeItem('lmsUsers');
-                localStorage.removeItem('lmsResults');
-                
-                // Reset na default
-                users = {
-                    'student@test.sk': { password: 'heslo123', name: 'Jan Student', role: 'student' },
-                    'teacher@test.sk': { password: 'heslo123', name: 'Peter Ucitel', role: 'teacher' }
-                };
-                results = [];
-                
-                saveUsers();
-                saveData();
-                
-                showAlert('Data boli vymazane. Mozete sa prihlasit s demo uctami.', 'success');
-                
-                if (currentUser) {
-                    logout();
-                }
-            }
-        }
-
-        // Inicializacia
-        loadData();
-        showTab('login'); // Zobrazit prihlasenie ako default
+        });
     </script>
 </body>
 </html>
