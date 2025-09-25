@@ -234,6 +234,9 @@
                     <h4>Demo ucty:</h4>
                     <p><strong>Student:</strong> student@test.sk / heslo123</p>
                     <p><strong>Ucitel:</strong> teacher@test.sk / heslo123</p>
+                    <hr style="margin: 15px 0;">
+                    <p style="font-size: 12px; color: #666;">Ak mate problemy s prihlasenim:</p>
+                    <button class="btn" onclick="resetData()" style="background: #ff9800; color: white; font-size: 12px; padding: 5px 10px;">Reset dat</button>
                 </div>
             </div>
 
@@ -445,8 +448,17 @@
 
         // Prihlasenie
         function prihlasit() {
-            var email = document.getElementById('login-email').value;
-            var password = document.getElementById('login-password').value;
+            var email = document.getElementById('login-email').value.trim();
+            var password = document.getElementById('login-password').value.trim();
+            
+            // Debug - zkontrolujeme co mame ulozene
+            console.log('Pokus o prihlasenie:', email);
+            console.log('Dostupni pouzivatelia:', Object.keys(users));
+            
+            if (!email || !password) {
+                showAlert('Vyplnte email a heslo!', 'error');
+                return;
+            }
             
             if (users[email] && users[email].password === password) {
                 currentUser = { email: email, name: users[email].name, role: users[email].role };
@@ -467,7 +479,7 @@
                 
                 showAlert('Prihlasenie uspesne!', 'success');
             } else {
-                showAlert('Nespravne udaje!', 'error');
+                showAlert('Nespravne udaje! Skontrolujte email a heslo.', 'error');
             }
         }
 
@@ -478,8 +490,14 @@
             document.getElementById('teacher-section').classList.add('hidden');
             document.getElementById('user-info').classList.add('hidden');
             
-            // Reset formularu
+            // Reset formularu a vymazanie vstupov
             showTab('login');
+            document.getElementById('login-email').value = '';
+            document.getElementById('login-password').value = '';
+            document.getElementById('register-name').value = '';
+            document.getElementById('register-email').value = '';
+            document.getElementById('register-password').value = '';
+            document.getElementById('register-role').value = 'student';
         }
 
         function showAlert(message, type) {
@@ -978,6 +996,30 @@
             document.body.appendChild(a);
             a.click();
             document.body.removeChild(a);
+        }
+
+        // Reset dat - pre pripad problemov
+        function resetData() {
+            if (confirm('Naozaj chcete vymazat vsetky ulozene data? Toto sa neda vratit spat.')) {
+                localStorage.removeItem('lmsUsers');
+                localStorage.removeItem('lmsResults');
+                
+                // Reset na default
+                users = {
+                    'student@test.sk': { password: 'heslo123', name: 'Jan Student', role: 'student' },
+                    'teacher@test.sk': { password: 'heslo123', name: 'Peter Ucitel', role: 'teacher' }
+                };
+                results = [];
+                
+                saveUsers();
+                saveData();
+                
+                showAlert('Data boli vymazane. Mozete sa prihlasit s demo uctami.', 'success');
+                
+                if (currentUser) {
+                    logout();
+                }
+            }
         }
 
         // Inicializacia
