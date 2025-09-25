@@ -27,12 +27,15 @@
             text-align: center;
         }
         .btn {
-            padding: 10px 20px;
+            padding: 12px 20px;
             border: none;
             border-radius: 5px;
             cursor: pointer;
             margin: 5px;
-            font-size: 14px;
+            font-size: 16px;
+            min-height: 44px; /* Touch target pre mobile */
+            -webkit-tap-highlight-color: transparent; /* Odstráni highlight na iOS */
+            touch-action: manipulation; /* Rýchlejší touch */
         }
         .btn-blue { background: #2196F3; color: white; }
         .btn-green { background: #4CAF50; color: white; }
@@ -47,10 +50,21 @@
         }
         .form-control {
             width: 100%;
-            padding: 8px;
+            padding: 12px;
             border: 1px solid #ddd;
             border-radius: 4px;
             box-sizing: border-box;
+            font-size: 16px; /* Predchádza zoom na iOS */
+            -webkit-appearance: none; /* iOS styling */
+        }
+        
+        .form-control:focus {
+            border-color: #2196F3;
+            outline: none;
+        }
+        
+        select.form-control {
+            height: 44px; /* Minimálna výška pre touch */
         }
         .hidden { display: none; }
         .games {
@@ -220,15 +234,17 @@
             <!-- Prihlasenie -->
             <div id="login-section">
                 <h2>Prihlasenie</h2>
-                <div class="form-group">
-                    <label>Email:</label>
-                    <input type="email" id="login-email" class="form-control" value="student@test.sk">
-                </div>
-                <div class="form-group">
-                    <label>Heslo:</label>
-                    <input type="password" id="login-password" class="form-control" value="heslo123">
-                </div>
-                <button class="btn btn-blue" onclick="prihlasit()">Prihlasit sa</button>
+                <form onsubmit="prihlasit(); return false;">
+                    <div class="form-group">
+                        <label>Email:</label>
+                        <input type="email" id="login-email" class="form-control" value="student@test.sk" autocomplete="email">
+                    </div>
+                    <div class="form-group">
+                        <label>Heslo:</label>
+                        <input type="password" id="login-password" class="form-control" value="heslo123" autocomplete="current-password">
+                    </div>
+                    <button type="submit" class="btn btn-blue" style="width: 100%;">Prihlasit sa</button>
+                </form>
                 
                 <div style="margin-top: 30px; padding: 20px; background: #f8f9fa; border-radius: 5px;">
                     <h4>Demo ucty:</h4>
@@ -243,26 +259,28 @@
             <!-- Registracia -->
             <div id="register-section" class="hidden">
                 <h2>Registracia</h2>
-                <div class="form-group">
-                    <label>Meno a priezvisko:</label>
-                    <input type="text" id="register-name" class="form-control" placeholder="Jan Novak">
-                </div>
-                <div class="form-group">
-                    <label>Email:</label>
-                    <input type="email" id="register-email" class="form-control" placeholder="jan@example.com">
-                </div>
-                <div class="form-group">
-                    <label>Heslo:</label>
-                    <input type="password" id="register-password" class="form-control" placeholder="Minimalne 6 znakov">
-                </div>
-                <div class="form-group">
-                    <label>Rola:</label>
-                    <select id="register-role" class="form-control">
-                        <option value="student">Student</option>
-                        <option value="teacher">Ucitel</option>
-                    </select>
-                </div>
-                <button class="btn btn-green" onclick="registrovat()">Registrovat sa</button>
+                <form onsubmit="registrovat(); return false;">
+                    <div class="form-group">
+                        <label>Meno a priezvisko:</label>
+                        <input type="text" id="register-name" class="form-control" placeholder="Jan Novak" autocomplete="name">
+                    </div>
+                    <div class="form-group">
+                        <label>Email:</label>
+                        <input type="email" id="register-email" class="form-control" placeholder="jan@example.com" autocomplete="email">
+                    </div>
+                    <div class="form-group">
+                        <label>Heslo:</label>
+                        <input type="password" id="register-password" class="form-control" placeholder="Minimalne 6 znakov" autocomplete="new-password">
+                    </div>
+                    <div class="form-group">
+                        <label>Rola:</label>
+                        <select id="register-role" class="form-control">
+                            <option value="student">Student</option>
+                            <option value="teacher">Ucitel</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-green" style="width: 100%;">Registrovat sa</button>
+                </form>
             </div>
         </div>
 
