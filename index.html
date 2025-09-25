@@ -242,12 +242,6 @@
             font-size: 0.9rem;
         }
         
-        .game-stats {
-            text-align: right;
-            font-size: 0.9rem;
-            color: #666;
-        }
-        
         .results-table {
             background: white;
             border-radius: 15px;
@@ -354,6 +348,280 @@
             font-size: 0.9rem;
         }
         
+        /* Game Modal Styles */
+        .game-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.8);
+            z-index: 1000;
+        }
+        
+        .game-modal-content {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            max-width: 95%;
+            max-height: 95%;
+            overflow-y: auto;
+            width: 800px;
+        }
+        
+        .game-modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #f0f0f0;
+        }
+        
+        .close-btn {
+            background: #f44336;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            cursor: pointer;
+            font-size: 1.2rem;
+            font-weight: bold;
+        }
+        
+        /* Quiz Styles */
+        .question {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 20px;
+            border-left: 5px solid #2196F3;
+        }
+        
+        .question h3 {
+            color: #333;
+            margin-bottom: 20px;
+            font-size: 1.3rem;
+        }
+        
+        .options {
+            display: grid;
+            gap: 15px;
+        }
+        
+        .option {
+            background: white;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            padding: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .option:hover {
+            border-color: #2196F3;
+            background: #f0f8ff;
+        }
+        
+        .option.selected {
+            border-color: #2196F3;
+            background: #e3f2fd;
+        }
+        
+        .option.correct {
+            border-color: #4caf50;
+            background: #e8f5e8;
+            color: #2e7d32;
+        }
+        
+        .option.incorrect {
+            border-color: #f44336;
+            background: #ffebee;
+            color: #c62828;
+        }
+        
+        .check-btn, .next-btn {
+            background: #4caf50;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 1rem;
+            margin: 10px;
+            transition: all 0.3s ease;
+        }
+        
+        .check-btn:hover, .next-btn:hover {
+            background: #45a049;
+            transform: translateY(-2px);
+        }
+        
+        .game-score {
+            text-align: center;
+            font-size: 1.2rem;
+            margin: 20px 0;
+            padding: 15px;
+            background: #e3f2fd;
+            border-radius: 10px;
+        }
+        
+        /* Memory Game Styles */
+        .memory-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        .memory-card {
+            aspect-ratio: 1;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 15px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.9rem;
+            font-weight: bold;
+            color: white;
+            transition: all 0.3s ease;
+            text-align: center;
+            padding: 10px;
+        }
+        
+        .memory-card:hover {
+            transform: scale(1.05);
+        }
+        
+        .memory-card.flipped {
+            background: white;
+            color: #333;
+            border: 2px solid #2196F3;
+        }
+        
+        .memory-card.matched {
+            background: #4caf50;
+            color: white;
+        }
+        
+        .memory-stats {
+            text-align: center;
+            margin: 20px 0;
+            display: flex;
+            justify-content: space-around;
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 15px;
+        }
+        
+        .memory-stats div {
+            font-size: 1.2rem;
+            font-weight: bold;
+        }
+        
+        /* Classification Game Styles */
+        .classification-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin: 20px 0;
+        }
+        
+        .items-pool {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 20px;
+            min-height: 300px;
+        }
+        
+        .items-pool h3 {
+            color: #2196F3;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+        
+        .drop-zone {
+            background: #fff;
+            border: 3px dashed #ddd;
+            border-radius: 15px;
+            padding: 20px;
+            min-height: 150px;
+            margin-bottom: 20px;
+            transition: all 0.3s ease;
+        }
+        
+        .drop-zone.drag-over {
+            border-color: #2196F3;
+            background: #f0f8ff;
+        }
+        
+        .drop-zone h4 {
+            color: #333;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+        
+        .draggable-item {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 12px 20px;
+            margin: 8px;
+            border-radius: 25px;
+            cursor: grab;
+            display: inline-block;
+            font-size: 0.95rem;
+            transition: all 0.3s ease;
+            user-select: none;
+        }
+        
+        .draggable-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+        
+        .draggable-item.dragging {
+            opacity: 0.5;
+            cursor: grabbing;
+        }
+        
+        .restart-btn {
+            background: #ff9800;
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 1rem;
+            margin: 10px;
+            transition: all 0.3s ease;
+        }
+        
+        .restart-btn:hover {
+            background: #f57c00;
+            transform: translateY(-2px);
+        }
+        
+        .explanation {
+            background: #e8f5e8;
+            border-radius: 10px;
+            padding: 15px;
+            margin-top: 20px;
+            border-left: 5px solid #4caf50;
+        }
+        
+        .explanation h4 {
+            color: #2e7d32;
+            margin-bottom: 10px;
+        }
+        
         @media (max-width: 768px) {
             .header {
                 flex-direction: column;
@@ -370,6 +638,19 @@
             
             .filters {
                 flex-direction: column;
+            }
+            
+            .classification-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .memory-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+            
+            .game-modal-content {
+                width: 95%;
+                padding: 20px;
             }
         }
     </style>
@@ -469,7 +750,7 @@
                             <p>6 otázok o konvenčných a progresívnych technológiách</p>
                         </div>
                         <div>
-                            <button class="btn btn-primary" onclick="startStudentGame('quiz')">Hrať</button>
+                            <button class="btn btn-primary" onclick="startGame('quiz')">Hrať</button>
                         </div>
                     </div>
                     <div class="game-item">
@@ -478,7 +759,7 @@
                             <p>Priraďte technológie k ich charakteristikám</p>
                         </div>
                         <div>
-                            <button class="btn btn-primary" onclick="startStudentGame('memory')">Hrať</button>
+                            <button class="btn btn-primary" onclick="startGame('memory')">Hrať</button>
                         </div>
                     </div>
                     <div class="game-item">
@@ -487,7 +768,7 @@
                             <p>Zatrieďte technológie do správnych kategórií</p>
                         </div>
                         <div>
-                            <button class="btn btn-primary" onclick="startStudentGame('classification')">Hrať</button>
+                            <button class="btn btn-primary" onclick="startGame('classification')">Hrať</button>
                         </div>
                     </div>
                     <div class="game-item">
@@ -496,7 +777,7 @@
                             <p>Usporiadajte technológie podľa spotreby energie</p>
                         </div>
                         <div>
-                            <button class="btn btn-primary" onclick="startStudentGame('sequence')">Hrať</button>
+                            <button class="btn btn-primary" onclick="startGame('sequence')">Hrať</button>
                         </div>
                     </div>
                 </div>
@@ -510,7 +791,7 @@
                                 <th>Hra</th>
                                 <th>Skóre</th>
                                 <th>Čas</th>
-                                <th>Hodnocenie</th>
+                                <th>Hodnotenie</th>
                             </tr>
                         </thead>
                         <tbody id="student-results-tbody">
@@ -577,7 +858,7 @@
                                 <th>Dátum</th>
                                 <th>Skóre</th>
                                 <th>Čas</th>
-                                <th>Hodnocenie</th>
+                                <th>Hodnotenie</th>
                                 <th>Detaily</th>
                             </tr>
                         </thead>
@@ -590,11 +871,11 @@
     </div>
 
     <!-- Game Modal -->
-    <div id="game-modal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 1000;">
-        <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background: white; border-radius: 15px; padding: 30px; max-width: 90%; max-height: 90%; overflow: auto;">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+    <div id="game-modal" class="game-modal">
+        <div class="game-modal-content">
+            <div class="game-modal-header">
                 <h2 id="game-modal-title">Hra</h2>
-                <button onclick="closeGameModal()" style="background: #f44336; color: white; border: none; border-radius: 50%; width: 40px; height: 40px; cursor: pointer; font-size: 1.2rem;">×</button>
+                <button class="close-btn" onclick="closeGameModal()">×</button>
             </div>
             <div id="game-modal-content">
                 <!-- Game content will be loaded here -->
@@ -603,7 +884,7 @@
     </div>
 
     <script>
-        // Simulovaná databáza (v reálnej aplikácii by to bola skutočná databáza)
+        // Simulovaná databáza
         let database = {
             users: [
                 {
@@ -632,24 +913,130 @@
                     time: 180,
                     date: new Date('2024-01-15').toISOString(),
                     details: "Správne odpovedané 5 z 6 otázok"
-                },
-                {
-                    id: 2,
-                    studentId: 2,
-                    studentName: "Ján Študent", 
-                    game: "memory",
-                    score: 100,
-                    maxScore: 100,
-                    time: 120,
-                    date: new Date('2024-01-16').toISOString(),
-                    details: "Všetky páry nájdené za 2:00 min, 24 ťahov"
                 }
             ]
         };
 
         let currentUser = null;
+        let currentGame = null;
 
-        // Načítanie dát z localStorage
+        // Game data
+        const quizQuestions = [
+            {
+                question: "Ktoré z nasledujúcich patria medzi konvenčné procesy úberu materiálu?",
+                options: [
+                    "Rezanie a brúsenie",
+                    "Elektrojiskrové obrábanie",
+                    "Laserové obrábanie",
+                    "Ultrazvukové obrábanie"
+                ],
+                correct: 0,
+                explanation: "Konvenčné procesy využívajú mechanické zdroje energie - rezanie s definovanou geometriou reznej hrany a brúsenie s neurčenou geometriou britov."
+            },
+            {
+                question: "Kedy boli vyvinuté nekonvenčné/progresívne procesy úberu materiálu?",
+                options: [
+                    "Pred rokom 1920",
+                    "Po roku 1940",
+                    "Po roku 1960",
+                    "Po roku 1980"
+                ],
+                correct: 1,
+                explanation: "Nekonvenčné procesy úberu materiálu boli vyvíjané až po roku 1940 ako odpoveď na potreby obrábania nových, ťažkoobrobiteľných materiálov."
+            },
+            {
+                question: "Aká je hlavná výhoda progresívnych technológií oproti klasickým?",
+                options: [
+                    "Nižšia spotreba energie",
+                    "Vyššia rýchlosť úberu",
+                    "Úber nezávisí na mechanických vlastnostiach materiálu",
+                    "Lacnejšie nástroje"
+                ],
+                correct: 2,
+                explanation: "Progresívne technológie nezávisia na mechanických vlastnostiach materiálu (tvrdosť, pevnosť, houževnatosť), čo umožňuje obrábanie ťažkoobrobiteľných materiálov."
+            },
+            {
+                question: "Ktoré tri základné podmienky musia byť splnené pre klasické obrábanie?",
+                options: [
+                    "Obrobiteľnosť, porušenie súdržnosti, konverzia energie",
+                    "Rýchlosť, presnosť, kvalita",
+                    "Teplota, tlak, vlhkosť",
+                    "Sila, moment, výkon"
+                ],
+                correct: 0,
+                explanation: "Základné podmienky pre klasické obrábanie: 1) obrobiteľnosť (nástroj tvrdší než obrobek), 2) porušenie súdržnosti materiálu, 3) konverzia na mechanickú energiu."
+            },
+            {
+                question: "Ako veľké sú typicky mikro-triesky pri brúsení?",
+                options: [
+                    "Niekoľko mm²",
+                    "Okolo tisíciny mm²",
+                    "Niekoľko cm²",
+                    "Okolo desatiny mm²"
+                ],
+                correct: 1,
+                explanation: "Pri brúsení vznikajú veľmi malé mikro-triesky s prierezom rádovo okolo tisíciny mm², ktoré sú pouhým okom neviditeľné."
+            },
+            {
+                question: "Aké energetické zdroje využívajú progresívne technológie?",
+                options: [
+                    "Iba mechanické",
+                    "Iba elektrické",
+                    "Fyzikálne, elektrické, chemické a iné",
+                    "Iba tepelné"
+                ],
+                correct: 2,
+                explanation: "Progresívne technológie využívajú rôzne zdroje energie: fyzikálne, elektrické, tepelné, chemické a elektrochemické - na rozdiel od konvenčných, ktoré používajú iba mechanickú energiu."
+            }
+        ];
+
+        const memoryPairs = [
+            { id: 1, text: "Rezanie", pair: "Definovaná geometria reznej hrany" },
+            { id: 2, text: "Brúsenie", pair: "Neurčitá geometria britov" },
+            { id: 3, text: "EDM", pair: "Elektrojiskrové obrábanie" },
+            { id: 4, text: "LBM", pair: "Laserové obrábanie" },
+            { id: 5, text: "Konvenčné", pair: "Mechanická energia" },
+            { id: 6, text: "Progresívne", pair: "Rôzne zdroje energie" },
+            { id: 7, text: "Mikro-triesky", pair: "~0.001 mm²" },
+            { id: 8, text: "Po roku 1940", pair: "Vznik progresívnych technológií" }
+        ];
+
+        const classificationItems = [
+            { name: "Sústruženie", type: "conventional" },
+            { name: "Frézovanie", type: "conventional" },
+            { name: "Vŕtanie", type: "conventional" },
+            { name: "Brúsenie", type: "conventional" },
+            { name: "Honovanie", type: "conventional" },
+            { name: "Elektrojiskrové obrábanie", type: "progressive" },
+            { name: "Laserové rezanie", type: "progressive" },
+            { name: "Ultrazvukové obrábanie", type: "progressive" },
+            { name: "Abrazívny vodný lúč", type: "progressive" },
+            { name: "Elektrolytické brúsenie", type: "progressive" },
+            { name: "Obrábanie elektrónovým lúčom", type: "progressive" },
+            { name: "Chemické obrábanie", type: "progressive" }
+        ];
+
+        const sequenceItems = [
+            { name: "LBM (Laserové obrábanie)", power: 2 },
+            { name: "EBM (Elektrónový lúč)", power: 6 },
+            { name: "AJM (Abrazívny prúd)", power: 4 },
+            { name: "USM (Ultrazvukové)", power: 8 },
+            { name: "EDM (Elektrojiskrové)", power: 10 },
+            { name: "AWJ (Abrazívny vodný lúč)", power: 15 },
+            { name: "KON (Konvenčné)", power: 18 }
+        ];
+
+        // Game variables
+        let currentQuizQuestion = 0;
+        let quizScore = 0;
+        let gameStartTime = 0;
+        let memoryCards = [];
+        let flippedCards = [];
+        let matchedPairs = 0;
+        let moves = 0;
+        let sequenceOrder = [];
+
+        // Database functions
         function loadDatabase() {
             const saved = localStorage.getItem('progressiveTechDB');
             if (saved) {
@@ -657,12 +1044,11 @@
             }
         }
 
-        // Uloženie dát do localStorage
         function saveDatabase() {
             localStorage.setItem('progressiveTechDB', JSON.stringify(database));
         }
 
-        // Autentifikácia
+        // Authentication functions
         function switchAuthTab(tab) {
             document.querySelectorAll('.auth-tab').forEach(t => t.classList.remove('active'));
             document.querySelector(`[onclick="switchAuthTab('${tab}')"]`).classList.add('active');
@@ -701,13 +1087,11 @@
             const password = document.getElementById('reg-password').value;
             const role = document.getElementById('reg-role').value;
             
-            // Kontrola existencie emailu
             if (database.users.find(u => u.email === email)) {
                 showAlert('Používateľ s týmto emailom už existuje!', 'danger');
                 return;
             }
             
-            // Vytvorenie nového používateľa
             const newUser = {
                 id: database.users.length + 1,
                 name,
@@ -728,8 +1112,10 @@
             currentUser = null;
             document.getElementById('auth-section').style.display = 'block';
             document.getElementById('main-dashboard').classList.remove('active');
+            localStorage.removeItem('currentUser');
         }
 
+        // Dashboard functions
         function showDashboard() {
             document.getElementById('auth-section').style.display = 'none';
             document.getElementById('main-dashboard').classList.add('active');
@@ -818,9 +1204,7 @@
         }
 
         function loadTeacherResults() {
-            const tbody = document.getElementById('teacher-results-tbody');
             const allResults = database.results.sort((a, b) => new Date(b.date) - new Date(a.date));
-            
             displayResults(allResults);
         }
 
@@ -908,8 +1292,13 @@
             document.body.removeChild(link);
         }
 
-        // Spustenie hry pre študenta
-        function startStudentGame(gameType) {
+        // Game functions
+        function startGame(gameType) {
+            if (currentUser.role !== 'student') return;
+            
+            currentGame = gameType;
+            gameStartTime = Date.now();
+            
             const gameNames = {
                 quiz: 'Kvíz - Základné pojmy',
                 memory: 'Pexeso - Technológie',
@@ -918,40 +1307,41 @@
             };
             
             document.getElementById('game-modal-title').textContent = gameNames[gameType];
-            document.getElementById('game-modal-content').innerHTML = `
-                <p>Hra sa načítava...</p>
-                <div style="text-align: center; margin: 20px;">
-                    <button class="btn btn-primary" onclick="simulateGamePlay('${gameType}')">Simulovať hranie hry</button>
-                </div>
-                <p><small>Poznámka: V plnej verzii by sa tu načítala skutočná hra z predchádzajúceho artefaktu.</small></p>
-            `;
+            
+            switch(gameType) {
+                case 'quiz':
+                    initQuiz();
+                    break;
+                case 'memory':
+                    initMemoryGame();
+                    break;
+                case 'classification':
+                    initClassificationGame();
+                    break;
+                case 'sequence':
+                    initSequenceGame();
+                    break;
+            }
+            
             document.getElementById('game-modal').style.display = 'block';
         }
 
-        function simulateGamePlay(gameType) {
-            // Simulácia výsledku hry
-            const scores = {
-                quiz: { min: 50, max: 100, maxScore: 100 },
-                memory: { min: 70, max: 100, maxScore: 100 },
-                classification: { min: 60, max: 100, maxScore: 100 },
-                sequence: { min: 40, max: 100, maxScore: 100 }
-            };
+        function closeGameModal() {
+            document.getElementById('game-modal').style.display = 'none';
+            currentGame = null;
+        }
+
+        function saveGameResult(gameType, score, maxScore, details) {
+            const gameTime = Math.floor((Date.now() - gameStartTime) / 1000);
             
-            const gameConfig = scores[gameType];
-            const score = Math.floor(Math.random() * (gameConfig.max - gameConfig.min + 1)) + gameConfig.min;
-            const time = Math.floor(Math.random() * 300) + 60; // 1-5 minút
-            
-            const details = generateGameDetails(gameType, score, gameConfig.maxScore);
-            
-            // Uloženie výsledku
             const newResult = {
                 id: database.results.length + 1,
                 studentId: currentUser.id,
                 studentName: currentUser.name,
                 game: gameType,
                 score: score,
-                maxScore: gameConfig.maxScore,
-                time: time,
+                maxScore: maxScore,
+                time: gameTime,
                 date: new Date().toISOString(),
                 details: details
             };
@@ -959,82 +1349,313 @@
             database.results.push(newResult);
             saveDatabase();
             
-            // Aktualizácia zobrazenia
             updateStudentStats();
             loadStudentResults();
             
-            // Zatvorenie modálu
-            closeGameModal();
-            
-            const percentage = Math.round((score / gameConfig.maxScore) * 100);
-            showAlert(`Hra dokončená! Vaše skóre: ${score}/${gameConfig.maxScore} (${percentage}%)`, 'success');
-        }
-
-        function generateGameDetails(gameType, score, maxScore) {
             const percentage = Math.round((score / maxScore) * 100);
+            showAlert(`Hra dokončená! Vaše skóre: ${score}/${maxScore} (${percentage}%)`, 'success');
+        }
+
+        // Quiz Game
+        function initQuiz() {
+            currentQuizQuestion = 0;
+            quizScore = 0;
+            showQuizQuestion();
+        }
+
+        function showQuizQuestion() {
+            if (currentQuizQuestion >= quizQuestions.length) {
+                showQuizResults();
+                return;
+            }
+
+            const question = quizQuestions[currentQuizQuestion];
+            const content = document.getElementById('game-modal-content');
             
-            switch(gameType) {
-                case 'quiz':
-                    const correct = Math.round((score / maxScore) * 6);
-                    return `Správne odpovedané ${correct} z 6 otázok`;
-                case 'memory':
-                    const moves = Math.floor(Math.random() * 20) + 16;
-                    return `Všetky páry nájdené, ${moves} ťahov`;
-                case 'classification':
-                    const correctItems = Math.round((score / maxScore) * 12);
-                    return `Správne zaradené ${correctItems} z 12 technológií`;
-                case 'sequence':
-                    const correctOrder = Math.round((score / maxScore) * 7);
-                    return `Správne usporiadané ${correctOrder} z 7 technológií`;
-                default:
-                    return `Skóre: ${percentage}%`;
+            content.innerHTML = `
+                <div class="question">
+                    <h3>Otázka ${currentQuizQuestion + 1}/${quizQuestions.length}</h3>
+                    <h3>${question.question}</h3>
+                    <div class="options">
+                        ${question.options.map((option, index) => `
+                            <div class="option" onclick="selectQuizOption(${index})" data-index="${index}">
+                                ${option}
+                            </div>
+                        `).join('')}
+                    </div>
+                    <button class="check-btn" onclick="checkQuizAnswer()" id="check-answer" style="display: none;">Skontrolovať</button>
+                    <button class="next-btn" onclick="nextQuizQuestion()" id="next-question" style="display: none;">Ďalšia otázka</button>
+                    <div id="explanation" style="display: none;"></div>
+                </div>
+            `;
+        }
+
+        function selectQuizOption(index) {
+            document.querySelectorAll('.option').forEach(opt => opt.classList.remove('selected'));
+            document.querySelector(`[data-index="${index}"]`).classList.add('selected');
+            document.getElementById('check-answer').style.display = 'inline-block';
+        }
+
+        function checkQuizAnswer() {
+            const question = quizQuestions[currentQuizQuestion];
+            const selectedOption = document.querySelector('.option.selected');
+            const selectedIndex = parseInt(selectedOption.dataset.index);
+            
+            const options = document.querySelectorAll('.option');
+            options.forEach((opt, index) => {
+                if (index === question.correct) {
+                    opt.classList.add('correct');
+                } else if (index === selectedIndex && index !== question.correct) {
+                    opt.classList.add('incorrect');
+                }
+            });
+
+            if (selectedIndex === question.correct) {
+                quizScore++;
+            }
+
+            document.getElementById('explanation').innerHTML = `
+                <div class="explanation">
+                    <h4>Vysvetlenie:</h4>
+                    <p>${question.explanation}</p>
+                </div>
+            `;
+            document.getElementById('explanation').style.display = 'block';
+            document.getElementById('check-answer').style.display = 'none';
+            document.getElementById('next-question').style.display = 'inline-block';
+        }
+
+        function nextQuizQuestion() {
+            currentQuizQuestion++;
+            showQuizQuestion();
+        }
+
+        function showQuizResults() {
+            const content = document.getElementById('game-modal-content');
+            const percentage = Math.round((quizScore / quizQuestions.length) * 100);
+            
+            content.innerHTML = `
+                <div class="question">
+                    <h3>Výsledky kvízu</h3>
+                    <div class="game-score">
+                        <h2>Získali ste ${quizScore} z ${quizQuestions.length} bodov (${percentage}%)</h2>
+                        ${percentage >= 80 ? '🎉 Výborne!' : percentage >= 60 ? '👍 Dobre!' : '📚 Skúste to znova!'}
+                    </div>
+                    <button class="next-btn" onclick="finishQuiz()">Dokončiť</button>
+                </div>
+            `;
+        }
+
+        function finishQuiz() {
+            const correct = quizScore;
+            const total = quizQuestions.length;
+            const details = `Správne odpovedané ${correct} z ${total} otázok`;
+            
+            saveGameResult('quiz', quizScore * 100 / quizQuestions.length, 100, details);
+            closeGameModal();
+        }
+
+        // Memory Game
+        function initMemoryGame() {
+            memoryCards = [];
+            flippedCards = [];
+            matchedPairs = 0;
+            moves = 0;
+            
+            memoryPairs.forEach(pair => {
+                memoryCards.push({ id: pair.id, text: pair.text, matched: false, flipped: false });
+                memoryCards.push({ id: pair.id, text: pair.pair, matched: false, flipped: false });
+            });
+            
+            memoryCards = memoryCards.sort(() => Math.random() - 0.5);
+            renderMemoryGame();
+        }
+
+        function renderMemoryGame() {
+            const content = document.getElementById('game-modal-content');
+            
+            content.innerHTML = `
+                <div class="memory-stats">
+                    <div>Tahy: <span id="memory-moves">${moves}</span></div>
+                    <div>Páry: <span id="memory-pairs">${matchedPairs}/${memoryPairs.length}</span></div>
+                </div>
+                <div class="memory-grid" id="memory-grid">
+                    ${memoryCards.map((card, index) => `
+                        <div class="memory-card ${card.matched ? 'matched' : ''} ${card.flipped ? 'flipped' : ''}" 
+                             onclick="flipMemoryCard(${index})" data-index="${index}">
+                            <span>${card.flipped || card.matched ? card.text : '?'}</span>
+                        </div>
+                    `).join('')}
+                </div>
+                <button class="restart-btn" onclick="initMemoryGame()">🔄 Nová hra</button>
+            `;
+        }
+
+        function flipMemoryCard(index) {
+            if (flippedCards.length >= 2 || memoryCards[index].flipped || memoryCards[index].matched) return;
+            
+            memoryCards[index].flipped = true;
+            flippedCards.push(index);
+            renderMemoryGame();
+            
+            if (flippedCards.length === 2) {
+                moves++;
+                
+                setTimeout(() => {
+                    checkMemoryMatch();
+                }, 1000);
             }
         }
 
-        function closeGameModal() {
-            document.getElementById('game-modal').style.display = 'none';
+        function checkMemoryMatch() {
+            const [first, second] = flippedCards;
+            
+            if (memoryCards[first].id === memoryCards[second].id) {
+                memoryCards[first].matched = true;
+                memoryCards[second].matched = true;
+                matchedPairs++;
+                
+                if (matchedPairs === memoryPairs.length) {
+                    setTimeout(() => {
+                        const details = `Všetky páry nájdené, ${moves} ťahov`;
+                        saveGameResult('memory', 100, 100, details);
+                        closeGameModal();
+                    }, 500);
+                }
+            } else {
+                memoryCards[first].flipped = false;
+                memoryCards[second].flipped = false;
+            }
+            
+            flippedCards = [];
+            renderMemoryGame();
         }
 
-        function formatTime(seconds) {
-            const mins = Math.floor(seconds / 60);
-            const secs = seconds % 60;
-            return `${mins}:${secs.toString().padStart(2, '0')}`;
+        // Classification Game
+        function initClassificationGame() {
+            const content = document.getElementById('game-modal-content');
+            const shuffledItems = [...classificationItems].sort(() => Math.random() - 0.5);
+            
+            content.innerHTML = `
+                <div class="classification-container">
+                    <div class="items-pool">
+                        <h3>Technológie na zaradenie</h3>
+                        <div id="items-container">
+                            ${shuffledItems.map(item => `
+                                <div class="draggable-item" draggable="true" ondragstart="dragClassification(event)" data-type="${item.type}">
+                                    ${item.name}
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                    <div>
+                        <div class="drop-zone" id="conventional" ondrop="dropClassification(event, 'conventional')" ondragover="allowDropClassification(event)">
+                            <h4>Konvenčné technológie</h4>
+                            <div class="drop-items"></div>
+                        </div>
+                        <div class="drop-zone" id="progressive" ondrop="dropClassification(event, 'progressive')" ondragover="allowDropClassification(event)">
+                            <h4>Progresívne technológie</h4>
+                            <div class="drop-items"></div>
+                        </div>
+                    </div>
+                </div>
+                <button class="check-btn" onclick="checkClassification()">Skontrolovať odpovede</button>
+                <button class="restart-btn" onclick="initClassificationGame()">🔄 Resetovať</button>
+                <div id="classification-result"></div>
+            `;
         }
 
-        function showAlert(message, type) {
-            const alertDiv = document.createElement('div');
-            alertDiv.className = `alert alert-${type}`;
-            alertDiv.textContent = message;
-            
-            const container = document.querySelector('.container');
-            container.insertBefore(alertDiv, container.firstChild);
-            
-            setTimeout(() => {
-                alertDiv.remove();
-            }, 5000);
+        function allowDropClassification(ev) {
+            ev.preventDefault();
+            ev.currentTarget.classList.add('drag-over');
         }
 
-        // Inicializácia aplikácie
-        function initApp() {
-            loadDatabase();
+        function dragClassification(ev) {
+            ev.dataTransfer.setData("text", ev.target.outerHTML);
+            ev.dataTransfer.setData("type", ev.target.dataset.type);
+            ev.target.classList.add('dragging');
+        }
+
+        function dropClassification(ev, category) {
+            ev.preventDefault();
+            ev.currentTarget.classList.remove('drag-over');
             
-            // Automatické prihlásenie ak je používateľ uložený
-            const savedUser = localStorage.getItem('currentUser');
-            if (savedUser) {
-                currentUser = JSON.parse(savedUser);
-                showDashboard();
+            const data = ev.dataTransfer.getData("text");
+            ev.currentTarget.querySelector('.drop-items').innerHTML += data;
+            
+            const draggingElement = document.querySelector('.dragging');
+            if (draggingElement) {
+                draggingElement.remove();
             }
         }
 
-        // Event listenery
-        window.addEventListener('beforeunload', () => {
-            if (currentUser) {
-                localStorage.setItem('currentUser', JSON.stringify(currentUser));
-            }
-        });
+        function checkClassification() {
+            let correct = 0;
+            let total = 0;
+            
+            const conventionalZone = document.getElementById('conventional').querySelector('.drop-items');
+            const progressiveZone = document.getElementById('progressive').querySelector('.drop-items');
+            
+            conventionalZone.querySelectorAll('.draggable-item').forEach(item => {
+                total++;
+                if (item.dataset.type === 'conventional') {
+                    correct++;
+                    item.style.border = '2px solid #4caf50';
+                } else {
+                    item.style.border = '2px solid #f44336';
+                }
+            });
+            
+            progressiveZone.querySelectorAll('.draggable-item').forEach(item => {
+                total++;
+                if (item.dataset.type === 'progressive') {
+                    correct++;
+                    item.style.border = '2px solid #4caf50';
+                } else {
+                    item.style.border = '2px solid #f44336';
+                }
+            });
+            
+            const percentage = Math.round((correct / total) * 100);
+            const details = `Správne zaradené ${correct} z ${total} technológií`;
+            
+            document.getElementById('classification-result').innerHTML = `
+                <div class="game-score">
+                    Správne zaradené: ${correct} z ${total} (${percentage}%)
+                    ${percentage === 100 ? '🎉 Perfektné!' : percentage >= 80 ? '👍 Veľmi dobre!' : '📚 Skúste to znova!'}
+                    <br><br>
+                    <button class="check-btn" onclick="finishClassification(${correct}, ${total}, '${details}')">Dokončiť</button>
+                </div>
+            `;
+        }
 
-        // Spustenie aplikácie
-        initApp();
-    </script>
-</body>
-</html>
+        function finishClassification(correct, total, details) {
+            const score = Math.round((correct / total) * 100);
+            saveGameResult('classification', score, 100, details);
+            closeGameModal();
+        }
+
+        // Sequence Game
+        function initSequenceGame() {
+            sequenceOrder = [...sequenceItems].sort(() => Math.random() - 0.5);
+            renderSequenceGame();
+        }
+
+        function renderSequenceGame() {
+            const content = document.getElementById('game-modal-content');
+            
+            content.innerHTML = `
+                <p>Usporiadajte technológie od najmenšej po najväčšiu spotrebu energie (kW)</p>
+                <div style="display: grid; gap: 15px; max-width: 600px; margin: 20px auto;">
+                    ${sequenceOrder.map((item, index) => `
+                        <div class="draggable-item" style="cursor: move; display: flex; justify-content: space-between; align-items: center;">
+                            <span>${item.name}</span>
+                            <div>
+                                <button onclick="moveSequenceUp(${index})" style="background: #2196F3; color: white; border: none; border-radius: 50%; width: 30px; height: 30px; margin: 0 2px; cursor: pointer;">↑</button>
+                                <button onclick="moveSequenceDown(${index})" style="background: #2196F3; color: white; border: none; border-radius: 50%; width: 30px; height: 30px; margin: 0 2px; cursor: pointer;">↓</button>
+                            </div>
+                        </div>
+                    `).join('')}
+                </div>
+                <button class="check-btn" onclick="checkSequence()">Skontrolovať poradie</button>
+                <button class="restart-btn" onclick="initSequenceGame()">
