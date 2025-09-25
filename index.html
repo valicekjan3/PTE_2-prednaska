@@ -1658,4 +1658,105 @@
                     `).join('')}
                 </div>
                 <button class="check-btn" onclick="checkSequence()">Skontrolovať poradie</button>
-                <button class="restart-btn" onclick="initSequenceGame()">
+                <button class="restart-btn" onclick="initSequenceGame()">🔄 Resetovať</button>
+                <div id="sequence-result"></div>
+            `;
+        }
+
+        function moveSequenceUp(index) {
+            if (index > 0) {
+                [sequenceOrder[index], sequenceOrder[index - 1]] = [sequenceOrder[index - 1], sequenceOrder[index]];
+                renderSequenceGame();
+            }
+        }
+
+        function moveSequenceDown(index) {
+            if (index < sequenceOrder.length - 1) {
+                [sequenceOrder[index], sequenceOrder[index + 1]] = [sequenceOrder[index + 1], sequenceOrder[index]];
+                renderSequenceGame();
+            }
+        }
+
+        function checkSequence() {
+            const correctOrder = [...sequenceItems].sort((a, b) => a.power - b.power);
+            let correct = 0;
+            
+            sequenceOrder.forEach((item, index) => {
+                if (item.name === correctOrder[index].name) {
+                    correct++;
+                }
+            });
+            
+            const percentage = Math.round((correct / sequenceOrder.length) * 100);
+            const details = `Správne usporiadané ${correct} z ${sequenceOrder.length} technológií`;
+            
+            let resultHTML = `
+                <div class="game-score">
+                    Správne usporiadané: ${correct} z ${sequenceOrder.length} (${percentage}%)
+                    ${percentage === 100 ? '🎉 Perfektné!' : percentage >= 80 ? '👍 Veľmi dobre!' : '📚 Skúste to znova!'}
+                    <br><br>
+                    <button class="check-btn" onclick="finishSequence(${correct}, ${sequenceOrder.length}, '${details}')">Dokončiť</button>
+                </div>
+                <div class="explanation">
+                    <h4>Správne poradie podľa spotreby energie:</h4>
+                    <ol>
+            `;
+            
+            correctOrder.forEach(item => {
+                resultHTML += `<li>${item.name} (${item.power} kW)</li>`;
+            });
+            
+            resultHTML += `
+                    </ol>
+                    <p><strong>Pozorovanie:</strong> Konvenčné technológie (KON) majú vysokú spotrebu energie, ale aj vysoký pomerný úber materiálu. Progresívne technológie majú rôznu energetickú náročnosť - laserové obrábanie (LBM) je najúspornejšie, zatiaľ čo abrazívny vodný lúč (AWJ) má vyššiu spotrebu.</p>
+                </div>
+            `;
+            
+            document.getElementById('sequence-result').innerHTML = resultHTML;
+        }
+
+        function finishSequence(correct, total, details) {
+            const score = Math.round((correct / total) * 100);
+            saveGameResult('sequence', score, 100, details);
+            closeGameModal();
+        }
+
+        // Utility functions
+        function formatTime(seconds) {
+            const mins = Math.floor(seconds / 60);
+            const secs = seconds % 60;
+            return `${mins}:${secs.toString().padStart(2, '0')}`;
+        }
+
+        function showAlert(message, type) {
+            const alertDiv = document.createElement('div');
+            alertDiv.className = `alert alert-${type}`;
+            alertDiv.textContent = message;
+            
+            const container = document.querySelector('.container');
+            container.insertBefore(alertDiv, container.firstChild);
+            
+            setTimeout(() => {
+                alertDiv.remove();
+            }, 5000);
+        }
+
+        // Initialize app
+        function initApp() {
+            loadDatabase();
+            
+            const savedUser = localStorage.getItem('currentUser');
+            if (savedUser) {
+                currentUser = JSON.parse(savedUser);
+                showDashboard();
+            }
+        }
+
+        window.addEventListener('beforeunload', () => {
+            if (currentUser) {
+                localStorage.setItem('currentUser', JSON.stringify(currentUser));
+            }
+        });
+
+        // Start the application
+        initApp();
